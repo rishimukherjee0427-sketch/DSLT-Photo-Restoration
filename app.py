@@ -1,5 +1,5 @@
 """
-Flask Backend for DSLT v3 — MPS-aware inference.
+Flask Backend for DSLT v5 — MPS-aware inference with TTA support.
 """
 
 import os
@@ -21,6 +21,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 from models.autoencoder import Encoder, Decoder
 from models.latent_translator import MultiScaleDSLT
 from models.filters import apply_filter, FILTERS
+from models.inference import restore_image as tta_restore
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -38,46 +39,70 @@ encoder = None
 decoder = None
 dslt = None
 
-MODEL_PATH = "results/best_model.pth"
+# Try v5 first, fall back to v4
+MODEL_PATHS = ["results/best_model_v5.pth", "results/best_model.pth"]
 
 
 def load_dslt_model():
     global encoder, decoder, dslt
-    if not os.path.exists(MODEL_PATH):
-        print("⚠️  No model at results/best_model.pth")
+
+    model_path = None
+    for p in MODEL_PATHS:
+        if os.path.exists(p):
+            model_path = p
+            break
+
+    if model_path is None:
+        print("⚠️  No model found in results/")
         return False
 
     encoder = Encoder().to(device)
     decoder = Decoder().to(device)
     dslt = MultiScaleDSLT().to(device)
 
-    checkpoint = torch.load(MODEL_PATH, map_location=device, weights_only=True)
+    checkpoint = torch.load(model_path, map_location=device, weights_only=True)
     encoder.load_state_dict(checkpoint['encoder'])
     decoder.load_state_dict(checkpoint['decoder'])
     dslt.load_state_dict(checkpoint['dslt'])
 
     encoder.eval(); decoder.eval(); dslt.eval()
 
-    print(f"✅ DSLT v3 loaded on {device} (epoch {checkpoint.get('epoch', '?')}, "
+    version = checkpoint.get('version', 'v4')
+    print(f"✅ DSLT {version} loaded on {device} (epoch {checkpoint.get('epoch', '?')}, "
           f"PSNR={checkpoint.get('val_psnr', 0):.2f})")
     return True
 
 
-def restore_image(img_rgb):
+def do_restore(img_rgb, use_tta=True):
+    """Restore an image using the DSLT model with optional TTA."""
     if encoder is None:
         return img_rgb
 
     h, w = img_rgb.shape[:2]
-    img = cv2.resize(img_rgb, (256, 256)).astype(np.float32) / 255.0
-    tensor = torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0).to(device)
 
-    with torch.no_grad():
-        bottleneck, skips = encoder(tensor)
-        bn_t, skips_t = dslt(bottleneck, skips)
-        correction = decoder(bn_t, skips_t)
-        output = torch.clamp(tensor + correction, 0, 1)
+    # Ensure dimensions are divisible by 16 for the 4-level encoder
+    target_h = ((h - 1) // 16 + 1) * 16
+    target_w = ((w - 1) // 16 + 1) * 16
+    # Cap at reasonable size for inference
+    max_dim = 512
+    if max(target_h, target_w) > max_dim:
+        scale = max_dim / max(target_h, target_w)
+        target_h = int(target_h * scale) // 16 * 16
+        target_w = int(target_w * scale) // 16 * 16
+    target_h = max(target_h, 16)
+    target_w = max(target_w, 16)
 
-    result = output.squeeze(0).cpu().permute(1, 2, 0).numpy()
+    img = cv2.resize(img_rgb, (target_w, target_h)).astype(np.float32) / 255.0
+    tensor = torch.from_numpy(img).permute(2, 0, 1).unsqueeze(0)
+
+    # Use TTA-enhanced inference from models/inference.py
+    output = tta_restore(
+        encoder, decoder, dslt, tensor, device,
+        use_tta=use_tta,
+        use_tiles=(target_h > 384 or target_w > 384)
+    )
+
+    result = output.squeeze(0).permute(1, 2, 0).numpy()
     result = np.clip(result * 255, 0, 255).astype(np.uint8)
     return cv2.resize(result, (w, h))
 
@@ -105,7 +130,8 @@ def upload():
         return jsonify({"error": "Invalid image"}), 400
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    restored_rgb = restore_image(img_rgb)
+    # Use TTA for best quality (adds ~1-2s per image)
+    restored_rgb = do_restore(img_rgb, use_tta=True)
     restored_path = os.path.join(RESTORED_DIR, f"{file_id}.jpg")
     cv2.imwrite(restored_path, cv2.cvtColor(restored_rgb, cv2.COLOR_RGB2BGR),
                 [int(cv2.IMWRITE_JPEG_QUALITY), 95])

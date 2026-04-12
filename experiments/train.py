@@ -1,7 +1,9 @@
 """
-DSLT v4 Training — MPS-Optimized for Apple M4 Pro
-v4 Upgrades: 3-scale DSLT (e2+e3+bottleneck), deeper translator blocks (4+6+10),
-             LR warmup, resume fine-tuning from best checkpoint.
+DSLT v5 Training — Progressive Multi-Phase Training
+Phase 1: 128×128 patches, learn coarse structure
+Phase 2: 256×256 patches, refine details
+Phase 3: 384×384 patches (if enough memory), fine textures
+Features: Gradient accumulation, OneCycleLR, EMA, mixed precision where available.
 """
 
 import sys
@@ -21,7 +23,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
-import torchvision.transforms as T
 import numpy as np
 import time
 import json
@@ -31,7 +32,7 @@ import cv2
 from models.autoencoder import Encoder, Decoder
 from models.latent_translator import MultiScaleDSLT
 from models.losses import CombinedLoss
-from utils.dataloader import PairedDataset
+from utils.dataloader import OnlineDegradationDataset, PairedDataset
 
 
 # ─── Device Setup ─────────────────────────────────────────
@@ -52,7 +53,7 @@ def get_device():
 
 class EMA:
     """Maintains exponential moving average of model parameters."""
-    def __init__(self, model, decay=0.999):
+    def __init__(self, model, decay=0.9999):
         self.decay = decay
         self.shadow = {k: v.clone().detach() for k, v in model.state_dict().items()}
 
@@ -108,6 +109,11 @@ def save_visualization(degraded, output, clean, epoch, save_dir="results/visuali
         d = degraded[i].cpu().permute(1, 2, 0).numpy()
         o = output[i].cpu().permute(1, 2, 0).numpy()
         c = clean[i].cpu().permute(1, 2, 0).numpy()
+        # Resize all to same size for visualization
+        target_h = 256
+        d = cv2.resize(d, (target_h, target_h))
+        o = cv2.resize(o, (target_h, target_h))
+        c = cv2.resize(c, (target_h, target_h))
         row = np.concatenate([d, o, c], axis=1)
         rows.append(row)
     grid = np.concatenate(rows, axis=0)
@@ -115,106 +121,36 @@ def save_visualization(degraded, output, clean, epoch, save_dir="results/visuali
     cv2.imwrite(f"{save_dir}/epoch_{epoch:03d}.jpg", grid_bgr)
 
 
-# ─── Main Training ────────────────────────────────────────
+# ─── Training Phase ──────────────────────────────────────
 
-def train():
-    device = get_device()
+def run_phase(phase_name, encoder, decoder, dslt, criterion, device,
+              train_loader, val_loader, epochs, lr, ema, all_params,
+              history, best_state, grad_accum_steps=4):
+    """Run a single training phase."""
 
-    # ─── Hyperparameters ──────────────────────────────────
-    EPOCHS = 120
-    BATCH_SIZE = 8 if device.type == "mps" else 4
-    LR = 8e-5       # Lower LR for stable fine-tuning from v3 best checkpoint
-    WEIGHT_DECAY = 1e-5
-    EMA_DECAY = 0.999
-    WARMUP_EPOCHS = 5  # Linear LR warmup to avoid overshooting on resume
-    RESUME = True   # Fine-tune from best checkpoint!
+    optimizer = torch.optim.AdamW(all_params, lr=lr, weight_decay=1e-4, betas=(0.9, 0.99))
 
-    # ─── Data ─────────────────────────────────────────────
-    dataset = PairedDataset("data/train_clean", "data/train_degraded", augment=True)
-    if len(dataset) == 0:
-        print("❌ No data. Run utils/degradation.py first.")
-        sys.exit(1)
-
-    train_size = int(0.9 * len(dataset))
-    val_size = len(dataset) - train_size
-    train_set, val_set = random_split(dataset, [train_size, val_size],
-                                       generator=torch.Generator().manual_seed(42))
-
-    train_loader = DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True,
-                              num_workers=0, pin_memory=False)
-    val_loader = DataLoader(val_set, batch_size=BATCH_SIZE, shuffle=False,
-                            num_workers=0, pin_memory=False)
-    print(f"Data: {train_size} train | {val_size} val | batch={BATCH_SIZE}")
-
-    # ─── Model ────────────────────────────────────────────
-    encoder = Encoder().to(device)
-    decoder = Decoder().to(device)
-    dslt = MultiScaleDSLT().to(device)
-
-    total_params = sum(p.numel() for m in [encoder, decoder, dslt] for p in m.parameters())
-    print(f"Params: {total_params:,}")
-
-    # ─── Loss, Optimizer, Scheduler ───────────────────────
-    criterion = CombinedLoss(device)
-    all_params = list(encoder.parameters()) + list(decoder.parameters()) + list(dslt.parameters())
-    optimizer = torch.optim.AdamW(all_params, lr=LR, weight_decay=WEIGHT_DECAY)
-
-    # CosineAnnealingWarmRestarts: T_0=30 epochs per cycle
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-        optimizer, T_0=30, T_mult=1, eta_min=2e-6
+    # OneCycleLR for efficient convergence
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        optimizer, max_lr=lr,
+        epochs=epochs, steps_per_epoch=len(train_loader),
+        pct_start=0.1, anneal_strategy='cos', div_factor=10, final_div_factor=100
     )
 
-    # Linear LR warmup override for first WARMUP_EPOCHS epochs
-    def get_warmup_lr(epoch):
-        if epoch < WARMUP_EPOCHS:
-            return LR * (epoch + 1) / WARMUP_EPOCHS
-        return None  # Use scheduler after warmup
-
-    # ─── EMA ──────────────────────────────────────────────
-    class ModelWrapper(nn.Module):
-        def __init__(self, enc, dec, d):
-            super().__init__()
-            self.encoder = enc
-            self.decoder = dec
-            self.dslt = d
-    model_wrap = ModelWrapper(encoder, decoder, dslt)
-    ema = EMA(model_wrap, decay=EMA_DECAY)
-
-    # ─── Resume ───────────────────────────────────────────
-    os.makedirs("results", exist_ok=True)
-    os.makedirs("results/visualizations", exist_ok=True)
-    start_epoch = 0
-    best_val_psnr = 0.0
-    best_val_loss = float("inf")
-    history = {"train_loss": [], "val_loss": [], "val_psnr": [], "val_ssim": [], "lr": []}
-
-    checkpoint_path = "results/best_model.pth"
-    if RESUME and os.path.exists(checkpoint_path):
-        ckpt = torch.load(checkpoint_path, map_location=device, weights_only=True)
-        encoder.load_state_dict(ckpt['encoder'], strict=True)   # Encoder unchanged
-        decoder.load_state_dict(ckpt['decoder'], strict=True)   # Decoder unchanged
-        # DSLT v4 has new layers — load what matches, new layers init from scratch
-        missing, unexpected = dslt.load_state_dict(ckpt['dslt'], strict=False)
-        print(f"  ↳ DSLT: {len(missing)} new keys (random init), {len(unexpected)} dropped")
-        start_epoch = ckpt.get('epoch', 0) + 1
-        best_val_loss = ckpt.get('val_loss', float("inf"))
-        best_val_psnr = ckpt.get('val_psnr', 0.0)
-        print(f"📂 Resumed from epoch {start_epoch} (PSNR={best_val_psnr:.2f})")
-
-    # ─── Training Loop ────────────────────────────────────
     print(f"\n{'='*70}")
-    print(f"DSLT v4 Fine-Tuning — epochs {start_epoch+1}→{EPOCHS}, {device}")
+    print(f"Phase: {phase_name} | {epochs} epochs | LR={lr} | accum={grad_accum_steps}")
     print(f"{'='*70}")
 
-    for epoch in range(start_epoch, EPOCHS):
+    for epoch in range(epochs):
         t0 = time.time()
 
         # ── Train ──
         encoder.train(); decoder.train(); dslt.train()
         train_loss_acc = 0.0
         n_batches = 0
+        optimizer.zero_grad(set_to_none=True)
 
-        for degraded, clean in train_loader:
+        for batch_idx, (degraded, clean) in enumerate(train_loader):
             degraded = degraded.to(device, non_blocking=True)
             clean = clean.to(device, non_blocking=True)
 
@@ -224,11 +160,15 @@ def train():
             output = torch.clamp(degraded + correction, 0, 1)
 
             total_loss, _, _, _ = criterion(output, clean)
+            loss = total_loss / grad_accum_steps
+            loss.backward()
 
-            optimizer.zero_grad(set_to_none=True)
-            total_loss.backward()
-            torch.nn.utils.clip_grad_norm_(all_params, max_norm=0.5)  # tighter clip for fine-tuning
-            optimizer.step()
+            if (batch_idx + 1) % grad_accum_steps == 0 or (batch_idx + 1) == len(train_loader):
+                torch.nn.utils.clip_grad_norm_(all_params, max_norm=1.0)
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+
+            scheduler.step()
 
             train_loss_acc += total_loss.detach()
             n_batches += 1
@@ -238,15 +178,9 @@ def train():
             torch.mps.synchronize()
 
         avg_train = (train_loss_acc / n_batches).item()
-
-        # LR warmup override
-        warmup_lr = get_warmup_lr(epoch - start_epoch)
-        if warmup_lr is not None:
-            for pg in optimizer.param_groups:
-                pg['lr'] = warmup_lr
-        else:
-            scheduler.step(epoch - start_epoch)
-        ema.update(model_wrap)
+        ema.update(encoder)
+        ema.update(decoder)
+        ema.update(dslt)
 
         # ── Validate ──
         encoder.eval(); decoder.eval(); dslt.eval()
@@ -280,67 +214,222 @@ def train():
         avg_val = (val_loss_acc / val_batches).item()
         avg_psnr = (val_psnr_acc / val_batches).item()
         avg_ssim = (val_ssim_acc / val_batches).item()
-        lr = optimizer.param_groups[0]['lr']
+        lr_now = optimizer.param_groups[0]['lr']
         elapsed = time.time() - t0
-
-        scheduler.step()
 
         history["train_loss"].append(avg_train)
         history["val_loss"].append(avg_val)
         history["val_psnr"].append(avg_psnr)
         history["val_ssim"].append(avg_ssim)
-        history["lr"].append(lr)
+        history["lr"].append(lr_now)
 
-        print(f"E[{epoch+1:3d}/{EPOCHS}] T:{avg_train:.4f} V:{avg_val:.4f} "
-              f"PSNR:{avg_psnr:.2f} SSIM:{avg_ssim:.4f} LR:{lr:.6f} {elapsed:.0f}s")
+        total_epoch = len(history["train_loss"])
+        print(f"E[{total_epoch:3d}] T:{avg_train:.4f} V:{avg_val:.4f} "
+              f"PSNR:{avg_psnr:.2f} SSIM:{avg_ssim:.4f} LR:{lr_now:.2e} {elapsed:.0f}s")
 
         # Save best model
-        score = avg_psnr + 10 * avg_ssim  # Combined metric
-        best_score = best_val_psnr + 10 * (history["val_ssim"][-2] if len(history["val_ssim"]) > 1 else 0)
-        if avg_val < best_val_loss or avg_psnr > best_val_psnr:
-            best_val_loss = min(best_val_loss, avg_val)
-            best_val_psnr = max(best_val_psnr, avg_psnr)
+        if avg_psnr > best_state["best_psnr"] or avg_val < best_state["best_loss"]:
+            best_state["best_psnr"] = max(best_state["best_psnr"], avg_psnr)
+            best_state["best_loss"] = min(best_state["best_loss"], avg_val)
             torch.save({
                 'encoder': encoder.state_dict(),
                 'decoder': decoder.state_dict(),
                 'dslt': dslt.state_dict(),
-                'epoch': epoch,
-                'val_loss': best_val_loss,
-                'val_psnr': best_val_psnr,
+                'epoch': total_epoch,
+                'val_loss': best_state["best_loss"],
+                'val_psnr': best_state["best_psnr"],
                 'val_ssim': avg_ssim,
-            }, checkpoint_path)
-            # Also save EMA version
-            torch.save(ema.state_dict(), "results/ema_weights.pth")
-            print(f"  ✅ Saved (PSNR={best_val_psnr:.2f})")
+                'version': 'v5',
+            }, "results/best_model_v5.pth")
+            # Save EMA
+            ema_state = {}
+            for name, mod in [('encoder', encoder), ('decoder', decoder), ('dslt', dslt)]:
+                ema_state[name] = {k: v for k, v in ema.shadow.items() if k.startswith(name + '.')}
+            torch.save(ema.shadow, "results/ema_weights_v5.pth")
+            print(f"  ✅ Saved (PSNR={best_state['best_psnr']:.2f})")
 
         # Visualization every 5 epochs
-        if (epoch + 1) % 5 == 0 and last_deg is not None:
-            save_visualization(last_deg, last_out, last_clean, epoch + 1)
+        if total_epoch % 5 == 0 and last_deg is not None:
+            save_visualization(last_deg, last_out, last_clean, total_epoch)
+
+    return history, best_state
+
+
+# ─── Main Training ────────────────────────────────────────
+
+def train():
+    device = get_device()
+
+    # ─── Model ────────────────────────────────────────────
+    encoder = Encoder().to(device)
+    decoder = Decoder().to(device)
+    dslt = MultiScaleDSLT().to(device)
+
+    total_params = sum(p.numel() for m in [encoder, decoder, dslt] for p in m.parameters())
+    print(f"Model params: {total_params:,}")
+
+    # ─── Loss ─────────────────────────────────────────────
+    criterion = CombinedLoss(device)
+    all_params = list(encoder.parameters()) + list(decoder.parameters()) + list(dslt.parameters())
+
+    # ─── EMA ──────────────────────────────────────────────
+    class ModelWrapper(nn.Module):
+        def __init__(self, enc, dec, d):
+            super().__init__()
+            self.encoder = enc
+            self.decoder = dec
+            self.dslt = d
+    model_wrap = ModelWrapper(encoder, decoder, dslt)
+    ema = EMA(model_wrap, decay=0.9999)
+
+    # ─── State ────────────────────────────────────────────
+    os.makedirs("results", exist_ok=True)
+    os.makedirs("results/visualizations", exist_ok=True)
+    history = {"train_loss": [], "val_loss": [], "val_psnr": [], "val_ssim": [], "lr": []}
+    best_state = {"best_psnr": 0.0, "best_loss": float("inf")}
+
+    # ─── Check for resume ─────────────────────────────────
+    if os.path.exists("results/best_model_v5.pth"):
+        ckpt = torch.load("results/best_model_v5.pth", map_location=device, weights_only=True)
+        encoder.load_state_dict(ckpt['encoder'])
+        decoder.load_state_dict(ckpt['decoder'])
+        dslt.load_state_dict(ckpt['dslt'])
+        best_state["best_psnr"] = ckpt.get('val_psnr', 0.0)
+        best_state["best_loss"] = ckpt.get('val_loss', float("inf"))
+        print(f"📂 Resumed v5 checkpoint (PSNR={best_state['best_psnr']:.2f})")
+
+    # ─── Data source ──────────────────────────────────────
+    clean_dir = "data/train_clean"
+    if not os.path.exists(clean_dir) or len(os.listdir(clean_dir)) == 0:
+        print("❌ No clean images found. Run utils/degradation.py first or place images in data/train_clean/")
+        sys.exit(1)
+
+    # ==========================================================
+    # PHASE 1: 128×128 patches — Learn coarse structure
+    # ==========================================================
+    print("\n" + "▓"*70)
+    print("▓  PHASE 1: 128×128 — Coarse Structure Learning")
+    print("▓"*70)
+
+    dataset_p1 = OnlineDegradationDataset(clean_dir, crop_size=128, augment=True)
+    train_size = int(0.9 * len(dataset_p1))
+    val_size = len(dataset_p1) - train_size
+    train_set, val_set = random_split(dataset_p1, [train_size, val_size],
+                                       generator=torch.Generator().manual_seed(42))
+
+    batch_size_p1 = 16 if device.type == "mps" else 8
+    train_loader = DataLoader(train_set, batch_size=batch_size_p1, shuffle=True, num_workers=0)
+    val_loader = DataLoader(val_set, batch_size=batch_size_p1, shuffle=False, num_workers=0)
+    print(f"Data: {train_size} train | {val_size} val | batch={batch_size_p1}")
+
+    history, best_state = run_phase(
+        "128×128 Coarse", encoder, decoder, dslt, criterion, device,
+        train_loader, val_loader, epochs=80, lr=2e-4, ema=ema,
+        all_params=all_params, history=history, best_state=best_state,
+        grad_accum_steps=2
+    )
+
+    # ==========================================================
+    # PHASE 2: 256×256 patches — Refine details
+    # ==========================================================
+    print("\n" + "▓"*70)
+    print("▓  PHASE 2: 256×256 — Detail Refinement")
+    print("▓"*70)
+
+    dataset_p2 = OnlineDegradationDataset(clean_dir, crop_size=256, augment=True)
+    train_set2, val_set2 = random_split(dataset_p2, [train_size, val_size],
+                                         generator=torch.Generator().manual_seed(42))
+
+    batch_size_p2 = 8 if device.type == "mps" else 4
+    train_loader2 = DataLoader(train_set2, batch_size=batch_size_p2, shuffle=True, num_workers=0)
+    val_loader2 = DataLoader(val_set2, batch_size=batch_size_p2, shuffle=False, num_workers=0)
+    print(f"Data: {train_size} train | {val_size} val | batch={batch_size_p2}")
+
+    history, best_state = run_phase(
+        "256×256 Detail", encoder, decoder, dslt, criterion, device,
+        train_loader2, val_loader2, epochs=120, lr=1e-4, ema=ema,
+        all_params=all_params, history=history, best_state=best_state,
+        grad_accum_steps=4
+    )
+
+    # ==========================================================
+    # PHASE 3: 384×384 patches — Fine textures + sharpness
+    # ==========================================================
+    print("\n" + "▓"*70)
+    print("▓  PHASE 3: 384×384 — Fine Texture Sharpening")
+    print("▓"*70)
+
+    dataset_p3 = OnlineDegradationDataset(clean_dir, crop_size=384, augment=True)
+    train_set3, val_set3 = random_split(dataset_p3, [train_size, val_size],
+                                         generator=torch.Generator().manual_seed(42))
+
+    batch_size_p3 = 4 if device.type == "mps" else 2
+    train_loader3 = DataLoader(train_set3, batch_size=batch_size_p3, shuffle=True, num_workers=0)
+    val_loader3 = DataLoader(val_set3, batch_size=batch_size_p3, shuffle=False, num_workers=0)
+    print(f"Data: {train_size} train | {val_size} val | batch={batch_size_p3}")
+
+    history, best_state = run_phase(
+        "384×384 Sharpen", encoder, decoder, dslt, criterion, device,
+        train_loader3, val_loader3, epochs=80, lr=5e-5, ema=ema,
+        all_params=all_params, history=history, best_state=best_state,
+        grad_accum_steps=8
+    )
 
     # ─── Save History + Plots ─────────────────────────────
-    with open("results/training_history.json", "w") as f:
+    with open("results/training_history_v5.json", "w") as f:
         json.dump(history, f)
 
     try:
         import matplotlib
         matplotlib.use('Agg')
         import matplotlib.pyplot as plt
-        fig, axes = plt.subplots(1, 4, figsize=(22, 5))
-        axes[0].plot(history["train_loss"], label="Train"); axes[0].plot(history["val_loss"], label="Val")
-        axes[0].set_title("Loss"); axes[0].legend(); axes[0].grid(True, alpha=0.3)
-        axes[1].plot(history["val_psnr"], color='green')
-        axes[1].set_title("Val PSNR"); axes[1].grid(True, alpha=0.3)
-        axes[2].plot(history["val_ssim"], color='blue')
-        axes[2].set_title("Val SSIM"); axes[2].grid(True, alpha=0.3)
-        axes[3].plot(history["lr"], color='orange')
-        axes[3].set_title("Learning Rate"); axes[3].grid(True, alpha=0.3)
-        plt.tight_layout()
-        plt.savefig("results/training_curves.png", dpi=150)
-        print("📊 Curves saved")
-    except Exception:
-        pass
 
-    print(f"\n🚀 Done! Best PSNR={best_val_psnr:.2f}")
+        fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+
+        # Losses
+        axes[0, 0].plot(history["train_loss"], label="Train", alpha=0.8)
+        axes[0, 0].plot(history["val_loss"], label="Val", alpha=0.8)
+        axes[0, 0].set_title("Loss (Charbonnier + Multi-Loss)")
+        axes[0, 0].legend(); axes[0, 0].grid(True, alpha=0.3)
+        axes[0, 0].set_xlabel("Epoch")
+
+        # PSNR
+        axes[0, 1].plot(history["val_psnr"], color='green')
+        axes[0, 1].axhline(y=30, color='red', linestyle='--', alpha=0.5, label='Target: 30 dB')
+        axes[0, 1].axhline(y=23.69, color='orange', linestyle='--', alpha=0.5, label='v4 baseline: 23.69 dB')
+        axes[0, 1].set_title("Val PSNR (dB)")
+        axes[0, 1].legend(); axes[0, 1].grid(True, alpha=0.3)
+        axes[0, 1].set_xlabel("Epoch")
+
+        # SSIM
+        axes[1, 0].plot(history["val_ssim"], color='blue')
+        axes[1, 0].axhline(y=0.85, color='red', linestyle='--', alpha=0.5, label='Target: 0.85')
+        axes[1, 0].set_title("Val SSIM")
+        axes[1, 0].legend(); axes[1, 0].grid(True, alpha=0.3)
+        axes[1, 0].set_xlabel("Epoch")
+
+        # LR
+        axes[1, 1].plot(history["lr"], color='orange')
+        axes[1, 1].set_title("Learning Rate Schedule")
+        axes[1, 1].grid(True, alpha=0.3)
+        axes[1, 1].set_xlabel("Step")
+
+        # Phase boundaries
+        phase1_end = 80
+        phase2_end = 80 + 120
+        for ax in [axes[0, 0], axes[0, 1], axes[1, 0]]:
+            ax.axvline(x=phase1_end, color='gray', linestyle=':', alpha=0.5)
+            ax.axvline(x=phase2_end, color='gray', linestyle=':', alpha=0.5)
+
+        plt.tight_layout()
+        plt.savefig("results/training_curves_v5.png", dpi=150)
+        print("📊 Training curves saved")
+    except Exception as e:
+        print(f"⚠️  Could not save plots: {e}")
+
+    print(f"\n🚀 Done! Best PSNR={best_state['best_psnr']:.2f} dB")
+    print(f"   Model: results/best_model_v5.pth")
+    print(f"   EMA:   results/ema_weights_v5.pth")
 
 
 if __name__ == "__main__":

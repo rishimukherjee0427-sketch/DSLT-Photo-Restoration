@@ -1,0 +1,17 @@
+{
+  "unet_baseline": {
+    "psnr_mean": 15.780690377672336,
+    "ssim_mean": 0.6223910450935364,
+    "lpips_mean": 0.5592384216189384
+  },
+  "dslt_bottleneck_only": {
+    "psnr_mean": 20.166192787228034,
+    "ssim_mean": 0.6720618605613708,
+    "lpips_mean": 0.47010492622852323
+  },
+  "dslt_multiscale": {
+    "psnr_mean": 23.68884496363448,
+    "ssim_mean": 0.719808042049408,
+    "lpips_mean": 0.4286383846402168
+  }
+}

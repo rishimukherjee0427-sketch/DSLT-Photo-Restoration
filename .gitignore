@@ -1,0 +1,43 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# PyTorch cache
+.torch_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Data files (too large for GitHub)
+data/*.zip
+data/clean_raw/
+data/raw/
+data/processed/
+data/train_clean/
+data/train_degraded/
+
+# Model weights (large binary files)
+results/best_model.pth
+results/ema_weights.pth
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Manuscript
+*.docx

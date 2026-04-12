@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DSLT — AI-powered vintage photo restoration using Deep Space Latent Translation with U-Net architecture">
+    <title>DSLT — Photo Restoration AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <canvas id="particles-canvas"></canvas>
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <div class="app-wrapper">
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-brand">
+                <div class="nav-logo">✦</div>
+                <span class="nav-title">DSLT Restore</span>
+            </div>
+            <span class="nav-tag">🧠 Deep Space Latent Translation</span>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero" id="heroSection">
+            <h1>Restore Vintage Photos<br>with AI Precision</h1>
+            <p>Upload old, degraded, or black & white photos — our DSLT neural network restores color, removes artifacts, and brings them to life.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">12.7M</div>
+                    <div class="stat-label">Parameters</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">MS-DSLT</div>
+                    <div class="stat-label">Architecture</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Filters</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon-ring">📸</div>
+                <h3>Drop your vintage photo here</h3>
+                <p class="hint">Click to browse · JPG, PNG up to 16 MB</p>
+                <input type="file" id="fileInput" class="file-input" accept="image/*">
+            </div>
+
+            <!-- Processing -->
+            <div class="processing" id="processing">
+                <div class="proc-spinner"></div>
+                <p class="proc-text">Restoring your photo...</p>
+                <p class="proc-sub">DSLT U-Net analyzing and enhancing your image</p>
+            </div>
+
+            <!-- Results -->
+            <div class="results" id="results">
+
+                <!-- Comparison -->
+                <div class="compare-card">
+                    <div class="compare-header">
+                        <span class="compare-header-label">Before / After Comparison</span>
+                        <div class="compare-header-info">
+                            <span class="tag tag-before">Original</span>
+                            <span class="tag tag-after">Restored</span>
+                        </div>
+                    </div>
+                    <div class="compare-viewport" id="compareViewport">
+                        <img src="" alt="Original" class="img-original" id="imgOriginal">
+                        <img src="" alt="Restored" class="img-restored" id="imgRestored">
+                        <div class="compare-slider" id="compareSlider">
+                            <div class="compare-slider-thumb">
+                                <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7"/></svg>
+                            </div>
+                        </div>
+                        <span class="compare-label-overlay ol-before">Original</span>
+                        <span class="compare-label-overlay ol-after">Restored</span>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-section">
+                    <div class="section-title"><span class="dot"></span> Post-Processing Enhance</div>
+                    <div class="filter-grid" id="filterGrid">
+                        <div class="filter-card active" data-filter="none">
+                            <span class="filter-icon">🔄</span>
+                            <span class="filter-name">Restored</span>
+                        </div>
+                        <div class="filter-card" data-filter="vivid">
+                            <span class="filter-icon">🌈</span>
+                            <span class="filter-name">Vivid</span>
+                        </div>
+                        <div class="filter-card" data-filter="warm">
+                            <span class="filter-icon">🔥</span>
+                            <span class="filter-name">Warm</span>
+                        </div>
+                        <div class="filter-card" data-filter="cool">
+                            <span class="filter-icon">❄️</span>
+                            <span class="filter-name">Cool</span>
+                        </div>
+                        <div class="filter-card" data-filter="bw">
+                            <span class="filter-icon">🖤</span>
+                            <span class="filter-name">B&W</span>
+                        </div>
+                        <div class="filter-card" data-filter="sharpen">
+                            <span class="filter-icon">🔍</span>
+                            <span class="filter-name">Sharpen</span>
+                        </div>
+                        <div class="filter-card" data-filter="colorize">
+                            <span class="filter-icon">🎨</span>
+                            <span class="filter-name">Colorize</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="action-bar">
+                    <button class="btn btn-glow" id="downloadBtn">
+                        <span>⬇️</span> Download HD Result
+                    </button>
+                    <button class="btn btn-ghost" id="newBtn">
+                        <span>📸</span> Restore Another
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="footer">
+            DSLT v3 — Multi-Scale Deep Space Latent Translation · CBAM · MPS Accelerated
+        </footer>
+    </div>
+
+    <script>
+    /* ━━━ PARTICLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    (function() {
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const COUNT = 50;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.radius = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.3 + 0.05;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height)
+                    this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(139, 92, 246, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            // Connect nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${0.06 * (1 - dist/120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+
+    /* ━━━ STATE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    let currentId = null;
+    let currentFilter = 'none';
+
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const processing = document.getElementById('processing');
+    const results = document.getElementById('results');
+    const heroSection = document.getElementById('heroSection');
+    const imgOriginal = document.getElementById('imgOriginal');
+    const imgRestored = document.getElementById('imgRestored');
+    const compareSlider = document.getElementById('compareSlider');
+    const compareViewport = document.getElementById('compareViewport');
+    const filterGrid = document.getElementById('filterGrid');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const newBtn = document.getElementById('newBtn');
+
+    /* ━━━ UPLOAD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    uploadZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        uploadZone.classList.add('dragging');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragging'));
+    uploadZone.addEventListener('drop', e => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragging');
+        if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) handleUpload(fileInput.files[0]);
+    });
+
+    async function handleUpload(file) {
+        uploadZone.classList.add('hidden');
+        heroSection.style.display = 'none';
+        processing.classList.add('active');
+        results.classList.remove('active');
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const res = await fetch('/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.error) { alert('Error: ' + data.error); resetUI(); return; }
+
+            currentId = data.id;
+            currentFilter = 'none';
+
+            imgOriginal.src = data.original_url;
+            imgRestored.src = data.restored_url;
+
+            await Promise.all([
+                new Promise(r => { imgOriginal.onload = r; }),
+                new Promise(r => { imgRestored.onload = r; }),
+            ]);
+
+            processing.classList.remove('active');
+            results.classList.add('active');
+
+            // Reset filters
+            document.querySelectorAll('.filter-card').forEach(c => c.classList.remove('active'));
+            document.querySelector('[data-filter="none"]').classList.add('active');
+            setSlider(50);
+
+        } catch (err) {
+            alert('Upload failed: ' + err.message);
+            resetUI();
+        }
+    }
+
+    /* ━━━ COMPARISON SLIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    let dragging = false;
+
+    function setSlider(pct) {
+        pct = Math.max(0, Math.min(100, pct));
+        compareSlider.style.left = pct + '%';
+        imgOriginal.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+    }
+
+    function getPct(e) {
+        const rect = compareViewport.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        return (x / rect.width) * 100;
+    }
+
+    compareViewport.addEventListener('mousedown', e => { dragging = true; setSlider(getPct(e)); });
+    compareViewport.addEventListener('touchstart', e => { dragging = true; setSlider(getPct(e)); });
+    document.addEventListener('mousemove', e => { if (dragging) setSlider(getPct(e)); });
+    document.addEventListener('touchmove', e => { if (dragging) setSlider(getPct(e)); });
+    document.addEventListener('mouseup', () => dragging = false);
+    document.addEventListener('touchend', () => dragging = false);
+
+    /* ━━━ FILTERS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    filterGrid.addEventListener('click', async e => {
+        const card = e.target.closest('.filter-card');
+        if (!card || !currentId) return;
+
+        const filter = card.dataset.filter;
+        if (filter === currentFilter) return;
+
+        document.querySelectorAll('.filter-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+
+        try {
+            if (filter === 'none') {
+                imgRestored.src = `/static/restored/${currentId}.jpg`;
+            } else {
+                const res = await fetch('/apply-filter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: currentId, filter })
+                });
+                const data = await res.json();
+                if (data.error) { alert(data.error); return; }
+                imgRestored.src = data.filtered_url;
+            }
+            await new Promise(r => { imgRestored.onload = r; });
+            currentFilter = filter;
+        } catch (err) {
+            alert('Filter failed: ' + err.message);
+        }
+    });
+
+    /* ━━━ DOWNLOAD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    downloadBtn.addEventListener('click', () => {
+        if (!currentId) return;
+        const a = document.createElement('a');
+        a.href = `/download/${currentId}?filter=${currentFilter}`;
+        a.download = `dslt_restored_${currentId}.jpg`;
+        a.click();
+    });
+
+    /* ━━━ NEW PHOTO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    newBtn.addEventListener('click', resetUI);
+
+    function resetUI() {
+        currentId = null;
+        currentFilter = 'none';
+        uploadZone.classList.remove('hidden');
+        heroSection.style.display = '';
+        processing.classList.remove('active');
+        results.classList.remove('active');
+        fileInput.value = '';
+    }
+    </script>
+</body>
+</html>

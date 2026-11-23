@@ -1,0 +1,81 @@
+{
+ "kind": "eval",
+ "created": "2026-11-23T20:47:06",
+ "git": {
+  "commit": "2cc4a88fd5ed441b9844341b4b6c4c8b7f6d90a5",
+  "dirty": true,
+  "dirty_files": [
+   "M  .gitignore",
+   "A  experiments/stats_v7.py",
+   "A  experiments/verify_checkpoints_v7.py",
+   "A  results/v7_corrected/seed123/A_history.json",
+   "A  results/v7_corrected/seed123/A_manifest.json",
+   "A  results/v7_corrected/seed123/B_history.json",
+   "A  results/v7_corrected/seed123/B_manifest.json",
+   "AM results/v7_corrected/train.log",
+   "A  results/venv_rebuild.log",
+   "?? results/v7_corrected/checkpoint_integrity.json",
+   "?? results/v7_corrected/per_image/",
+   "?? results/v7_corrected/seed123/C_history.json",
+   "?? results/v7_corrected/seed123/C_manifest.json",
+   "?? results/v7_corrected/seed2026/",
+   "?? results/v7_corrected/stats.log"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "cfg": "B",
+  "seed": 123,
+  "split": "test",
+  "severities": [
+   "mild",
+   "medium",
+   "severe"
+  ],
+  "psnr_cap_db": 50,
+  "ssim": "skimage structural_similarity",
+  "lpips": "alex"
+ },
+ "metrics": {
+  "mild": {
+   "psnr": 26.395338815406973,
+   "ssim": 0.8015411182641983,
+   "lpips": 0.22502285017166287
+  },
+  "medium": {
+   "psnr": 23.86650350303693,
+   "ssim": 0.7448998438119888,
+   "lpips": 0.3392723813597113
+  },
+  "severe": {
+   "psnr": 18.830424536948296,
+   "ssim": 0.5981716359853745,
+   "lpips": 0.5761858553290368
+  }
+ },
+ "checkpoint": {
+  "path": "results/v7_corrected/seed123/B_best.pth",
+  "sha256": "e5045e28759c92eaad46ce296f693c9e23f84942e1731a6847114b68164a5452"
+ },
+ "extra": {}
+}

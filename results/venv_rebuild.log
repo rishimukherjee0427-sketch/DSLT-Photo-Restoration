@@ -1,0 +1,5 @@
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: python3.12 -m pip install --upgrade pip
+exit 0
+venv ok 2.15.0 0.29.2

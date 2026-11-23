@@ -57,3 +57,6 @@ input/
 
 # Backup of the broken legacy Python 3.11 venv (kept for recovery)
 .venv.bak_py311/
+
+# Raw v7 test predictions (regenerable via experiments/stats_v7.py; ~100MB/model)
+results/v7_corrected/predictions/

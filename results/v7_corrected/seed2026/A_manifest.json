@@ -1,0 +1,122 @@
+{
+ "kind": "train",
+ "created": "2026-11-23T20:36:55",
+ "git": {
+  "commit": "2cc4a88fd5ed441b9844341b4b6c4c8b7f6d90a5",
+  "dirty": true,
+  "dirty_files": [
+   "M  .gitignore",
+   "A  experiments/stats_v7.py",
+   "A  experiments/verify_checkpoints_v7.py",
+   "A  results/v7_corrected/seed123/A_history.json",
+   "A  results/v7_corrected/seed123/A_manifest.json",
+   "A  results/v7_corrected/seed123/B_history.json",
+   "A  results/v7_corrected/seed123/B_manifest.json",
+   "AM results/v7_corrected/train.log",
+   "A  results/venv_rebuild.log",
+   "?? results/v7_corrected/seed123/C_history.json",
+   "?? results/v7_corrected/seed123/C_manifest.json",
+   "?? results/v7_corrected/seed2026/"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "cfg": {
+   "name": "dslt_A_ungated",
+   "use_gating": false,
+   "w_gate_sup": 0.0,
+   "w_gate_sparsity": 0.0,
+   "desc": "ungated (use_gating=False)"
+  },
+  "args": {
+   "config": "A",
+   "epochs": 8,
+   "steps_per_epoch": 100,
+   "crop": 128,
+   "batch_size": 4,
+   "lr": 0.0002,
+   "min_lr_ratio": 0.005,
+   "warmup": 50,
+   "weight_decay": 0.0001,
+   "grad_clip": 1.0,
+   "ema_decay": 0.99,
+   "seed": 2026,
+   "val_n": 24,
+   "log_every": 100,
+   "clean_dir": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/train_clean",
+   "file_list": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/splits/train.txt",
+   "resume": false,
+   "smoke": false,
+   "stop_after_epoch": null,
+   "out_dir": "results/v7_corrected/seed2026",
+   "vgg_normalize": 1
+  },
+  "meta": {
+   "config": "A",
+   "name": "dslt_A_ungated",
+   "use_gating": false,
+   "gate_mode": "film",
+   "gate_head": "rich",
+   "w_gate_sup": 0.0,
+   "w_gate_sparsity": 0.0,
+   "crop": 128,
+   "steps_per_epoch": 100,
+   "epochs": 8,
+   "seed": 2026,
+   "uses_ema": true,
+   "ema_decay": 0.99,
+   "vgg_normalize": true
+  },
+  "n_params": 46060826
+ },
+ "metrics": {
+  "best_val_psnr_mean": 22.955000038592885,
+  "best_epoch": 8,
+  "best_val": {
+   "mild": {
+    "psnr": 26.14620479812035,
+    "ssim": 0.7685091681778431
+   },
+   "medium": {
+    "psnr": 23.631438184795048,
+    "ssim": 0.7235298578937849
+   },
+   "severe": {
+    "psnr": 19.08735713286326,
+    "ssim": 0.601623460650444
+   },
+   "psnr_mean": 22.955000038592885,
+   "ssim_mean": 0.6978874955740241,
+   "sev_map_l1": 0.18949615127510494
+  }
+ },
+ "checkpoint": {
+  "path": "results/v7_corrected/seed2026/A_best.pth",
+  "sha256": "3f40f38dadd0acfdd2715614a47fd4cabf866a9041d878a7afed0bd1c908a2e9"
+ },
+ "extra": {
+  "train_minutes": 3.9953160206476848,
+  "peak_mps_driver_bytes": 3035791360,
+  "last_checkpoint": "results/v7_corrected/seed2026/A_last.pth"
+ }
+}

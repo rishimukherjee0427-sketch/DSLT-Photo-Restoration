@@ -1,17 +1,116 @@
 {
-  "unet_baseline": {
-    "psnr_mean": 15.780690377672336,
-    "ssim_mean": 0.6223910450935364,
-    "lpips_mean": 0.5592384216189384
+  "last_updated": "2026-04-23 09:39:46",
+  "training_status": {
+    "phase_1": {
+      "status": "complete",
+      "epochs": "1-100",
+      "crop": "128x128"
+    },
+    "phase_2": {
+      "status": "in_progress",
+      "epochs": "101-250",
+      "crop": "256x256",
+      "current_epoch": 125
+    },
+    "phase_3": {
+      "status": "pending",
+      "epochs": "251-350",
+      "crop": "384x384"
+    },
+    "total_epochs_completed": 125,
+    "total_epochs_planned": 350
   },
-  "dslt_bottleneck_only": {
-    "psnr_mean": 20.166192787228034,
-    "ssim_mean": 0.6720618605613708,
-    "lpips_mean": 0.47010492622852323
+  "best_model": {
+    "psnr": 30.16120147705078,
+    "ssim": 0.8761836886405945,
+    "epoch": 122,
+    "checkpoint": "results/best_model_v5.pth",
+    "version": "v5",
+    "loss_mode": "psnr",
+    "degradation": "mild"
   },
-  "dslt_multiscale": {
-    "psnr_mean": 23.68884496363448,
-    "ssim_mean": 0.719808042049408,
-    "lpips_mean": 0.4286383846402168
+  "ablation_comparison": {
+    "unet_baseline": {
+      "psnr": 15.78,
+      "ssim": 0.622,
+      "lpips": 0.559
+    },
+    "dslt_single_scale": {
+      "psnr": 20.17,
+      "ssim": 0.672,
+      "lpips": 0.47
+    },
+    "dslt_multiscale_v4": {
+      "psnr": 23.69,
+      "ssim": 0.72,
+      "lpips": 0.429
+    },
+    "dslt_v5_gan": {
+      "psnr": 22.962890771719124,
+      "ssim": 0.7213077636865469
+    },
+    "dslt_v5_psnr_mode": {
+      "psnr": 30.16120147705078,
+      "ssim": 0.8761836886405945
+    }
+  },
+  "training_milestones": {
+    "1": {
+      "psnr": 25.09,
+      "ssim": 0.8069
+    },
+    "6": {
+      "psnr": 27.57,
+      "ssim": 0.848
+    },
+    "10": {
+      "psnr": 27.85,
+      "ssim": 0.8459
+    },
+    "12": {
+      "psnr": 28.14,
+      "ssim": 0.8526
+    },
+    "23": {
+      "psnr": 28.38,
+      "ssim": 0.8666
+    },
+    "25": {
+      "psnr": 28.5,
+      "ssim": 0.8658
+    },
+    "100": {
+      "psnr": 29.56,
+      "ssim": 0.8709
+    },
+    "103": {
+      "psnr": 29.59,
+      "ssim": 0.8716
+    },
+    "105": {
+      "psnr": 29.65,
+      "ssim": 0.8659
+    },
+    "108": {
+      "psnr": 29.7,
+      "ssim": 0.8704
+    },
+    "114": {
+      "psnr": 29.88,
+      "ssim": 0.875
+    },
+    "122": {
+      "psnr": 30.16,
+      "ssim": 0.8762
+    },
+    "125": {
+      "psnr": 29.55,
+      "ssim": 0.8698
+    }
+  },
+  "improvement": {
+    "vs_unet_baseline": "+14.38 dB",
+    "vs_v4_multiscale": "+6.47 dB",
+    "vs_v5_gan": "+7.20 dB"
   }
 }

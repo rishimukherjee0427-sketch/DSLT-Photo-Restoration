@@ -72,10 +72,16 @@ def add_jpeg_artifacts(img, quality_range=(5, 30)):
 
 
 def add_scratches(img, num_scratches=None):
+    scratched, _ = add_scratches_with_mask(img, num_scratches)
+    return scratched
+
+
+def add_scratches_with_mask(img, num_scratches=None):
     if num_scratches is None:
         num_scratches = random.randint(3, 12)
     h, w = img.shape[:2]
     result = img.copy()
+    mask = np.zeros((h, w), dtype=np.float32)
     for _ in range(num_scratches):
         x1 = random.randint(0, w - 1)
         y1 = random.randint(0, h - 1)
@@ -84,7 +90,8 @@ def add_scratches(img, num_scratches=None):
         color = random.uniform(0.6, 1.0)
         thickness = random.randint(1, 2)
         cv2.line(result, (x1, y1), (x2, y2), (color, color, color), thickness)
-    return result
+        cv2.line(mask, (x1, y1), (x2, y2), 1.0, thickness)
+    return result, mask
 
 
 def convert_to_grayscale(img):
@@ -135,35 +142,83 @@ def add_broken_pixels(img, ratio=None):
 
 def degrade_image(img):
     """Apply random combination of degradations."""
-    degraded = img.copy()
-
-    degradations = [
-        (add_gaussian_noise, 0.7),
-        (add_salt_pepper_noise, 0.3),
-        (add_gaussian_blur, 0.5),
-        (add_heavy_blur, 0.2),
-        (add_sepia_tint, 0.5),
-        (reduce_contrast, 0.6),
-        (add_jpeg_artifacts, 0.4),
-        (add_scratches, 0.35),
-        (convert_to_grayscale, 0.4),   # Higher B&W probability
-        (add_color_fading, 0.5),
-        (add_vignette, 0.3),
-        (add_broken_pixels, 0.2),
-    ]
-
-    applied = 0
-    for func, prob in degradations:
-        if random.random() < prob:
-            degraded = func(degraded)
-            applied += 1
-
-    if applied < 2:
-        extras = random.sample(degradations, 2 - applied)
-        for func, _ in extras:
-            degraded = func(degraded)
-
+    degraded, _ = degrade_image_with_severity(img)
     return degraded
+
+
+def degrade_image_with_severity(img):
+    """
+    Apply random combination of degradations and return 4-channel ground truth severity map:
+    - Channel 0: Blur severity [0, 1] (broadcast scalar)
+    - Channel 1: Noise severity [0, 1] (broadcast scalar)
+    - Channel 2: Scratch severity mask [0, 1] (2D spatial mask matching scratches)
+    - Channel 3: Fade severity [0, 1] (broadcast scalar)
+    """
+    h, w = img.shape[:2]
+    degraded = img.copy()
+    
+    blur_sev = 0.0
+    noise_sev = 0.0
+    scratch_mask = np.zeros((h, w), dtype=np.float32)
+    fade_sev = 0.0
+
+    # 1. Blur
+    if random.random() < 0.5:
+        k = random.choice([3, 5, 7, 9])
+        degraded = cv2.GaussianBlur(degraded, (k, k), 0)
+        blur_sev = max(blur_sev, float(k / 17.0))
+    elif random.random() < 0.2:
+        k = random.choice([11, 13, 15, 17])
+        degraded = cv2.GaussianBlur(degraded, (k, k), 0)
+        blur_sev = max(blur_sev, float(k / 17.0))
+
+    # 2. Noise
+    if random.random() < 0.7:
+        sigma = random.uniform(10, 40)
+        noise = np.random.normal(0, sigma / 255.0, degraded.shape).astype(np.float32)
+        degraded = np.clip(degraded + noise, 0, 1).astype(np.float32)
+        noise_sev = max(noise_sev, float(sigma / 40.0))
+    if random.random() < 0.3:
+        degraded = add_salt_pepper_noise(degraded)
+        noise_sev = max(noise_sev, 0.4)
+
+    # 3. Fade / Tint / Contrast
+    if random.random() < 0.5:
+        intensity = random.uniform(0.3, 0.8)
+        degraded = add_sepia_tint(degraded, intensity=intensity)
+        fade_sev = max(fade_sev, float(intensity))
+    if random.random() < 0.6:
+        factor = random.uniform(0.3, 0.7)
+        degraded = reduce_contrast(degraded, factor=factor)
+        fade_sev = max(fade_sev, float(1.0 - factor))
+    if random.random() < 0.5:
+        fade = random.uniform(0.3, 0.8)
+        degraded = add_color_fading(degraded, fade=fade)
+        fade_sev = max(fade_sev, float(fade))
+
+    # 4. Scratches
+    if random.random() < 0.35:
+        degraded, s_mask = add_scratches_with_mask(degraded)
+        scratch_mask = np.maximum(scratch_mask, s_mask)
+
+    # Other non-tracked degradations
+    if random.random() < 0.4:
+        degraded = add_jpeg_artifacts(degraded)
+    if random.random() < 0.4:
+        degraded = convert_to_grayscale(degraded)
+    if random.random() < 0.3:
+        degraded = add_vignette(degraded)
+    if random.random() < 0.2:
+        degraded = add_broken_pixels(degraded)
+
+    # Construct severity map (H, W, 4)
+    severity_map = np.zeros((h, w, 4), dtype=np.float32)
+    severity_map[:, :, 0] = np.clip(blur_sev, 0, 1)
+    severity_map[:, :, 1] = np.clip(noise_sev, 0, 1)
+    severity_map[:, :, 2] = np.clip(scratch_mask, 0, 1)
+    severity_map[:, :, 3] = np.clip(fade_sev, 0, 1)
+
+    return degraded, severity_map
 
 
 def augment_image(img):

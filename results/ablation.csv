@@ -1,0 +1,6 @@
+variant,label,psnr_mean,ssim_mean,lpips_mean
+unet_baseline,"U-Net Baseline",15.78,0.622,0.559
+dslt_single,"Single-Scale DSLT",20.17,0.672,0.470
+dslt_multiscale_v4,"Multi-Scale DSLT v4",23.69,0.72,0.429
+dslt_v5_gan,"v5 + GAN",22.96,0.7213,
+dslt_v5_psnr,"v5 PSNR-Mode",30.16,0.8762,

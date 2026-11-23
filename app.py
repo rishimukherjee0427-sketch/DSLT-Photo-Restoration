@@ -39,8 +39,8 @@ encoder = None
 decoder = None
 dslt = None
 
-# Try v5 first, fall back to v4
-MODEL_PATHS = ["results/best_model_v5.pth", "results/best_model.pth"]
+# Prefer PSNR-optimized model (30.16 dB) over GAN-sharpened (22.96 dB)
+MODEL_PATHS = ["results/best_model_v5.pth", "results/best_model_v5_gan.pth", "results/best_model.pth"]
 
 
 def load_dslt_model():
@@ -180,4 +180,6 @@ def download(file_id):
 
 if __name__ == "__main__":
     load_dslt_model()
-    app.run(debug=False, host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 8888))
+    print(f"\n🚀 Open http://127.0.0.1:{port} in your browser\n")
+    app.run(debug=False, host="127.0.0.1", port=port)

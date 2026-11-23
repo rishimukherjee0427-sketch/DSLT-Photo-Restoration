@@ -124,7 +124,7 @@ def save_visualization(degraded, output, clean, epoch, save_dir="results/visuali
 # ─── Training Phase ──────────────────────────────────────
 
 def run_phase(phase_name, encoder, decoder, dslt, criterion, device,
-              train_loader, val_loader, epochs, lr, ema, all_params,
+              train_loader, val_loader, epochs, lr, ema, model_wrap, all_params,
               history, best_state, grad_accum_steps=4):
     """Run a single training phase."""
 
@@ -159,7 +159,7 @@ def run_phase(phase_name, encoder, decoder, dslt, criterion, device,
             correction = decoder(bn_t, skips_t)
             output = torch.clamp(degraded + correction, 0, 1)
 
-            total_loss, _, _, _ = criterion(output, clean)
+            total_loss, _, _, _, _ = criterion(output, clean)
             loss = total_loss / grad_accum_steps
             loss.backward()
 
@@ -178,9 +178,7 @@ def run_phase(phase_name, encoder, decoder, dslt, criterion, device,
             torch.mps.synchronize()
 
         avg_train = (train_loss_acc / n_batches).item()
-        ema.update(encoder)
-        ema.update(decoder)
-        ema.update(dslt)
+        ema.update(model_wrap)
 
         # ── Validate ──
         encoder.eval(); decoder.eval(); dslt.eval()
@@ -200,7 +198,7 @@ def run_phase(phase_name, encoder, decoder, dslt, criterion, device,
                 correction = decoder(bn_t, skips_t)
                 output = torch.clamp(degraded + correction, 0, 1)
 
-                total_loss, _, _, _ = criterion(output, clean)
+                total_loss, _, _, _, _ = criterion(output, clean)
                 val_loss_acc += total_loss.detach()
                 val_psnr_acc += compute_psnr_batch(output, clean).detach()
                 val_ssim_acc += compute_ssim_batch(output, clean).detach()
@@ -268,8 +266,9 @@ def train():
     total_params = sum(p.numel() for m in [encoder, decoder, dslt] for p in m.parameters())
     print(f"Model params: {total_params:,}")
 
-    # ─── Loss ─────────────────────────────────────────────
-    criterion = CombinedLoss(device)
+    # ─── Loss (PSNR-maximizing mode) ──────────────────────
+    criterion = CombinedLoss(device, mode='psnr')
+    print(f"Loss mode: PSNR (w_percep={criterion.w_perceptual}, w_ssim={criterion.w_ssim})")
     all_params = list(encoder.parameters()) + list(decoder.parameters()) + list(dslt.parameters())
 
     # ─── EMA ──────────────────────────────────────────────
@@ -311,7 +310,7 @@ def train():
     print("▓  PHASE 1: 128×128 — Coarse Structure Learning")
     print("▓"*70)
 
-    dataset_p1 = OnlineDegradationDataset(clean_dir, crop_size=128, augment=True)
+    dataset_p1 = OnlineDegradationDataset(clean_dir, crop_size=128, augment=True, severity='mild')
     train_size = int(0.9 * len(dataset_p1))
     val_size = len(dataset_p1) - train_size
     train_set, val_set = random_split(dataset_p1, [train_size, val_size],
@@ -324,9 +323,9 @@ def train():
 
     history, best_state = run_phase(
         "128×128 Coarse", encoder, decoder, dslt, criterion, device,
-        train_loader, val_loader, epochs=80, lr=2e-4, ema=ema,
-        all_params=all_params, history=history, best_state=best_state,
-        grad_accum_steps=2
+        train_loader, val_loader, epochs=100, lr=3e-4, ema=ema,
+        model_wrap=model_wrap, all_params=all_params, history=history,
+        best_state=best_state, grad_accum_steps=2
     )
 
     # ==========================================================
@@ -336,7 +335,7 @@ def train():
     print("▓  PHASE 2: 256×256 — Detail Refinement")
     print("▓"*70)
 
-    dataset_p2 = OnlineDegradationDataset(clean_dir, crop_size=256, augment=True)
+    dataset_p2 = OnlineDegradationDataset(clean_dir, crop_size=256, augment=True, severity='mild')
     train_set2, val_set2 = random_split(dataset_p2, [train_size, val_size],
                                          generator=torch.Generator().manual_seed(42))
 
@@ -347,9 +346,9 @@ def train():
 
     history, best_state = run_phase(
         "256×256 Detail", encoder, decoder, dslt, criterion, device,
-        train_loader2, val_loader2, epochs=120, lr=1e-4, ema=ema,
-        all_params=all_params, history=history, best_state=best_state,
-        grad_accum_steps=4
+        train_loader2, val_loader2, epochs=150, lr=1.5e-4, ema=ema,
+        model_wrap=model_wrap, all_params=all_params, history=history,
+        best_state=best_state, grad_accum_steps=4
     )
 
     # ==========================================================
@@ -359,7 +358,7 @@ def train():
     print("▓  PHASE 3: 384×384 — Fine Texture Sharpening")
     print("▓"*70)
 
-    dataset_p3 = OnlineDegradationDataset(clean_dir, crop_size=384, augment=True)
+    dataset_p3 = OnlineDegradationDataset(clean_dir, crop_size=384, augment=True, severity='mild')
     train_set3, val_set3 = random_split(dataset_p3, [train_size, val_size],
                                          generator=torch.Generator().manual_seed(42))
 
@@ -370,9 +369,9 @@ def train():
 
     history, best_state = run_phase(
         "384×384 Sharpen", encoder, decoder, dslt, criterion, device,
-        train_loader3, val_loader3, epochs=80, lr=5e-5, ema=ema,
-        all_params=all_params, history=history, best_state=best_state,
-        grad_accum_steps=8
+        train_loader3, val_loader3, epochs=100, lr=5e-5, ema=ema,
+        model_wrap=model_wrap, all_params=all_params, history=history,
+        best_state=best_state, grad_accum_steps=8
     )
 
     # ─── Save History + Plots ─────────────────────────────
@@ -415,8 +414,8 @@ def train():
         axes[1, 1].set_xlabel("Step")
 
         # Phase boundaries
-        phase1_end = 80
-        phase2_end = 80 + 120
+        phase1_end = 100
+        phase2_end = 100 + 150
         for ax in [axes[0, 0], axes[0, 1], axes[1, 0]]:
             ax.axvline(x=phase1_end, color='gray', linestyle=':', alpha=0.5)
             ax.axvline(x=phase2_end, color='gray', linestyle=':', alpha=0.5)

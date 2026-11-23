@@ -1,0 +1,28 @@
+{
+  "dslt_v5_psnr_mode": {
+    "psnr_mean": 30.16120147705078,
+    "ssim_mean": 0.8761836886405945,
+    "epoch": 122,
+    "loss_mode": "psnr",
+    "degradation_severity": "mild"
+  },
+  "dslt_v5_gan": {
+    "psnr_mean": 22.962890771719124,
+    "ssim_mean": 0.7213077636865469,
+    "loss_mode": "gan"
+  },
+  "dslt_multiscale_v4": {
+    "psnr_mean": 23.69,
+    "ssim_mean": 0.72
+  },
+  "unet_baseline": {
+    "psnr_mean": 15.78,
+    "ssim_mean": 0.622,
+    "lpips_mean": 0.559
+  },
+  "dslt_single_scale": {
+    "psnr_mean": 20.17,
+    "ssim_mean": 0.672,
+    "lpips_mean": 0.47
+  }
+}

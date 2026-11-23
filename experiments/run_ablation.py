@@ -271,6 +271,8 @@ def main():
     ap.add_argument("--stop_after_epoch", type=int, default=None,
                     help="(testing) exit after this epoch without finishing, to test --resume")
     ap.add_argument("--out_dir", default=None)
+    ap.add_argument("--vgg_normalize", type=int, default=1, choices=[0, 1],
+                    help="1 = ImageNet-normalised VGG perceptual loss (corrected, v7); 0 = legacy un-normalised")
     args = ap.parse_args()
 
     if args.smoke:
@@ -305,7 +307,8 @@ def main():
     opt = torch.optim.AdamW(params, lr=args.lr, betas=(0.9, 0.99), weight_decay=args.weight_decay)
     sched = torch.optim.lr_scheduler.LambdaLR(opt, make_lr_lambda(total, args.warmup, args.min_lr_ratio))
     crit = CombinedLoss(device, mode="psnr", w_gate_sup=cfg["w_gate_sup"],
-                        w_gate_sparsity=cfg["w_gate_sparsity"], w_gate_bimodal=0.0)
+                        w_gate_sparsity=cfg["w_gate_sparsity"], w_gate_bimodal=0.0,
+                        vgg_normalize=bool(args.vgg_normalize))
 
     step, epoch0, best_psnr, history = 0, 0, -1.0, []
     if args.resume and os.path.exists(last_path):
@@ -336,7 +339,9 @@ def main():
     meta = dict(config=tag, name=cfg["name"], use_gating=cfg["use_gating"], gate_mode="film",
                 gate_head="rich", w_gate_sup=cfg["w_gate_sup"], w_gate_sparsity=cfg["w_gate_sparsity"],
                 crop=args.crop, steps_per_epoch=args.steps_per_epoch, epochs=args.epochs,
-                seed=args.seed, uses_ema=True, ema_decay=args.ema_decay)
+                seed=args.seed, uses_ema=True, ema_decay=args.ema_decay,
+                vgg_normalize=bool(args.vgg_normalize))
+    peak_mem = 0
 
     t_start = time.time()
     t_resume_epochs = 0
@@ -392,6 +397,7 @@ def main():
         t_train = time.time() - t_ep
         if device.type == "mps":
             torch.mps.synchronize()
+            peak_mem = max(peak_mem, torch.mps.driver_allocated_memory())
         empty_cache(device)
 
         # ---- validation (EMA weights) ----
@@ -442,6 +448,16 @@ def main():
     else:
         print(f"[{tag}] done: best val PSNR(mean of 3 severities) {best_psnr:.3f} | "
               f"{(time.time()-t_start)/60:.1f} min -> {best_path}", flush=True)
+        from utils.manifest import write_manifest
+        best_ep = max(history, key=lambda r: r["val"]["psnr_mean"]) if history else None
+        write_manifest(os.path.join(out_dir, f"{tag}_manifest.json"), kind="train",
+                       config=dict(cfg=cfg, args=vars(args), meta=meta, n_params=n_params),
+                       metrics=dict(best_val_psnr_mean=best_psnr,
+                                    best_epoch=best_ep["epoch"] if best_ep else None,
+                                    best_val=best_ep["val"] if best_ep else None),
+                       checkpoint=best_path,
+                       extra=dict(train_minutes=(time.time() - t_start) / 60,
+                                  peak_mps_driver_bytes=peak_mem, last_checkpoint=last_path))
 
 
 if __name__ == "__main__":

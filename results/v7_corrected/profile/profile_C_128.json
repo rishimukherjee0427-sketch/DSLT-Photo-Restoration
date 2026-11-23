@@ -1,0 +1,45 @@
+{
+ "args": {
+  "config": "C",
+  "crop": 128,
+  "batch_size": 4,
+  "steps": 50,
+  "warmup_steps": 10,
+  "modes": [
+   "fp32",
+   "fp16"
+  ],
+  "seed": 42
+ },
+ "results": {
+  "fp32": {
+   "mode": "fp32",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 2.969223976135254,
+   "steady_s_per_step": 0.24755744338035585,
+   "steady_it_per_s": 4.039466502582859,
+   "peak_mps_driver_gb": 2.809479168,
+   "base_mps_driver_gb": 0.235372544,
+   "loss_first": 0.5494183897972107,
+   "loss_last": 0.371870219707489,
+   "loss_mean_last10": 0.44593979716300963
+  },
+  "fp16": {
+   "mode": "fp16",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 4.633910417556763,
+   "steady_s_per_step": 0.24745671153068544,
+   "steady_it_per_s": 4.04111084243515,
+   "peak_mps_driver_gb": 2.830450688,
+   "base_mps_driver_gb": 2.71130624,
+   "loss_first": 0.550322949886322,
+   "loss_last": 0.3744930922985077,
+   "loss_mean_last10": 0.4731505274772644,
+   "grad_cosine_vs_fp32_step0": 1.0009945631027222,
+   "grad_relnorm_diff_vs_fp32_step0": 0.05962979421019554,
+   "speedup_vs_fp32": 1.0004070685698816
+  }
+ }
+}

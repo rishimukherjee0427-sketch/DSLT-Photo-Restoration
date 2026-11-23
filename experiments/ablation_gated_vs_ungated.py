@@ -1,4 +1,10 @@
 """
+DEPRECATED (legacy v5 pipeline): trains/evaluates on ALL of data/train_clean, i.e. no held-out
+split (train/test leakage). Do not use for reported results. Use instead:
+  training   : experiments/run_ablation.py, experiments/train_baseline.py (data/splits/train.txt)
+  evaluation : experiments/eval_all.py (held-out data/splits/test.txt, cached degradations)
+"""
+"""
 experiments/ablation_gated_vs_ungated.py
 Ablation experiment comparing:
   - Config A: Ungated Baseline (fixed scale gates = 1.0)
@@ -25,6 +31,7 @@ import json
 import time
 import math
 import numpy as np
+import cv2
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader

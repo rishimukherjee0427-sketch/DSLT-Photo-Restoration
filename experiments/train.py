@@ -1,4 +1,10 @@
 """
+DEPRECATED (legacy v5 pipeline): trains/evaluates on ALL of data/train_clean, i.e. no held-out
+split (train/test leakage). Do not use for reported results. Use instead:
+  training   : experiments/run_ablation.py, experiments/train_baseline.py (data/splits/train.txt)
+  evaluation : experiments/eval_all.py (held-out data/splits/test.txt, cached degradations)
+"""
+"""
 DSLT v5 Training — Progressive Multi-Phase Training
 Phase 1: 128×128 patches, learn coarse structure
 Phase 2: 256×256 patches, refine details
@@ -11,7 +17,8 @@ import os
 
 # ─── Environment Setup (MUST be before torch import) ─────
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
-os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
+os.environ.setdefault("PYTORCH_MPS_HIGH_WATERMARK_RATIO", "0.5")
+os.environ.setdefault("PYTORCH_MPS_LOW_WATERMARK_RATIO", "0.4")
 os.environ["TORCH_HOME"] = os.path.join(os.path.dirname(__file__), "..", ".torch_cache")
 os.environ["MPLCONFIGDIR"] = "/tmp/mpl_cache"
 

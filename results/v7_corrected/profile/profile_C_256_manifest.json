@@ -1,0 +1,107 @@
+{
+ "kind": "profile",
+ "created": "2026-11-23T20:16:18",
+ "git": {
+  "commit": "837c662734fe28ce710e6cf8bd3def3642e74366",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   " M app.py",
+   " M experiments/ablation_gated_vs_ungated.py",
+   " M experiments/evaluate.py",
+   " M experiments/run_ablation.py",
+   " M experiments/train.py",
+   " M experiments/train_gan.py",
+   " M models/losses.py",
+   " M run_server.sh",
+   "?? experiments/profile_mps.py",
+   "?? results/legacy_venv_py311_packages.txt",
+   "?? results/v7_corrected/",
+   "?? results/venv_rebuild.log",
+   "?? utils/manifest.py"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "config": "C",
+  "crop": 256,
+  "batch_size": 4,
+  "steps": 50,
+  "warmup_steps": 10,
+  "modes": [
+   "fp32",
+   "fp16",
+   "bf16"
+  ],
+  "seed": 42
+ },
+ "metrics": {
+  "fp32": {
+   "mode": "fp32",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 9.285011768341064,
+   "steady_s_per_step": 0.8413290321826935,
+   "steady_it_per_s": 1.1885956168725809,
+   "peak_mps_driver_gb": 7.101431808,
+   "base_mps_driver_gb": 0.235372544,
+   "loss_first": 0.5468374490737915,
+   "loss_last": 0.48051977157592773,
+   "loss_mean_last10": 0.4274937480688095
+  },
+  "fp16": {
+   "mode": "fp16",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 17.83968448638916,
+   "steady_s_per_step": 0.8316436171531677,
+   "steady_it_per_s": 1.2024381350068432,
+   "peak_mps_driver_gb": 6.067535872,
+   "base_mps_driver_gb": 4.862984192,
+   "loss_first": 0.5472835898399353,
+   "loss_last": 0.5035225749015808,
+   "loss_mean_last10": 0.44101124107837675,
+   "grad_cosine_vs_fp32_step0": 0.9741355180740356,
+   "grad_relnorm_diff_vs_fp32_step0": 0.24882227182388306,
+   "speedup_vs_fp32": 1.0116461123848703
+  },
+  "bf16": {
+   "mode": "bf16",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 18.165552139282227,
+   "steady_s_per_step": 0.8433793663978577,
+   "steady_it_per_s": 1.185706029625887,
+   "peak_mps_driver_gb": 7.15595776,
+   "base_mps_driver_gb": 5.984960512,
+   "loss_first": 0.5586993098258972,
+   "loss_last": 0.6784222722053528,
+   "loss_mean_last10": 0.6573808491230011,
+   "grad_cosine_vs_fp32_step0": 0.16849233210086823,
+   "grad_relnorm_diff_vs_fp32_step0": 4.74738883972168,
+   "speedup_vs_fp32": 0.9975689063583315
+  }
+ },
+ "checkpoint": null,
+ "extra": {}
+}

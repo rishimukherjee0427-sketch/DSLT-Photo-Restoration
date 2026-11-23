@@ -54,3 +54,6 @@ static/uploads/
 static/restored/
 static/filtered/
 input/
+
+# Backup of the broken legacy Python 3.11 venv (kept for recovery)
+.venv.bak_py311/

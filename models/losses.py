@@ -108,8 +108,13 @@ class MultiScalePerceptualLoss(nn.Module):
     Extracts features from conv1_2, conv2_2, conv3_3, conv4_3 for multi-scale matching.
     Much more effective than single-layer perceptual loss.
     """
-    def __init__(self, device):
+    def __init__(self, device, normalize=True):
         super().__init__()
+        # torchvision VGG16 weights expect ImageNet-normalised input. Inputs here are in [0, 1].
+        # normalize=False reproduces the legacy (pre-v7, un-normalised) behaviour exactly.
+        self.normalize = normalize
+        self.register_buffer("mean", torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1).to(device))
+        self.register_buffer("std", torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1).to(device))
         vgg = tv_models.vgg16(weights=tv_models.VGG16_Weights.DEFAULT)
         features = list(vgg.features)
 
@@ -130,8 +135,12 @@ class MultiScalePerceptualLoss(nn.Module):
 
     def forward(self, output, target):
         loss = 0.0
-        x_out = output
-        x_tgt = target
+        if self.normalize:
+            x_out = (output - self.mean) / self.std
+            x_tgt = (target - self.mean) / self.std
+        else:
+            x_out = output
+            x_tgt = target
 
         for i, (slice_module, w) in enumerate(zip(
             [self.slice1, self.slice2, self.slice3, self.slice4],
@@ -245,10 +254,12 @@ class CombinedLoss(nn.Module):
     """
     def __init__(self, device, use_discriminator=False, discriminator=None, mode='psnr',
                  w_gate_sup=0.0, w_gate_sparsity=0.0, w_gate_bimodal=0.0,
-                 gate_target_a=0.2, gate_target_b=0.8, gate_sup_type='l1'):
+                 gate_target_a=0.2, gate_target_b=0.8, gate_sup_type='l1', vgg_normalize=True):
         super().__init__()
         self.charbonnier = CharbonnierLoss(epsilon=1e-3)
-        self.perceptual = MultiScalePerceptualLoss(device)
+        # vgg_normalize=True: corrected ImageNet normalisation (v7). False = legacy behaviour.
+        self.vgg_normalize = vgg_normalize
+        self.perceptual = MultiScalePerceptualLoss(device, normalize=vgg_normalize)
         self.ssim_loss = SSIMLoss(device=device)
         self.lab_loss = LABColorLoss().to(device)
         self.fft_loss = FFTFrequencyLoss().to(device)

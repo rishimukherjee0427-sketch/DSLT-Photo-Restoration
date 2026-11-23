@@ -7,7 +7,8 @@ import sys
 import uuid
 
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
-os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
+os.environ.setdefault("PYTORCH_MPS_HIGH_WATERMARK_RATIO", "0.5")
+os.environ.setdefault("PYTORCH_MPS_LOW_WATERMARK_RATIO", "0.4")
 os.environ["TORCH_HOME"] = os.path.join(os.path.dirname(__file__), ".torch_cache")
 
 import ssl

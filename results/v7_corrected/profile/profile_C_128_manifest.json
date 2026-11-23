@@ -1,0 +1,90 @@
+{
+ "kind": "profile",
+ "created": "2026-11-23T20:16:49",
+ "git": {
+  "commit": "837c662734fe28ce710e6cf8bd3def3642e74366",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   " M app.py",
+   " M experiments/ablation_gated_vs_ungated.py",
+   " M experiments/evaluate.py",
+   " M experiments/run_ablation.py",
+   " M experiments/train.py",
+   " M experiments/train_gan.py",
+   " M models/losses.py",
+   " M run_server.sh",
+   "?? experiments/profile_mps.py",
+   "?? results/legacy_venv_py311_packages.txt",
+   "?? results/v7_corrected/",
+   "?? results/venv_rebuild.log",
+   "?? utils/manifest.py"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "config": "C",
+  "crop": 128,
+  "batch_size": 4,
+  "steps": 50,
+  "warmup_steps": 10,
+  "modes": [
+   "fp32",
+   "fp16"
+  ],
+  "seed": 42
+ },
+ "metrics": {
+  "fp32": {
+   "mode": "fp32",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 2.969223976135254,
+   "steady_s_per_step": 0.24755744338035585,
+   "steady_it_per_s": 4.039466502582859,
+   "peak_mps_driver_gb": 2.809479168,
+   "base_mps_driver_gb": 0.235372544,
+   "loss_first": 0.5494183897972107,
+   "loss_last": 0.371870219707489,
+   "loss_mean_last10": 0.44593979716300963
+  },
+  "fp16": {
+   "mode": "fp16",
+   "steps_completed": 50,
+   "nonfinite_losses": 0,
+   "warmup_s": 4.633910417556763,
+   "steady_s_per_step": 0.24745671153068544,
+   "steady_it_per_s": 4.04111084243515,
+   "peak_mps_driver_gb": 2.830450688,
+   "base_mps_driver_gb": 2.71130624,
+   "loss_first": 0.550322949886322,
+   "loss_last": 0.3744930922985077,
+   "loss_mean_last10": 0.4731505274772644,
+   "grad_cosine_vs_fp32_step0": 1.0009945631027222,
+   "grad_relnorm_diff_vs_fp32_step0": 0.05962979421019554,
+   "speedup_vs_fp32": 1.0004070685698816
+  }
+ },
+ "checkpoint": null,
+ "extra": {}
+}

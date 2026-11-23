@@ -26,21 +26,28 @@ Advanced vintage photo restoration using a deep residual U-Net with RRDB blocks,
 |---|---|---|
 | **Gating** | Uniform translation across all scales | Damage-conditioned adaptive gating per scale |
 | **Damage Estimator** | ❌ | ✅ Lightweight CNN predicting 4-channel severity map |
-| **Scale Gates** | Fixed (implicitly 1.0) | Learned per-image (e2, e3, e4, bottleneck) via sigmoid |
-| **Translation** | `T(e)` | `g·T(e) + (1-g)·e` (soft gating) |
+| **Scale Gates** | Fixed (implicitly 1.0) | Per-scale base gates (e2, e3, e4, bottleneck) from a "rich" gate head, refined per channel and per pixel (FiLM-style; see Architecture) |
+| **Translation** | `T(e)` | `e + G ⊙ (T(e) − e)`, with `G` a per-channel × per-pixel gate tensor |
 | **Severity Map** | ❌ | ✅ GT: [blur, noise, scratch, fade] per pixel |
-| **Aux Loss** | ❌ | ✅ L1 severity map loss (λ=0.15) |
-| **Ablation** | ❌ | ✅ Gated vs. ungated comparison script |
-| **Parameters** | ~30M | ~31.2M (+1.2M DamageEstimator) |
+| **Aux Loss** | ❌ | ✅ L1 severity map loss (λ=0.15), plus optional gate supervision / sparsity / bimodality losses |
+| **Ablation** | ❌ | ✅ Gated vs. ungated comparison (`experiments/run_ablation.py`) |
+| **Parameters** | ~30M | 46.06M total (see breakdown below) |
+
+> The original v6 scalar soft gate `g·T(e) + (1−g)·e` was found to be non-functional (see *Why the original gating did nothing*). It survives only as `MultiScaleDSLT(gate_mode='scalar')` for reproducing the legacy behaviour.
 
 ## Architecture
 
-- **Encoder**: 4-level (3→64→128→256→512) with strided conv + CBAM attention
-- **Bottleneck**: 4× RRDB (Residual-in-Residual Dense Blocks) + CBAM
-- **Damage Estimator**: Lightweight encoder-decoder CNN predicting (B,4,H,W) severity map + (B,4) scale gates
-- **Multi-Scale DSLT**: Latent translation at e2 + e3 + e4 + bottleneck with **adaptive gating**: `gate × translated + (1-gate) × original`
-- **Decoder**: PixelShuffle upsampling + skip connections + learnable residual scaling
-- **Loss**: Charbonnier + 0.05×MultiPerceptual + 0.15×SSIM + 0.05×LAB + 0.10×FFT + 0.05×Edge + 0.15×DamageSeverityL1
+- **Encoder** (8.95M): 4-level with strided conv + CBAM attention, RRDB bottleneck
+- **Damage Estimator** (1.56M, `models/damage_estimator.py`): lightweight encoder-decoder CNN predicting a (B,4,H,W) severity map [blur, noise, scratch, fade]. Its default `gate_head='rich'` predicts (B,4) base gates from avg+max-pooled e3 and e4 features plus avg+max of the detached predicted severity map, with the final bias initialised to 1.0 (gates start ≈ 0.73).
+- **Multi-Scale DSLT** (21.98M, `models/latent_translator.py`, default `gate_mode='film'`): dilated residual translators `T` at e2, e3, e4 and the bottleneck. Per scale, the output is `e + G ⊙ (T(e) − e)`, where `G = σ(logit(g_scale) + Δ_channel + Δ_spatial)`:
+  - `g_scale` is the base gate from the damage estimator.
+  - `Δ_channel` is a squeeze-excitation-style per-channel offset computed from the pooled features and all 4 gates.
+  - `Δ_spatial` is a per-pixel offset computed from the predicted severity map, resized to that scale.
+  - Both offsets are zero-initialised (0.09M parameters in `gate_mods`), so at init `G` equals the scalar gate. The e1 skip is not gated. `use_gating=False` gives the ungated baseline (`G ≡ 1`).
+- **Decoder** (13.57M): PixelShuffle upsampling + skip connections. The output is `clamp(x + correction, 0, 1)`.
+- **Parameters:** total 46.06M (encoder + decoder + DSLT = 44.41M without the damage estimator and gate modulators).
+- **Loss** (`CombinedLoss(mode='psnr')`): Charbonnier + 0.01×VGG16 multi-scale perceptual + 0.25×(1−SSIM) + 0.02×LAB + 0.05×FFT + 0.03×Edge + 0.15×damage-severity L1, plus optional `w_gate_sup·L_sup + w_gate_sparsity·L_sparse + w_gate_bimodal·L_bimodal`.
+  - Since v7 (`vgg_normalize=True`, the default), VGG inputs are ImageNet mean/std-normalised. Models trained before this fix (`results/ablation/`, `results/baselines/`, all v5 checkpoints) used un-normalised VGG inputs.
 
 ## Features
 

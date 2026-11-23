@@ -1,0 +1,152 @@
+{
+  "identity": {
+    "val": {
+      "mild": {
+        "n": 250,
+        "time_s": 13.1,
+        "n_pristine": 8,
+        "psnr": 25.709216264154477,
+        "psnr_std": 6.6600100616028195,
+        "ssim": 0.7835049439668655,
+        "ssim_std": 0.14209147356455662,
+        "lpips": 0.24767331590969116,
+        "lpips_std": 0.18279758092915013,
+        "psnr_median": 24.7646579246972
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 5.84,
+        "n_pristine": 6,
+        "psnr": 22.129107083629105,
+        "psnr_std": 6.441692844142231,
+        "ssim": 0.7058122168779373,
+        "ssim_std": 0.15121522500362367,
+        "lpips": 0.38352504912018776,
+        "lpips_std": 0.18258386628568118,
+        "psnr_median": 20.90470366469487
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 3.42,
+        "n_pristine": 0,
+        "psnr": 15.349560470095604,
+        "psnr_std": 3.611589061791724,
+        "ssim": 0.5066548474431037,
+        "ssim_std": 0.1323357293839469,
+        "lpips": 0.6808586158752441,
+        "lpips_std": 0.14165836344167015,
+        "psnr_median": 14.762221555605912
+      }
+    },
+    "_meta": {
+      "params": 0,
+      "contaminated": false,
+      "note": "no restoration (input = output)",
+      "device": "mps",
+      "load_s": 0.0,
+      "n_images": 250,
+      "updated": "2026-11-23T15:20:10",
+      "lpips_net": "alex"
+    }
+  },
+  "bicubic": {
+    "val": {
+      "mild": {
+        "n": 250,
+        "time_s": 3.86,
+        "n_pristine": 8,
+        "psnr": 24.947946176635853,
+        "psnr_std": 4.760794709278897,
+        "ssim": 0.782805389046669,
+        "ssim_std": 0.10672030772535669,
+        "lpips": 0.2803814714550972,
+        "lpips_std": 0.12516221723514478,
+        "psnr_median": 25.04322585707951
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 3.35,
+        "n_pristine": 6,
+        "psnr": 21.87395017067391,
+        "psnr_std": 5.020823823306698,
+        "ssim": 0.7153034621477127,
+        "ssim_std": 0.12148729615564458,
+        "lpips": 0.4003005810379982,
+        "lpips_std": 0.14813422078633276,
+        "psnr_median": 20.933717746970327
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 4.01,
+        "n_pristine": 0,
+        "psnr": 15.42824255854942,
+        "psnr_std": 3.6485633489833447,
+        "ssim": 0.5135471069216728,
+        "ssim_std": 0.12877423773396646,
+        "lpips": 0.6746872045993805,
+        "lpips_std": 0.1300547156158857,
+        "psnr_median": 14.796785352735766
+      }
+    },
+    "_meta": {
+      "params": 0,
+      "contaminated": false,
+      "note": "bicubic down/up x2 (interpolation only)",
+      "device": "mps",
+      "load_s": 0.0,
+      "n_images": 250,
+      "updated": "2026-11-23T15:20:21",
+      "lpips_net": "alex"
+    }
+  },
+  "dslt_v5": {
+    "val": {
+      "mild": {
+        "n": 250,
+        "time_s": 35.07,
+        "n_pristine": 8,
+        "psnr": 29.97972474326337,
+        "psnr_std": 4.105869907052774,
+        "ssim": 0.8803308007717132,
+        "ssim_std": 0.07033000098370416,
+        "lpips": 0.13253627457655967,
+        "lpips_std": 0.09358747924311842,
+        "psnr_median": 30.07268854672604
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 34.99,
+        "n_pristine": 6,
+        "psnr": 26.894537103872768,
+        "psnr_std": 4.474111463983861,
+        "ssim": 0.8148160530328751,
+        "ssim_std": 0.09317418244601004,
+        "lpips": 0.2308281987309456,
+        "lpips_std": 0.12441021930362443,
+        "psnr_median": 26.730523153518277
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 26.54,
+        "n_pristine": 0,
+        "psnr": 18.6138932092572,
+        "psnr_std": 4.168303267963547,
+        "ssim": 0.5919834337234497,
+        "ssim_std": 0.1217555596864212,
+        "lpips": 0.5158005406260491,
+        "lpips_std": 0.1282206560394517,
+        "psnr_median": 18.865779215833804
+      }
+    },
+    "_meta": {
+      "params": 44496338,
+      "contaminated": true,
+      "note": "results/best_model_v5.pth: trained on ALL of data/train_clean (incl. val/test) -> NOT a held-out result",
+      "device": "mps",
+      "load_s": 0.5,
+      "n_images": 250,
+      "updated": "2026-11-23T15:21:59",
+      "lpips_net": "alex"
+    }
+  }
+}

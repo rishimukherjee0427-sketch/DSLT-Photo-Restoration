@@ -1,0 +1,37 @@
+{
+  "n_images": 5000,
+  "exact_md5_dup_groups": 368,
+  "phash_pairs_le_8": 3801,
+  "dhash_pairs_le_8": 6823,
+  "linked_pairs_phash_and_dhash": 3249,
+  "seed": 42,
+  "phash_threshold": 8,
+  "dhash_threshold": 8,
+  "n_clusters": 3596,
+  "n_clusters_size_gt1": 621,
+  "images_in_clusters_size_gt1": 2025,
+  "largest_cluster": 15,
+  "cluster_size_hist": {
+    "1": 2975,
+    "2": 291,
+    "3": 155,
+    "4": 56,
+    "5": 47,
+    "6": 36,
+    "7": 15,
+    "8": 11,
+    "9": 1,
+    "10": 5,
+    "11": 1,
+    "12": 1,
+    "13": 1,
+    "15": 1
+  },
+  "sizes": {
+    "train": 4279,
+    "val": 250,
+    "test": 250,
+    "excluded": 221
+  },
+  "note": "v5 checkpoints in results/ were trained on ALL train_clean -> contaminated for val/test."
+}

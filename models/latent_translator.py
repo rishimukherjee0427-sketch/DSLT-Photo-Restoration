@@ -131,14 +131,22 @@ class MultiScaleDSLT(nn.Module):
     After a gated forward with `record_gates=True`, `self.last_gate_info` holds
       'eff_gates': (B,4) mean effective gate per scale, 'rel_delta': (B,4) ||raw-orig||/||orig||.
     """
-    def __init__(self, gate_mode='film'):
+    ALL_TRANSLATORS = ('e2', 'e3', 'e4', 'bn')
+
+    def __init__(self, gate_mode='film', translators=ALL_TRANSLATORS):
+        """translators: subset of ('e2','e3','e4','bn') that get a ScaleTranslator. Omitted scales use
+        nn.Identity (no parameters, no computation). gate_mode='none' builds no gating modules
+        (ungated-only model; use_gating must be False). Defaults reproduce the original model exactly."""
         super().__init__()
-        assert gate_mode in ('scalar', 'film')
+        assert gate_mode in ('scalar', 'film', 'none')
+        assert set(translators) <= set(self.ALL_TRANSLATORS), translators
         self.gate_mode = gate_mode
-        self.translator_e2 = ScaleTranslator(96, num_blocks=3)
-        self.translator_e3 = ScaleTranslator(192, num_blocks=4)
-        self.translator_e4 = ScaleTranslator(384, num_blocks=3)
-        self.translator_bn = ScaleTranslator(384, num_blocks=4)
+        self.translators = tuple(t for t in self.ALL_TRANSLATORS if t in translators)
+        spec = {'e2': (96, 3), 'e3': (192, 4), 'e4': (384, 3), 'bn': (384, 4)}
+        for k in self.ALL_TRANSLATORS:   # same construction order as before for the default config
+            ch, nb = spec[k]
+            setattr(self, f'translator_{k}', ScaleTranslator(ch, num_blocks=nb) if k in self.translators
+                    else nn.Identity())
         if gate_mode == 'film':
             self.gate_mods = nn.ModuleList([GateModulator(c) for c in (96, 192, 384, 384)])
             self._register_load_state_dict_pre_hook(self._fill_missing_gate_keys)
@@ -172,6 +180,8 @@ class MultiScaleDSLT(nn.Module):
         if (not use_gating) or (scale_gates is None):
             # Ungated baseline path (Full translation)
             return raw_bn, [e1, raw_e2, raw_e3, raw_e4]
+        if self.gate_mode == 'none':
+            raise ValueError("gate_mode='none' model cannot run the gated path (use_gating=True)")
 
         origs = [e2, e3, e4, bottleneck]
         raws = [raw_e2, raw_e3, raw_e4, raw_bn]

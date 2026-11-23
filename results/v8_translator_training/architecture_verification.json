@@ -1,0 +1,61 @@
+{
+ "Tfull": {
+  "translators": [
+   "e2",
+   "e3",
+   "e4",
+   "bn"
+  ],
+  "has_gate_mods": false,
+  "inference_params_M": 44.40855,
+  "translator_params_M": 21.892256,
+  "damage_estimator_params_M": 1.564488,
+  "GMACs_256": 76.27599104,
+  "translator_modules_executed": {
+   "translator_e2": 1,
+   "translator_e3": 1,
+   "translator_e4": 1,
+   "translator_bn": 1
+  },
+  "output_shape": [
+   1,
+   3,
+   256,
+   256
+  ]
+ },
+ "Te2": {
+  "translators": [
+   "e2"
+  ],
+  "has_gate_mods": false,
+  "inference_params_M": 23.019437,
+  "translator_params_M": 0.503143,
+  "damage_estimator_params_M": 1.564488,
+  "GMACs_256": 54.530417152,
+  "translator_modules_executed": {
+   "translator_e2": 1
+  },
+  "output_shape": [
+   1,
+   3,
+   256,
+   256
+  ]
+ },
+ "Tnone": {
+  "translators": [],
+  "has_gate_mods": false,
+  "inference_params_M": 22.516294,
+  "translator_params_M": 0.0,
+  "damage_estimator_params_M": 1.564488,
+  "GMACs_256": 46.371864064,
+  "translator_modules_executed": {},
+  "output_shape": [
+   1,
+   3,
+   256,
+   256
+  ]
+ }
+}

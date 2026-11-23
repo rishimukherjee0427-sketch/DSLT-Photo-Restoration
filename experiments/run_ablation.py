@@ -79,6 +79,15 @@ CONFIGS = {
     # validation and test. The damage estimator is still trained on its severity loss exactly as in C.
     "O": dict(name="dslt_O_oracle_cond", use_gating=True, w_gate_sup=0.5, w_gate_sparsity=0.01, oracle=True,
               desc="ORACLE: C with ground-truth severity map as gate conditioning (diagnostic only)"),
+    # Stage 2 (v8) independently trained translator ablation. Ungated, NO gating modules built
+    # (gate_mode='none'); disabled translators are nn.Identity (no params, no compute).
+    "Tfull": dict(name="dslt_v8_full", use_gating=False, w_gate_sup=0.0, w_gate_sparsity=0.0,
+                  translators=("e2", "e3", "e4", "bn"), gate_mode="none",
+                  desc="v8 full DSLT-A: all 4 translators, no gating modules"),
+    "Te2": dict(name="dslt_v8_e2only", use_gating=False, w_gate_sup=0.0, w_gate_sparsity=0.0,
+                translators=("e2",), gate_mode="none", desc="v8 DSLT-e2: e2 translator only"),
+    "Tnone": dict(name="dslt_v8_encdec", use_gating=False, w_gate_sup=0.0, w_gate_sparsity=0.0,
+                  translators=(), gate_mode="none", desc="v8 DSLT-EncoderDecoder: no translators"),
 }
 
 
@@ -100,11 +109,11 @@ class Nets(nn.Module):
     """Container so optimiser / EMA / state_dict handle all four sub-networks at once.
     Construction order (and hence RNG consumption) is identical for every config."""
 
-    def __init__(self):
+    def __init__(self, translators=MultiScaleDSLT.ALL_TRANSLATORS, gate_mode="film"):
         super().__init__()
         self.damage_estimator = DamageEstimator(3, 32)          # gate_head='rich'
         self.encoder = Encoder()
-        self.dslt = MultiScaleDSLT()                            # gate_mode='film'
+        self.dslt = MultiScaleDSLT(gate_mode, translators=translators)   # defaults: original model
         self.decoder = Decoder()
 
     def restore(self, x, use_gating, gates_out=None, oracle_sev=None):
@@ -322,7 +331,7 @@ def main():
 
     # ---- model (identical seed + construction order for every config) ----
     seed_all(args.seed)
-    nets = Nets().to(device)
+    nets = Nets(cfg.get("translators", MultiScaleDSLT.ALL_TRANSLATORS), cfg.get("gate_mode", "film")).to(device)
     ema = EMA(nets, args.ema_decay)
     n_params = sum(p.numel() for p in nets.parameters())
     params = [p for p in nets.parameters() if p.requires_grad]
@@ -358,11 +367,13 @@ def main():
         torch.save(obj, path + ".tmp")
         os.replace(path + ".tmp", path)
 
-    meta = dict(config=tag, name=cfg["name"], use_gating=cfg["use_gating"], gate_mode="film",
+    meta = dict(config=tag, name=cfg["name"], use_gating=cfg["use_gating"], gate_mode=cfg.get("gate_mode", "film"),
                 gate_head="rich", w_gate_sup=cfg["w_gate_sup"], w_gate_sparsity=cfg["w_gate_sparsity"],
                 crop=args.crop, steps_per_epoch=args.steps_per_epoch, epochs=args.epochs,
                 seed=args.seed, uses_ema=True, ema_decay=args.ema_decay,
-                vgg_normalize=bool(args.vgg_normalize))
+                vgg_normalize=bool(args.vgg_normalize),
+                translators=list(cfg.get("translators", MultiScaleDSLT.ALL_TRANSLATORS)),
+                gate_mode_built=cfg.get("gate_mode", "film"))
     peak_mem = 0
 
     t_start = time.time()

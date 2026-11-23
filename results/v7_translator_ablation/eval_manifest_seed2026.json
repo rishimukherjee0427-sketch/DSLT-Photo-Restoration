@@ -1,0 +1,194 @@
+{
+ "kind": "eval",
+ "created": "2026-11-23T22:09:15",
+ "git": {
+  "commit": "e773b85e1608adb000ecb9ef7bf0dca9c0ce49a3",
+  "dirty": true,
+  "dirty_files": [
+   "?? experiments/translator_ablation.py",
+   "?? results/v7_translator_ablation.log",
+   "?? results/v7_translator_ablation/"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "experiment": "translator ablation (inference-time)",
+  "variants": [
+   "full",
+   "off_all",
+   "off_e2",
+   "off_e3",
+   "off_e4",
+   "off_bn",
+   "resid_zero",
+   "content_off"
+  ],
+  "seed": 2026,
+  "split": "test",
+  "psnr_cap_db": 50,
+  "lpips": "alex"
+ },
+ "metrics": {
+  "full": {
+   "mild": {
+    "psnr": 26.803322389981396,
+    "ssim": 0.8027903951406479,
+    "lpips": 0.22062893985025583
+   },
+   "medium": {
+    "psnr": 24.10327861520185,
+    "ssim": 0.7460874614715576,
+    "lpips": 0.33514067363552746
+   },
+   "severe": {
+    "psnr": 18.686802366111287,
+    "ssim": 0.5952325521111488,
+    "lpips": 0.5780462474822998
+   }
+  },
+  "off_all": {
+   "mild": {
+    "psnr": 26.729605069192772,
+    "ssim": 0.8028348642587662,
+    "lpips": 0.2207427323870361
+   },
+   "medium": {
+    "psnr": 24.033122847132226,
+    "ssim": 0.7459281214475632,
+    "lpips": 0.33481037730397656
+   },
+   "severe": {
+    "psnr": 18.605510561939795,
+    "ssim": 0.5938637241125106,
+    "lpips": 0.5799114990234375
+   }
+  },
+  "off_e2": {
+   "mild": {
+    "psnr": 26.72417624153008,
+    "ssim": 0.8030150474309922,
+    "lpips": 0.22047513503115623
+   },
+   "medium": {
+    "psnr": 24.03418793355364,
+    "ssim": 0.7462133380174637,
+    "lpips": 0.33433219889644533
+   },
+   "severe": {
+    "psnr": 18.640298980072163,
+    "ssim": 0.5946602973341942,
+    "lpips": 0.5792566487193107
+   }
+  },
+  "off_e3": {
+   "mild": {
+    "psnr": 26.807923092514603,
+    "ssim": 0.8028140550851822,
+    "lpips": 0.22067717805923895
+   },
+   "medium": {
+    "psnr": 24.10938054446299,
+    "ssim": 0.746096046447754,
+    "lpips": 0.33520110008027404
+   },
+   "severe": {
+    "psnr": 18.686813285381387,
+    "ssim": 0.5950765134692192,
+    "lpips": 0.5781188215613365
+   }
+  },
+  "off_e4": {
+   "mild": {
+    "psnr": 26.80287591302176,
+    "ssim": 0.8027928297519684,
+    "lpips": 0.22059994804626332
+   },
+   "medium": {
+    "psnr": 24.105932019512,
+    "ssim": 0.7460684994459152,
+    "lpips": 0.33509900396037845
+   },
+   "severe": {
+    "psnr": 18.682351099045892,
+    "ssim": 0.5950492767691612,
+    "lpips": 0.5780042280554771
+   }
+  },
+  "off_bn": {
+   "mild": {
+    "psnr": 26.79991838027168,
+    "ssim": 0.8026564357280731,
+    "lpips": 0.2208332392834127
+   },
+   "medium": {
+    "psnr": 24.091689373510714,
+    "ssim": 0.7459224858283997,
+    "lpips": 0.33556650219950823
+   },
+   "severe": {
+    "psnr": 18.66139360741038,
+    "ssim": 0.5949212856888771,
+    "lpips": 0.5787264568209648
+   }
+  },
+  "resid_zero": {
+   "mild": {
+    "psnr": 26.729605069192772,
+    "ssim": 0.8028348642587662,
+    "lpips": 0.2207427323870361
+   },
+   "medium": {
+    "psnr": 24.033122847132226,
+    "ssim": 0.7459281214475632,
+    "lpips": 0.33481037730397656
+   },
+   "severe": {
+    "psnr": 18.605510561939795,
+    "ssim": 0.5938637241125106,
+    "lpips": 0.5799114990234375
+   }
+  },
+  "content_off": {
+   "mild": {
+    "psnr": 26.7766531836453,
+    "ssim": 0.8018346130847931,
+    "lpips": 0.22188934605102986
+   },
+   "medium": {
+    "psnr": 24.10447833815077,
+    "ssim": 0.7450951615571976,
+    "lpips": 0.33599800590239465
+   },
+   "severe": {
+    "psnr": 18.63806430145308,
+    "ssim": 0.5935586767196656,
+    "lpips": 0.5793878772258758
+   }
+  }
+ },
+ "checkpoint": {
+  "path": "results/v7_corrected/seed2026/A_best.pth",
+  "sha256": "3f40f38dadd0acfdd2715614a47fd4cabf866a9041d878a7afed0bd1c908a2e9"
+ },
+ "extra": {}
+}

@@ -1,0 +1,126 @@
+{
+ "kind": "eval",
+ "created": "2026-11-23T21:46:41",
+ "git": {
+  "commit": "e612ad1bd9325706a0c37a9a70b907e6847dd95b",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   " M experiments/run_ablation.py",
+   "?? experiments/stage0.py",
+   "?? results/v7_stage0/"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "info": {
+   "cfg": "C",
+   "mode": "gates1",
+   "seed": 2026,
+   "checkpoint": "results/v7_corrected/seed2026/C_best.pth",
+   "params": 46060826
+  },
+  "split": "test",
+  "severities": [
+   "mild",
+   "medium",
+   "severe"
+  ],
+  "psnr_cap_db": 50,
+  "lpips": "alex"
+ },
+ "metrics": {
+  "mild": {
+   "psnr": 26.796187733375433,
+   "ssim": 0.8024700262546539,
+   "lpips": 0.22209733376093208
+  },
+  "medium": {
+   "psnr": 24.119650063724702,
+   "ssim": 0.7453220980167389,
+   "lpips": 0.33693902086885646
+  },
+  "severe": {
+   "psnr": 18.8227856669995,
+   "ssim": 0.5977766616344452,
+   "lpips": 0.5777899439930916
+  }
+ },
+ "checkpoint": {
+  "path": "results/v7_corrected/seed2026/C_best.pth",
+  "sha256": "bb1fe99f1834839a32e01a4e1b4125e6c48caeb22c67167aa12b399962c1c2af"
+ },
+ "extra": {
+  "eval_s": 74.08358979225159,
+  "gate_eff_by_severity": {
+   "mild": {
+    "mean": [
+     0.4024330675601959,
+     0.43586263060569763,
+     0.3530897796154022,
+     0.2719419002532959
+    ],
+    "std": [
+     0.10753030329942703,
+     0.1175675094127655,
+     0.1203397735953331,
+     0.1368456929922104
+    ]
+   },
+   "medium": {
+    "mean": [
+     0.5117484927177429,
+     0.5424450635910034,
+     0.4603675901889801,
+     0.400176465511322
+    ],
+    "std": [
+     0.16722241044044495,
+     0.17779460549354553,
+     0.20055994391441345,
+     0.22258123755455017
+    ]
+   },
+   "severe": {
+    "mean": [
+     0.8209750652313232,
+     0.8510242700576782,
+     0.8152703046798706,
+     0.7898752093315125
+    ],
+    "std": [
+     0.15734879672527313,
+     0.16244913637638092,
+     0.19494909048080444,
+     0.22054652869701385
+    ]
+   }
+  },
+  "mean_abs_output_diff_vs_normal": {
+   "mild": 0.003119530847063288,
+   "medium": 0.0034031842350086662,
+   "severe": 0.0019696725015382983
+  },
+  "alignment_checked_inputs": 750
+ }
+}

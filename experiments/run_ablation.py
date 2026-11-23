@@ -74,6 +74,11 @@ CONFIGS = {
               desc="adaptive film gating, no gate losses"),
     "C": dict(name="dslt_C_gated_sup", use_gating=True, w_gate_sup=0.5, w_gate_sparsity=0.01,
               desc="adaptive film gating + gate supervision (0.5) + sparsity (0.01)"),
+    # Stage-0 diagnostic (NOT deployable): identical to C, but the gate head and the spatial gate
+    # modulators receive the GROUND-TRUTH severity map instead of the predicted one, in training,
+    # validation and test. The damage estimator is still trained on its severity loss exactly as in C.
+    "O": dict(name="dslt_O_oracle_cond", use_gating=True, w_gate_sup=0.5, w_gate_sparsity=0.01, oracle=True,
+              desc="ORACLE: C with ground-truth severity map as gate conditioning (diagnostic only)"),
 }
 
 
@@ -102,13 +107,29 @@ class Nets(nn.Module):
         self.dslt = MultiScaleDSLT()                            # gate_mode='film'
         self.decoder = Decoder()
 
-    def restore(self, x, use_gating, gates_out=None):
-        """Returns (restored, severity_map, scale_gates). Same code path for train and eval."""
+    def restore(self, x, use_gating, gates_out=None, oracle_sev=None):
+        """Returns (restored, severity_map, scale_gates). Same code path for train and eval.
+        oracle_sev (B,4,H,W): if given (config O only), gates + spatial modulation use this map."""
         sev, g = self.damage_estimator(x)
+        cond = sev.detach()
+        if oracle_sev is not None:
+            cond = oracle_sev
+            g = oracle_scale_gates(self.damage_estimator, x, oracle_sev)
         b, sk = self.encoder(x)
-        bn_t, sk_t = self.dslt(b, sk, scale_gates=g, use_gating=use_gating, severity_map=sev.detach())
+        bn_t, sk_t = self.dslt(b, sk, scale_gates=g, use_gating=use_gating, severity_map=cond)
         out = torch.clamp(x + self.decoder(bn_t, sk_t), 0.0, 1.0)
         return out, sev, g
+
+
+def oracle_scale_gates(de, x, sev_map):
+    """Rich gate head of DamageEstimator evaluated with sev_map in place of its predicted map
+    (same layers/weights as DamageEstimator.forward, gate branch only)."""
+    e1 = de.enc1(x); e2 = de.enc2(e1); e3 = de.enc3(e2); e4 = de.enc4(e3)
+    B = e4.size(0)
+    feats = torch.cat([de.global_pool(e3).view(B, -1), de.global_max(e3).view(B, -1),
+                       de.global_pool(e4).view(B, -1), de.global_max(e4).view(B, -1),
+                       de.global_pool(sev_map).view(B, -1), de.global_max(sev_map).view(B, -1)], dim=1)
+    return torch.sigmoid(de.gate_mlp(feats))
 
 
 class EMA:
@@ -197,7 +218,8 @@ def validate(ema_nets, vset, cfg, device, bs=4):
         sc, eff, rel = [], [], []
         for x, c, gt_sev in vset.batches(sev, bs):
             x = x.to(device)
-            y, sm, g = ema_nets.restore(x, cfg["use_gating"])
+            y, sm, g = ema_nets.restore(x, cfg["use_gating"],
+                                        oracle_sev=gt_sev.to(device) if cfg.get("oracle") else None)
             yn = y.float().cpu().permute(0, 2, 3, 1).numpy()
             cn = c.permute(0, 2, 3, 1).numpy()
             for k in range(len(yn)):
@@ -362,7 +384,8 @@ def main():
             if it >= args.steps_per_epoch:
                 break
             deg, clean, gt_sev = deg.to(device), clean.to(device), gt_sev.to(device)
-            out, sev, gates = nets.restore(deg, cfg["use_gating"])
+            out, sev, gates = nets.restore(deg, cfg["use_gating"],
+                                           oracle_sev=gt_sev if cfg.get("oracle") else None)
             total_loss, l_char, _, l_ssim, _, l_dmg = crit(
                 out, clean, pred_severity=sev, target_severity=gt_sev, pred_gates=gates)
             if not torch.isfinite(total_loss):

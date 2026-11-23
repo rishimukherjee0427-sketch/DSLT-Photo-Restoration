@@ -60,3 +60,6 @@ input/
 
 # Raw v7 test predictions (regenerable via experiments/stats_v7.py; ~100MB/model)
 results/v7_corrected/predictions/
+
+# Raw Stage-0 test predictions (regenerable via experiments/stage0.py eval)
+results/v7_stage0/predictions/

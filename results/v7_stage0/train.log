@@ -1,0 +1,61 @@
+=== seed 42 cfg A 21:06:08
+[A] EPOCH 1/8 loss 0.4064 | VAL PSNR mild 22.66 med 21.74 sev 18.34 mean 20.915 | SSIM mean 0.6854 *best* | train 26s val 4s | ETA 3.6 min
+[A] EPOCH 2/8 loss 0.3750 | VAL PSNR mild 24.39 med 22.22 sev 18.65 mean 21.755 | SSIM mean 0.6884 *best* | train 26s val 4s | ETA 3.1 min
+[A] EPOCH 3/8 loss 0.3414 | VAL PSNR mild 24.77 med 22.61 sev 18.88 mean 22.088 | SSIM mean 0.6926 *best* | train 26s val 4s | ETA 2.6 min
+[A] EPOCH 4/8 loss 0.3156 | VAL PSNR mild 25.24 med 22.78 sev 18.75 mean 22.258 | SSIM mean 0.6933 *best* | train 26s val 4s | ETA 2.1 min
+[A] EPOCH 5/8 loss 0.3236 | VAL PSNR mild 25.31 med 22.84 sev 18.65 mean 22.266 | SSIM mean 0.6932 *best* | train 26s val 4s | ETA 1.5 min
+[A] EPOCH 6/8 loss 0.3289 | VAL PSNR mild 25.78 med 23.30 sev 18.82 mean 22.630 | SSIM mean 0.6952 *best* | train 26s val 4s | ETA 1.0 min
+[A] EPOCH 7/8 loss 0.3235 | VAL PSNR mild 25.95 med 23.41 sev 18.82 mean 22.727 | SSIM mean 0.6958 *best* | train 26s val 4s | ETA 0.5 min
+[A] EPOCH 8/8 loss 0.3097 | VAL PSNR mild 25.94 med 23.43 sev 18.82 mean 22.731 | SSIM mean 0.6955 *best* | train 26s val 4s | ETA 0.0 min
+[A] done: best val PSNR(mean of 3 severities) 22.731 | 4.1 min -> results/v7_stage0/seed42/A_best.pth
+=== seed 42 cfg B 21:10:16
+[B] EPOCH 1/8 loss 0.4061 | VAL PSNR mild 22.79 med 21.82 sev 18.35 mean 20.985 | SSIM mean 0.6856 *best* | train 26s val 4s | ETA 3.6 min | gate(eff) [1.  ,0.  ,0.06,0.99] corr_tgt [0.33, -0.36, -0.45, 0.36]
+[B] EPOCH 2/8 loss 0.3721 | VAL PSNR mild 24.16 med 22.14 sev 18.46 mean 21.585 | SSIM mean 0.6865 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [1.  ,0.01,0.01,0.98] corr_tgt [0.47, -0.53, -0.62, 0.54]
+[B] EPOCH 3/8 loss 0.3400 | VAL PSNR mild 24.97 med 23.00 sev 18.90 mean 22.289 | SSIM mean 0.6943 *best* | train 26s val 4s | ETA 2.5 min | gate(eff) [1.  ,0.01,0.01,0.71] corr_tgt [0.46, -0.56, -0.65, -0.18]
+[B] EPOCH 4/8 loss 0.3148 | VAL PSNR mild 25.65 med 23.25 sev 18.81 mean 22.572 | SSIM mean 0.6956 *best* | train 26s val 4s | ETA 2.0 min | gate(eff) [1.  ,0.01,0.01,0.61] corr_tgt [0.44, -0.56, -0.64, -0.38]
+[B] EPOCH 5/8 loss 0.3229 | VAL PSNR mild 25.71 med 23.26 sev 18.70 mean 22.559 | SSIM mean 0.6953 | train 26s val 4s | ETA 1.5 min | gate(eff) [1.  ,0.01,0.01,0.48] corr_tgt [0.45, -0.56, -0.62, -0.47]
+[B] EPOCH 6/8 loss 0.3295 | VAL PSNR mild 25.96 med 23.59 sev 18.77 mean 22.775 | SSIM mean 0.6966 *best* | train 26s val 4s | ETA 1.0 min | gate(eff) [1.  ,0.01,0.  ,0.69] corr_tgt [0.47, -0.56, -0.61, -0.27]
+[B] EPOCH 7/8 loss 0.3240 | VAL PSNR mild 26.07 med 23.61 sev 18.73 mean 22.802 | SSIM mean 0.6968 *best* | train 26s val 4s | ETA 0.5 min | gate(eff) [1.  ,0.02,0.  ,0.81] corr_tgt [0.46, -0.56, -0.61, 0.02]
+[B] EPOCH 8/8 loss 0.3102 | VAL PSNR mild 26.07 med 23.59 sev 18.70 mean 22.785 | SSIM mean 0.6964 | train 26s val 4s | ETA 0.0 min | gate(eff) [1.  ,0.02,0.  ,0.84] corr_tgt [0.45, -0.55, -0.61, 0.12]
+[B] done: best val PSNR(mean of 3 severities) 22.802 | 4.1 min -> results/v7_stage0/seed42/B_best.pth
+=== seed 42 cfg C 21:14:23
+[C] EPOCH 1/8 loss 0.5207 | VAL PSNR mild 22.84 med 21.87 sev 18.38 mean 21.028 | SSIM mean 0.6859 *best* | train 26s val 4s | ETA 3.6 min | gate(eff) [0.64,0.59,0.53,0.5 ] corr_tgt [0.64, 0.69, 0.67, 0.63]
+[C] EPOCH 2/8 loss 0.4647 | VAL PSNR mild 24.33 med 22.39 sev 18.69 mean 21.804 | SSIM mean 0.6886 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [0.59,0.59,0.55,0.54] corr_tgt [0.57, 0.65, 0.69, 0.65]
+[C] EPOCH 3/8 loss 0.4278 | VAL PSNR mild 24.87 med 22.67 sev 18.80 mean 22.112 | SSIM mean 0.6928 *best* | train 92s val 4s | ETA 4.4 min | gate(eff) [0.64,0.65,0.6 ,0.52] corr_tgt [0.57, 0.67, 0.69, 0.69]
+[C] EPOCH 4/8 loss 0.4014 | VAL PSNR mild 25.36 med 22.90 sev 18.72 mean 22.326 | SSIM mean 0.6932 *best* | train 26s val 4s | ETA 3.2 min | gate(eff) [0.61,0.6 ,0.56,0.52] corr_tgt [0.56, 0.67, 0.71, 0.71]
+[C] EPOCH 5/8 loss 0.4097 | VAL PSNR mild 25.32 med 22.93 sev 18.64 mean 22.299 | SSIM mean 0.6935 | train 26s val 4s | ETA 2.2 min | gate(eff) [0.62,0.64,0.58,0.56] corr_tgt [0.59, 0.69, 0.73, 0.69]
+[C] EPOCH 6/8 loss 0.4046 | VAL PSNR mild 25.62 med 23.36 sev 18.74 mean 22.575 | SSIM mean 0.6940 *best* | train 26s val 4s | ETA 1.4 min | gate(eff) [0.62,0.61,0.54,0.54] corr_tgt [0.6, 0.7, 0.73, 0.71]
+[C] EPOCH 7/8 loss 0.3982 | VAL PSNR mild 25.81 med 23.44 sev 18.76 mean 22.672 | SSIM mean 0.6949 *best* | train 26s val 4s | ETA 0.7 min | gate(eff) [0.61,0.6 ,0.55,0.53] corr_tgt [0.62, 0.71, 0.75, 0.73]
+[C] EPOCH 8/8 loss 0.3812 | VAL PSNR mild 25.84 med 23.43 sev 18.78 mean 22.684 | SSIM mean 0.6951 *best* | train 26s val 4s | ETA 0.0 min | gate(eff) [0.61,0.6 ,0.54,0.52] corr_tgt [0.63, 0.71, 0.76, 0.74]
+[C] done: best val PSNR(mean of 3 severities) 22.684 | 5.2 min -> results/v7_stage0/seed42/C_best.pth
+=== seed 42 cfg O 21:19:37
+[O] EPOCH 1/8 loss 0.5197 | VAL PSNR mild 22.67 med 21.73 sev 18.34 mean 20.915 | SSIM mean 0.6859 *best* | train 26s val 4s | ETA 3.7 min | gate(eff) [0.65,0.59,0.52,0.49] corr_tgt [0.65, 0.68, 0.68, 0.61]
+[O] EPOCH 2/8 loss 0.4636 | VAL PSNR mild 24.39 med 22.37 sev 18.69 mean 21.817 | SSIM mean 0.6903 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [0.59,0.59,0.57,0.5 ] corr_tgt [0.6, 0.69, 0.72, 0.65]
+[O] EPOCH 3/8 loss 0.4236 | VAL PSNR mild 24.92 med 22.84 sev 18.89 mean 22.216 | SSIM mean 0.6925 *best* | train 26s val 4s | ETA 2.6 min | gate(eff) [0.64,0.67,0.6 ,0.53] corr_tgt [0.58, 0.68, 0.74, 0.68]
+[O] EPOCH 4/8 loss 0.4000 | VAL PSNR mild 25.41 med 22.97 sev 18.71 mean 22.364 | SSIM mean 0.6930 *best* | train 26s val 4s | ETA 2.1 min | gate(eff) [0.59,0.59,0.54,0.49] corr_tgt [0.61, 0.7, 0.76, 0.73]
+[O] EPOCH 5/8 loss 0.4047 | VAL PSNR mild 25.43 med 23.14 sev 18.64 mean 22.405 | SSIM mean 0.6927 *best* | train 26s val 4s | ETA 1.6 min | gate(eff) [0.63,0.62,0.58,0.54] corr_tgt [0.65, 0.73, 0.77, 0.72]
+[O] EPOCH 6/8 loss 0.4011 | VAL PSNR mild 25.59 med 23.40 sev 18.78 mean 22.591 | SSIM mean 0.6939 *best* | train 26s val 4s | ETA 1.0 min | gate(eff) [0.63,0.62,0.57,0.53] corr_tgt [0.66, 0.74, 0.78, 0.74]
+[O] EPOCH 7/8 loss 0.3952 | VAL PSNR mild 25.68 med 23.50 sev 18.79 mean 22.656 | SSIM mean 0.6948 *best* | train 26s val 4s | ETA 0.5 min | gate(eff) [0.61,0.61,0.56,0.52] corr_tgt [0.67, 0.74, 0.8, 0.76]
+[O] EPOCH 8/8 loss 0.3781 | VAL PSNR mild 25.66 med 23.48 sev 18.78 mean 22.638 | SSIM mean 0.6946 | train 26s val 4s | ETA 0.0 min | gate(eff) [0.61,0.6 ,0.55,0.52] corr_tgt [0.67, 0.75, 0.8, 0.76]
+[O] done: best val PSNR(mean of 3 severities) 22.656 | 4.2 min -> results/v7_stage0/seed42/O_best.pth
+=== seed 123 cfg O 21:23:51
+[O] EPOCH 1/8 loss 0.5006 | VAL PSNR mild 23.55 med 22.36 sev 18.45 mean 21.454 | SSIM mean 0.6864 *best* | train 26s val 4s | ETA 3.7 min | gate(eff) [0.73,0.71,0.62,0.57] corr_tgt [0.69, 0.66, 0.73, 0.6]
+[O] EPOCH 2/8 loss 0.4342 | VAL PSNR mild 24.71 med 22.99 sev 18.71 mean 22.137 | SSIM mean 0.6928 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [0.63,0.65,0.55,0.6 ] corr_tgt [0.69, 0.72, 0.76, 0.62]
+[O] EPOCH 3/8 loss 0.4221 | VAL PSNR mild 25.31 med 23.31 sev 18.85 mean 22.491 | SSIM mean 0.6971 *best* | train 26s val 4s | ETA 2.6 min | gate(eff) [0.65,0.66,0.59,0.57] corr_tgt [0.71, 0.76, 0.8, 0.71]
+[O] EPOCH 4/8 loss 0.3983 | VAL PSNR mild 25.65 med 23.50 sev 18.92 mean 22.692 | SSIM mean 0.6958 *best* | train 26s val 4s | ETA 2.1 min | gate(eff) [0.59,0.63,0.58,0.56] corr_tgt [0.72, 0.79, 0.82, 0.72]
+[O] EPOCH 5/8 loss 0.4081 | VAL PSNR mild 25.71 med 23.56 sev 19.01 mean 22.759 | SSIM mean 0.6946 *best* | train 26s val 4s | ETA 1.6 min | gate(eff) [0.58,0.63,0.59,0.57] corr_tgt [0.72, 0.79, 0.82, 0.71]
+[O] EPOCH 6/8 loss 0.3923 | VAL PSNR mild 25.97 med 23.85 sev 19.05 mean 22.957 | SSIM mean 0.6967 *best* | train 26s val 4s | ETA 1.0 min | gate(eff) [0.6 ,0.63,0.58,0.52] corr_tgt [0.74, 0.8, 0.83, 0.72]
+[O] EPOCH 7/8 loss 0.3869 | VAL PSNR mild 26.00 med 23.95 sev 19.07 mean 23.009 | SSIM mean 0.6972 *best* | train 26s val 4s | ETA 0.5 min | gate(eff) [0.57,0.6 ,0.54,0.49] corr_tgt [0.75, 0.82, 0.84, 0.74]
+[O] EPOCH 8/8 loss 0.3747 | VAL PSNR mild 25.99 med 24.02 sev 19.16 mean 23.058 | SSIM mean 0.6978 *best* | train 26s val 4s | ETA 0.0 min | gate(eff) [0.58,0.61,0.55,0.5 ] corr_tgt [0.76, 0.82, 0.84, 0.74]
+[O] done: best val PSNR(mean of 3 severities) 23.058 | 4.2 min -> results/v7_stage0/seed123/O_best.pth
+=== seed 2026 cfg O 21:28:04
+[O] EPOCH 1/8 loss 0.5024 | VAL PSNR mild 23.18 med 21.98 sev 18.26 mean 21.140 | SSIM mean 0.6857 *best* | train 26s val 4s | ETA 3.7 min | gate(eff) [0.56,0.58,0.61,0.64] corr_tgt [0.61, 0.55, 0.63, 0.51]
+[O] EPOCH 2/8 loss 0.4497 | VAL PSNR mild 24.78 med 22.45 sev 18.45 mean 21.892 | SSIM mean 0.6900 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [0.69,0.71,0.65,0.61] corr_tgt [0.68, 0.67, 0.71, 0.61]
+[O] EPOCH 3/8 loss 0.4234 | VAL PSNR mild 24.80 med 22.49 sev 18.56 mean 21.948 | SSIM mean 0.6915 *best* | train 26s val 4s | ETA 2.6 min | gate(eff) [0.63,0.66,0.62,0.56] corr_tgt [0.7, 0.71, 0.75, 0.67]
+[O] EPOCH 4/8 loss 0.4136 | VAL PSNR mild 25.49 med 23.06 sev 18.83 mean 22.459 | SSIM mean 0.6948 *best* | train 26s val 4s | ETA 2.1 min | gate(eff) [0.62,0.63,0.6 ,0.56] corr_tgt [0.66, 0.7, 0.75, 0.69]
+[O] EPOCH 5/8 loss 0.4062 | VAL PSNR mild 25.72 med 23.42 sev 18.98 mean 22.702 | SSIM mean 0.6968 *best* | train 26s val 4s | ETA 1.6 min | gate(eff) [0.6 ,0.6 ,0.56,0.5 ] corr_tgt [0.68, 0.72, 0.78, 0.74]
+[O] EPOCH 6/8 loss 0.3918 | VAL PSNR mild 25.86 med 23.32 sev 19.00 mean 22.725 | SSIM mean 0.6972 *best* | train 26s val 4s | ETA 1.0 min | gate(eff) [0.63,0.63,0.57,0.49] corr_tgt [0.7, 0.76, 0.8, 0.76]
+[O] EPOCH 7/8 loss 0.3701 | VAL PSNR mild 26.09 med 23.73 sev 19.25 mean 23.021 | SSIM mean 0.6983 *best* | train 26s val 4s | ETA 0.5 min | gate(eff) [0.61,0.62,0.56,0.48] corr_tgt [0.72, 0.77, 0.8, 0.77]
+[O] EPOCH 8/8 loss 0.3741 | VAL PSNR mild 26.06 med 23.66 sev 19.27 mean 22.996 | SSIM mean 0.6983 | train 26s val 4s | ETA 0.0 min | gate(eff) [0.61,0.62,0.56,0.5 ] corr_tgt [0.72, 0.78, 0.81, 0.77]
+[O] done: best val PSNR(mean of 3 severities) 23.021 | 4.2 min -> results/v7_stage0/seed2026/O_best.pth
+=== ALL DONE 21:32:16

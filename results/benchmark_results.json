@@ -45,8 +45,46 @@
       "device": "mps",
       "load_s": 0.0,
       "n_images": 250,
-      "updated": "2026-11-23T15:20:10",
+      "updated": "2026-11-23T16:29:14",
       "lpips_net": "alex"
+    },
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 4.13,
+        "n_pristine": 8,
+        "psnr": 25.602929514884206,
+        "psnr_std": 6.601522331999408,
+        "ssim": 0.7847258725166321,
+        "ssim_std": 0.14227496528291136,
+        "lpips": 0.24816599508468062,
+        "lpips_std": 0.18372877351086286,
+        "psnr_median": 24.71227539858866
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 2.96,
+        "n_pristine": 6,
+        "psnr": 21.99472168795103,
+        "psnr_std": 6.403993949411518,
+        "ssim": 0.7073594624996186,
+        "ssim_std": 0.14465612827312327,
+        "lpips": 0.38657643358409405,
+        "lpips_std": 0.17623379439151104,
+        "psnr_median": 20.829429844499437
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 2.78,
+        "n_pristine": 0,
+        "psnr": 15.249064657773364,
+        "psnr_std": 3.531545336745172,
+        "ssim": 0.5111378026604653,
+        "ssim_std": 0.12662192386016946,
+        "lpips": 0.6843572576642036,
+        "lpips_std": 0.14322593121205326,
+        "psnr_median": 14.926498932271663
+      }
     }
   },
   "bicubic": {
@@ -95,8 +133,46 @@
       "device": "mps",
       "load_s": 0.0,
       "n_images": 250,
-      "updated": "2026-11-23T15:20:21",
+      "updated": "2026-11-23T16:29:23",
       "lpips_net": "alex"
+    },
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 2.77,
+        "n_pristine": 8,
+        "psnr": 24.806510516231384,
+        "psnr_std": 4.606844257443559,
+        "ssim": 0.7826256405115127,
+        "ssim_std": 0.10772098822738035,
+        "lpips": 0.2802228754162788,
+        "lpips_std": 0.1215379394551853,
+        "psnr_median": 24.76203466890309
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 2.77,
+        "n_pristine": 6,
+        "psnr": 21.694918636289948,
+        "psnr_std": 4.936962251272995,
+        "ssim": 0.7154451786875725,
+        "ssim_std": 0.11614918436221136,
+        "lpips": 0.40405899861454964,
+        "lpips_std": 0.14358124083549867,
+        "psnr_median": 20.768827739106015
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 2.67,
+        "n_pristine": 0,
+        "psnr": 15.316443598676935,
+        "psnr_std": 3.553784396217652,
+        "ssim": 0.5168257449865341,
+        "ssim_std": 0.12453908621037106,
+        "lpips": 0.6794813026189804,
+        "lpips_std": 0.13137142044214745,
+        "psnr_median": 14.985224926969472
+      }
     }
   },
   "dslt_v5": {
@@ -143,9 +219,297 @@
       "contaminated": true,
       "note": "results/best_model_v5.pth: trained on ALL of data/train_clean (incl. val/test) -> NOT a held-out result",
       "device": "mps",
-      "load_s": 0.5,
+      "load_s": 0.24,
       "n_images": 250,
-      "updated": "2026-11-23T15:21:59",
+      "updated": "2026-11-23T16:34:31",
+      "lpips_net": "alex"
+    },
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 13.36,
+        "n_pristine": 8,
+        "psnr": 29.902344344462566,
+        "psnr_std": 4.053826717391219,
+        "ssim": 0.8794359178543091,
+        "ssim_std": 0.06914401383786226,
+        "lpips": 0.12946578730642797,
+        "lpips_std": 0.0874841990052363,
+        "psnr_median": 30.010474444349498
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 13.39,
+        "n_pristine": 6,
+        "psnr": 26.838220825110064,
+        "psnr_std": 4.498407508433769,
+        "ssim": 0.8158276010751724,
+        "ssim_std": 0.0913337949043438,
+        "lpips": 0.23148543019033968,
+        "lpips_std": 0.12371679454257571,
+        "psnr_median": 26.637941650831454
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 13.42,
+        "n_pristine": 0,
+        "psnr": 18.523558099396922,
+        "psnr_std": 4.12391077672,
+        "ssim": 0.5944967420101166,
+        "ssim_std": 0.12085919611882204,
+        "lpips": 0.5202870028167963,
+        "lpips_std": 0.1250056211967615,
+        "psnr_median": 18.73766004199736
+      }
+    }
+  },
+  "restormer": {
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 21.17,
+        "n_pristine": 8,
+        "psnr": 26.167041752814132,
+        "psnr_std": 3.167611029064058,
+        "ssim": 0.8044828590154648,
+        "ssim_std": 0.12341235631115928,
+        "lpips": 0.2214155705347657,
+        "lpips_std": 0.14811893786424932,
+        "psnr_median": 26.316089671503775
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 20.86,
+        "n_pristine": 6,
+        "psnr": 23.78698886265061,
+        "psnr_std": 3.3007055200111375,
+        "ssim": 0.7459516069889068,
+        "ssim_std": 0.12489576444318252,
+        "lpips": 0.3258812404051423,
+        "lpips_std": 0.1399973290872412,
+        "psnr_median": 23.63078314103089
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 20.98,
+        "n_pristine": 0,
+        "psnr": 18.01300325135568,
+        "psnr_std": 3.1054243307246496,
+        "ssim": 0.5746133561730384,
+        "ssim_std": 0.11537470803396428,
+        "lpips": 0.5750548075437546,
+        "lpips_std": 0.10872217919006183,
+        "psnr_median": 18.417207511686374
+      }
+    },
+    "_meta": {
+      "params": 3750670,
+      "contaminated": false,
+      "note": "reduced-size re-implementation (tiny), 800 steps",
+      "device": "mps",
+      "load_s": 0.05,
+      "n_images": 250,
+      "updated": "2026-11-23T16:30:26",
+      "lpips_net": "alex"
+    }
+  },
+  "promptir": {
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 23.64,
+        "n_pristine": 8,
+        "psnr": 26.162649393222267,
+        "psnr_std": 3.1540506396809684,
+        "ssim": 0.8075864615440369,
+        "ssim_std": 0.11903523691064066,
+        "lpips": 0.2234708983451128,
+        "lpips_std": 0.1447864232929915,
+        "psnr_median": 26.250345632404084
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 23.24,
+        "n_pristine": 6,
+        "psnr": 23.852549552580744,
+        "psnr_std": 3.2696812148370045,
+        "ssim": 0.7492803512811661,
+        "ssim_std": 0.12201619544778049,
+        "lpips": 0.32794125593453644,
+        "lpips_std": 0.13774714046815026,
+        "psnr_median": 23.78196800567317
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 22.86,
+        "n_pristine": 0,
+        "psnr": 18.01991314191093,
+        "psnr_std": 3.1345108275270683,
+        "ssim": 0.57549871301651,
+        "ssim_std": 0.11649017435548799,
+        "lpips": 0.5771619879603386,
+        "lpips_std": 0.10892862862178665,
+        "psnr_median": 18.164980631132096
+      }
+    },
+    "_meta": {
+      "params": 7217061,
+      "contaminated": false,
+      "note": "reduced-size re-implementation (tiny), 800 steps",
+      "device": "mps",
+      "load_s": 0.07,
+      "n_images": 250,
+      "updated": "2026-11-23T16:31:36",
+      "lpips_net": "alex"
+    }
+  },
+  "dslt_A_ungated": {
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 13.41,
+        "n_pristine": 8,
+        "psnr": 26.7360241322223,
+        "psnr_std": 4.532673124983016,
+        "ssim": 0.8020682822465897,
+        "ssim_std": 0.13680855533628447,
+        "lpips": 0.22608647129498421,
+        "lpips_std": 0.16283605368874468,
+        "psnr_median": 26.50724872114779
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 13.39,
+        "n_pristine": 6,
+        "psnr": 23.928404043210925,
+        "psnr_std": 4.52814071383187,
+        "ssim": 0.7429997243881226,
+        "ssim_std": 0.13637717391511137,
+        "lpips": 0.34190983829274774,
+        "lpips_std": 0.15180784777236023,
+        "psnr_median": 23.14813077664772
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 13.08,
+        "n_pristine": 0,
+        "psnr": 18.426692152504984,
+        "psnr_std": 2.9099930262500107,
+        "ssim": 0.5897574658989906,
+        "ssim_std": 0.11162358827250722,
+        "lpips": 0.5882273426651955,
+        "lpips_std": 0.10761463141859265,
+        "psnr_median": 18.728750595933498
+      }
+    },
+    "_meta": {
+      "params": 44408550,
+      "contaminated": false,
+      "note": "ablation config A (dslt_A_ungated): EMA weights of best-val epoch 7 (val PSNR mean 22.41); trained on data/splits/train.txt only; gating=off, w_gate_sup=0.0, w_gate_sparsity=0.0",
+      "device": "mps",
+      "load_s": 0.22,
+      "n_images": 250,
+      "updated": "2026-11-23T16:32:17",
+      "lpips_net": "alex"
+    }
+  },
+  "dslt_B_gated": {
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 15.58,
+        "n_pristine": 8,
+        "psnr": 26.807306985196707,
+        "psnr_std": 4.815803246882438,
+        "ssim": 0.8020505886077881,
+        "ssim_std": 0.13735844942511877,
+        "lpips": 0.22506755922921,
+        "lpips_std": 0.16308166022044,
+        "psnr_median": 26.472402907374736
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 15.16,
+        "n_pristine": 6,
+        "psnr": 23.984513397363582,
+        "psnr_std": 4.644815101034215,
+        "ssim": 0.7441522470712661,
+        "ssim_std": 0.13625804785691614,
+        "lpips": 0.34165874726418405,
+        "lpips_std": 0.15228369698723432,
+        "psnr_median": 23.194293198827804
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 15.35,
+        "n_pristine": 0,
+        "psnr": 18.4163240523631,
+        "psnr_std": 2.9444263596210813,
+        "ssim": 0.5884044130444527,
+        "ssim_std": 0.11129246887725436,
+        "lpips": 0.5874029086828232,
+        "lpips_std": 0.10755625183543813,
+        "psnr_median": 18.629426610817326
+      }
+    },
+    "_meta": {
+      "params": 46060826,
+      "contaminated": false,
+      "note": "ablation config B (dslt_B_gated): EMA weights of best-val epoch 7 (val PSNR mean 22.81); trained on data/splits/train.txt only; gating=film, w_gate_sup=0.0, w_gate_sparsity=0.0",
+      "device": "mps",
+      "load_s": 0.17,
+      "n_images": 250,
+      "updated": "2026-11-23T16:33:03",
+      "lpips_net": "alex"
+    }
+  },
+  "dslt_C_gated_sup": {
+    "test": {
+      "mild": {
+        "n": 250,
+        "time_s": 15.39,
+        "n_pristine": 8,
+        "psnr": 26.78136030272801,
+        "psnr_std": 4.734376284452956,
+        "ssim": 0.8019386907815933,
+        "ssim_std": 0.13726851839419818,
+        "lpips": 0.22577982389135287,
+        "lpips_std": 0.16327747719368524,
+        "psnr_median": 26.505415258553953
+      },
+      "medium": {
+        "n": 250,
+        "time_s": 15.61,
+        "n_pristine": 6,
+        "psnr": 23.987781093022324,
+        "psnr_std": 4.639284711577504,
+        "ssim": 0.7439336748123169,
+        "ssim_std": 0.13653024445728854,
+        "lpips": 0.3416636868924834,
+        "lpips_std": 0.1516589977935857,
+        "psnr_median": 23.180066735159087
+      },
+      "severe": {
+        "n": 250,
+        "time_s": 15.48,
+        "n_pristine": 0,
+        "psnr": 18.450000471274343,
+        "psnr_std": 2.9293793635460275,
+        "ssim": 0.5908723619580268,
+        "ssim_std": 0.11123115769734859,
+        "lpips": 0.5864872650504113,
+        "lpips_std": 0.10845299848457027,
+        "psnr_median": 18.764894163987893
+      }
+    },
+    "_meta": {
+      "params": 46060826,
+      "contaminated": false,
+      "note": "ablation config C (dslt_C_gated_sup): EMA weights of best-val epoch 7 (val PSNR mean 22.68); trained on data/splits/train.txt only; gating=film, w_gate_sup=0.5, w_gate_sparsity=0.01",
+      "device": "mps",
+      "load_s": 0.18,
+      "n_images": 250,
+      "updated": "2026-11-23T16:33:51",
       "lpips_net": "alex"
     }
   }

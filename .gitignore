@@ -41,3 +41,16 @@ Thumbs.db
 
 # Manuscript
 *.docx
+
+# All model checkpoints (exceed GitHub 100MB limit)
+*.pth
+results/baselines/*.pth
+
+# Regenerable benchmark cache (python experiments/make_benchmark.py --cache)
+data/benchmark_cache/
+
+# Web app runtime files
+static/uploads/
+static/restored/
+static/filtered/
+input/

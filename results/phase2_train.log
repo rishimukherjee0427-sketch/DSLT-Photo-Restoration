@@ -1,0 +1,45 @@
+=== DSLT A 16:02:11
+[A] EPOCH 1/8 loss 0.3947 | VAL PSNR mild 22.76 med 21.82 sev 18.39 mean 20.993 | SSIM mean 0.6849 *best* | train 26s val 4s | ETA 3.7 min
+[A] EPOCH 2/8 loss 0.3614 | VAL PSNR mild 24.21 med 21.99 sev 18.48 mean 21.559 | SSIM mean 0.6819 *best* | train 26s val 4s | ETA 3.1 min
+[A] EPOCH 3/8 loss 0.3300 | VAL PSNR mild 24.76 med 22.78 sev 18.79 mean 22.111 | SSIM mean 0.6918 *best* | train 26s val 4s | ETA 2.6 min
+[A] EPOCH 4/8 loss 0.3060 | VAL PSNR mild 25.06 med 22.56 sev 18.65 mean 22.088 | SSIM mean 0.6916 | train 25s val 4s | ETA 2.0 min
+[A] EPOCH 5/8 loss 0.3146 | VAL PSNR mild 25.09 med 22.66 sev 18.60 mean 22.115 | SSIM mean 0.6914 *best* | train 25s val 4s | ETA 1.5 min
+[A] EPOCH 6/8 loss 0.3184 | VAL PSNR mild 25.30 med 23.05 sev 18.63 mean 22.327 | SSIM mean 0.6918 *best* | train 25s val 4s | ETA 1.0 min
+[A] EPOCH 7/8 loss 0.3116 | VAL PSNR mild 25.49 med 23.17 sev 18.58 mean 22.412 | SSIM mean 0.6926 *best* | train 25s val 4s | ETA 0.5 min
+[A] EPOCH 8/8 loss 0.2976 | VAL PSNR mild 25.43 med 23.12 sev 18.53 mean 22.363 | SSIM mean 0.6920 | train 26s val 4s | ETA 0.0 min
+[A] done: best val PSNR(mean of 3 severities) 22.412 | 4.0 min -> /Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /results/ablation/A_best.pth
+=== DSLT B 16:06:17
+[B] EPOCH 1/8 loss 0.3948 | VAL PSNR mild 22.62 med 21.73 sev 18.32 mean 20.893 | SSIM mean 0.6852 *best* | train 26s val 4s | ETA 3.6 min | gate(eff) [1.  ,0.02,0.32,0.98] corr_tgt [0.44, -0.4, -0.37, 0.46]
+[B] EPOCH 2/8 loss 0.3623 | VAL PSNR mild 24.29 med 22.28 sev 18.61 mean 21.728 | SSIM mean 0.6866 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [1.  ,0.06,0.02,0.91] corr_tgt [0.56, -0.64, -0.66, 0.56]
+[B] EPOCH 3/8 loss 0.3335 | VAL PSNR mild 24.70 med 22.80 sev 18.84 mean 22.117 | SSIM mean 0.6928 *best* | train 26s val 4s | ETA 2.6 min | gate(eff) [1.  ,0.03,0.01,0.92] corr_tgt [0.52, -0.58, -0.67, 0.55]
+[B] EPOCH 4/8 loss 0.3037 | VAL PSNR mild 25.54 med 23.06 sev 18.75 mean 22.449 | SSIM mean 0.6933 *best* | train 26s val 4s | ETA 2.1 min | gate(eff) [1.  ,0.05,0.01,0.92] corr_tgt [0.53, -0.56, -0.67, 0.59]
+[B] EPOCH 5/8 loss 0.3118 | VAL PSNR mild 25.66 med 23.16 sev 18.75 mean 22.523 | SSIM mean 0.6937 *best* | train 26s val 4s | ETA 1.5 min | gate(eff) [1.  ,0.03,0.01,0.89] corr_tgt [0.49, -0.55, -0.64, 0.51]
+[B] EPOCH 6/8 loss 0.3182 | VAL PSNR mild 25.98 med 23.54 sev 18.80 mean 22.773 | SSIM mean 0.6957 *best* | train 26s val 4s | ETA 1.0 min | gate(eff) [1.  ,0.05,0.  ,0.93] corr_tgt [0.49, -0.53, -0.62, 0.49]
+[B] EPOCH 7/8 loss 0.3126 | VAL PSNR mild 26.03 med 23.64 sev 18.76 mean 22.811 | SSIM mean 0.6961 *best* | train 26s val 4s | ETA 0.5 min | gate(eff) [1.  ,0.09,0.  ,0.94] corr_tgt [0.47, -0.48, -0.61, 0.52]
+[B] EPOCH 8/8 loss 0.2988 | VAL PSNR mild 26.00 med 23.63 sev 18.74 mean 22.790 | SSIM mean 0.6956 | train 26s val 4s | ETA 0.0 min | gate(eff) [1.  ,0.13,0.  ,0.95] corr_tgt [0.46, -0.45, -0.62, 0.52]
+[B] done: best val PSNR(mean of 3 severities) 22.811 | 4.1 min -> /Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /results/ablation/B_best.pth
+=== DSLT C 16:10:24
+[C] EPOCH 1/8 loss 0.5091 | VAL PSNR mild 22.66 med 21.73 sev 18.35 mean 20.913 | SSIM mean 0.6856 *best* | train 26s val 4s | ETA 3.6 min | gate(eff) [0.64,0.61,0.51,0.49] corr_tgt [0.66, 0.69, 0.66, 0.61]
+[C] EPOCH 2/8 loss 0.4522 | VAL PSNR mild 24.51 med 22.46 sev 18.68 mean 21.883 | SSIM mean 0.6896 *best* | train 26s val 4s | ETA 3.1 min | gate(eff) [0.62,0.6 ,0.56,0.53] corr_tgt [0.6, 0.68, 0.7, 0.63]
+[C] EPOCH 3/8 loss 0.4134 | VAL PSNR mild 25.12 med 22.88 sev 18.85 mean 22.286 | SSIM mean 0.6925 *best* | train 26s val 4s | ETA 2.5 min | gate(eff) [0.66,0.66,0.6 ,0.51] corr_tgt [0.62, 0.66, 0.72, 0.69]
+[C] EPOCH 4/8 loss 0.3901 | VAL PSNR mild 25.49 med 23.08 sev 18.80 mean 22.459 | SSIM mean 0.6945 *best* | train 26s val 4s | ETA 2.0 min | gate(eff) [0.63,0.63,0.56,0.52] corr_tgt [0.62, 0.67, 0.75, 0.74]
+[C] EPOCH 5/8 loss 0.3960 | VAL PSNR mild 25.56 med 23.23 sev 18.82 mean 22.534 | SSIM mean 0.6950 *best* | train 26s val 4s | ETA 1.5 min | gate(eff) [0.62,0.64,0.6 ,0.55] corr_tgt [0.65, 0.72, 0.76, 0.72]
+[C] EPOCH 6/8 loss 0.3943 | VAL PSNR mild 25.66 med 23.42 sev 18.89 mean 22.654 | SSIM mean 0.6956 *best* | train 26s val 4s | ETA 1.0 min | gate(eff) [0.62,0.61,0.57,0.53] corr_tgt [0.64, 0.7, 0.76, 0.72]
+[C] EPOCH 7/8 loss 0.3877 | VAL PSNR mild 25.70 med 23.48 sev 18.87 mean 22.683 | SSIM mean 0.6962 *best* | train 26s val 4s | ETA 0.5 min | gate(eff) [0.6 ,0.6 ,0.56,0.52] corr_tgt [0.66, 0.71, 0.77, 0.74]
+[C] EPOCH 8/8 loss 0.3692 | VAL PSNR mild 25.68 med 23.46 sev 18.85 mean 22.664 | SSIM mean 0.6961 | train 26s val 4s | ETA 0.0 min | gate(eff) [0.61,0.6 ,0.55,0.51] corr_tgt [0.66, 0.71, 0.78, 0.74]
+[C] done: best val PSNR(mean of 3 severities) 22.683 | 4.1 min -> /Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /results/ablation/C_best.pth
+=== restormer 16:14:32
+[restormer_tiny] 3.75M params | device=mps | budget=800 steps (bs=4, crop=128) | severity=mixed
+[restormer_tiny] step 200/800 loss 0.3394 (charb 0.0931, 1-ssim 0.351) lr 1.81e-04 | 1.7 min elapsed
+[restormer_tiny] step 400/800 loss 0.2952 (charb 0.0800, 1-ssim 0.317) lr 1.11e-04 | 3.3 min elapsed
+[restormer_tiny] step 600/800 loss 0.2758 (charb 0.0745, 1-ssim 0.297) lr 3.39e-05 | 5.0 min elapsed
+[restormer_tiny] step 800/800 loss 0.2693 (charb 0.0716, 1-ssim 0.300) lr 1.00e-06 | 6.7 min elapsed
+[restormer_tiny] done: 800 steps in 6.7 min | first loss 0.4142 -> last logged 0.2693
+=== promptir 16:21:13
+[promptir_tiny] 7.22M params | device=mps | budget=800 steps (bs=4, crop=128) | severity=mixed
+[promptir_tiny] step 200/800 loss 0.3603 (charb 0.0958, 1-ssim 0.347) lr 1.81e-04 | 1.9 min elapsed
+[promptir_tiny] step 400/800 loss 0.2953 (charb 0.0819, 1-ssim 0.310) lr 1.11e-04 | 3.8 min elapsed
+[promptir_tiny] step 600/800 loss 0.2757 (charb 0.0736, 1-ssim 0.301) lr 3.39e-05 | 5.6 min elapsed
+[promptir_tiny] step 800/800 loss 0.2659 (charb 0.0695, 1-ssim 0.294) lr 1.00e-06 | 7.5 min elapsed
+[promptir_tiny] done: 800 steps in 7.6 min | first loss 0.8538 -> last logged 0.2659
+=== ALL DONE 16:28:48

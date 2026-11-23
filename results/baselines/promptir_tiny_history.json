@@ -1,0 +1,69 @@
+{
+ "name": "promptir_tiny",
+ "n_params": 7217061,
+ "args": {
+  "model": "promptir",
+  "size": "tiny",
+  "iters": 800,
+  "epochs": null,
+  "batch_size": 4,
+  "crop": 128,
+  "lr": 0.0002,
+  "min_lr_ratio": 0.005,
+  "warmup": 50,
+  "weight_decay": 0.0001,
+  "grad_clip": 1.0,
+  "grad_ckpt": false,
+  "ema": true,
+  "ema_decay": 0.99,
+  "clean_dir": "data/train_clean",
+  "file_list": "data/splits/train.txt",
+  "severity": "mixed",
+  "val_clean_dir": null,
+  "val_file_list": null,
+  "val_severity": null,
+  "val_every": 100000,
+  "val_samples": 96,
+  "log_every": 200,
+  "save_every": 800,
+  "workers": 0,
+  "resume": false,
+  "tag": "",
+  "seed": 0,
+  "smoke": false
+ },
+ "history": [
+  {
+   "step": 200,
+   "loss": 0.360322727188468,
+   "charb": 0.09583241486921906,
+   "ssim_loss": 0.34677429735660553,
+   "lr": 0.00018099719094030728,
+   "elapsed_s": 112.19545412063599
+  },
+  {
+   "step": 400,
+   "loss": 0.29533235043287276,
+   "charb": 0.08186624143272639,
+   "ssim_loss": 0.3096830984950066,
+   "lr": 0.00011090058209513152,
+   "elapsed_s": 225.5331950187683
+  },
+  {
+   "step": 600,
+   "loss": 0.27565196879208087,
+   "charb": 0.07359493156895042,
+   "ssim_loss": 0.3007143437862396,
+   "lr": 3.392150466729364e-05,
+   "elapsed_s": 338.9336369037628
+  },
+  {
+   "step": 800,
+   "loss": 0.26594744607806203,
+   "charb": 0.06953426161780954,
+   "ssim_loss": 0.29433889567852023,
+   "lr": 1.0000000000000002e-06,
+   "elapsed_s": 452.7176299095154
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+[
+ {
+  "cfg": "Tfull",
+  "params_M": 44.40855,
+  "GMACs_128": 19.069314176,
+  "GMACs_256": 76.27599104,
+  "latency_ms_128_b1": 22.133946418762207,
+  "throughput_img_s_128_b1": 45.17947143634239,
+  "peak_mps_driver_GB_128_b1": 1.164525568,
+  "latency_ms_256_b1": 58.51101875305176,
+  "throughput_img_s_256_b1": 17.090797960988212,
+  "peak_mps_driver_GB_256_b1": 1.17710848,
+  "latency_ms_256_b4": 163.19286823272705,
+  "throughput_img_s_256_b4": 24.51087503588488,
+  "peak_mps_driver_GB_256_b4": 2.292826112
+ },
+ {
+  "cfg": "Te2",
+  "params_M": 23.019437,
+  "GMACs_128": 13.63269952,
+  "GMACs_256": 54.530417152,
+  "latency_ms_128_b1": 16.641855239868164,
+  "throughput_img_s_128_b1": 60.08945430581224,
+  "peak_mps_driver_GB_128_b1": 1.164443648,
+  "latency_ms_256_b1": 45.66001892089844,
+  "throughput_img_s_256_b1": 21.900998370859266,
+  "peak_mps_driver_GB_256_b1": 1.177010176,
+  "latency_ms_256_b4": 124.79734420776367,
+  "throughput_img_s_256_b4": 32.0519641294671,
+  "peak_mps_driver_GB_256_b4": 2.292711424
+ },
+ {
+  "cfg": "Tnone",
+  "params_M": 22.516294,
+  "GMACs_128": 11.593054336,
+  "GMACs_256": 46.371864064,
+  "latency_ms_128_b1": 15.183091163635254,
+  "throughput_img_s_128_b1": 65.86274094138892,
+  "peak_mps_driver_GB_128_b1": 1.15499008,
+  "latency_ms_256_b1": 37.76109218597412,
+  "throughput_img_s_256_b1": 26.482284862815415,
+  "peak_mps_driver_GB_256_b1": 1.176993792,
+  "latency_ms_256_b4": 103.04558277130127,
+  "throughput_img_s_256_b4": 38.81777260532919,
+  "peak_mps_driver_GB_256_b4": 2.29269504
+ }
+]

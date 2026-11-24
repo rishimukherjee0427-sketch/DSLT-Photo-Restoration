@@ -1,0 +1,124 @@
+{
+ "kind": "train",
+ "created": "2026-11-24T12:20:51",
+ "git": {
+  "commit": "e235240581506078cc217d1aa2e86930d94486a6",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   "?? experiments/stage2.py",
+   "?? results/v8_translator_training/seed123/",
+   "?? results/v8_translator_training/seed2026/",
+   "?? results/v8_translator_training/seed42/",
+   "?? results/v8_translator_training/train.log"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "cfg": {
+   "name": "dslt_v8_e2only",
+   "use_gating": false,
+   "w_gate_sup": 0.0,
+   "w_gate_sparsity": 0.0,
+   "translators": [
+    "e2"
+   ],
+   "gate_mode": "none",
+   "desc": "v8 DSLT-e2: e2 translator only"
+  },
+  "args": {
+   "config": "Te2",
+   "epochs": 8,
+   "steps_per_epoch": 100,
+   "crop": 128,
+   "batch_size": 4,
+   "lr": 0.0002,
+   "min_lr_ratio": 0.005,
+   "warmup": 50,
+   "weight_decay": 0.0001,
+   "grad_clip": 1.0,
+   "ema_decay": 0.99,
+   "seed": 2026,
+   "val_n": 24,
+   "log_every": 100,
+   "clean_dir": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/train_clean",
+   "file_list": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/splits/train.txt",
+   "resume": false,
+   "smoke": false,
+   "stop_after_epoch": null,
+   "out_dir": "results/v8_translator_training/seed2026",
+   "vgg_normalize": 1
+  },
+  "meta": {
+   "config": "Te2",
+   "name": "dslt_v8_e2only",
+   "use_gating": false,
+   "gate_mode": "none",
+   "gate_head": "rich",
+   "w_gate_sup": 0.0,
+   "w_gate_sparsity": 0.0,
+   "crop": 128,
+   "steps_per_epoch": 100,
+   "epochs": 8,
+   "seed": 2026,
+   "uses_ema": true,
+   "ema_decay": 0.99,
+   "vgg_normalize": true,
+   "translators": [
+    "e2"
+   ],
+   "gate_mode_built": "none"
+  },
+  "n_params": 24583925
+ },
+ "metrics": {
+  "best_val_psnr_mean": 23.06536717428983,
+  "best_epoch": 8,
+  "best_val": {
+   "mild": {
+    "psnr": 26.100041863766226,
+    "ssim": 0.7678727048138777
+   },
+   "medium": {
+    "psnr": 23.94405651706795,
+    "ssim": 0.7287786081433296
+   },
+   "severe": {
+    "psnr": 19.152003142035312,
+    "ssim": 0.6049645120898882
+   },
+   "psnr_mean": 23.06536717428983,
+   "ssim_mean": 0.7005386083490318,
+   "sev_map_l1": 0.18890965854128203
+  }
+ },
+ "checkpoint": {
+  "path": "results/v8_translator_training/seed2026/Te2_best.pth",
+  "sha256": "e59e9a2d4328bcf5aa24816aedb1b6f2b4fef61281ba620bd2ce31dc9257f92b"
+ },
+ "extra": {
+  "train_minutes": 3.276057716210683,
+  "peak_mps_driver_bytes": 2599223296,
+  "last_checkpoint": "results/v8_translator_training/seed2026/Te2_last.pth"
+ }
+}

@@ -1,0 +1,93 @@
+=== seed 42 cfg Tfull 22:35:20
+[Tfull] EPOCH 1/8 loss 0.3975 | VAL PSNR mild 23.63 med 22.17 sev 18.47 mean 21.423 | SSIM mean 0.6883 *best* | train 26s val 4s | ETA 3.6 min
+[Tfull] EPOCH 2/8 loss 0.3658 | VAL PSNR mild 24.37 med 22.33 sev 18.45 mean 21.713 | SSIM mean 0.6880 *best* | train 26s val 4s | ETA 3.1 min
+[Tfull] EPOCH 3/8 loss 0.3352 | VAL PSNR mild 25.04 med 22.96 sev 18.72 mean 22.241 | SSIM mean 0.6919 *best* | train 25s val 4s | ETA 2.5 min
+[Tfull] EPOCH 4/8 loss 0.3105 | VAL PSNR mild 25.52 med 23.08 sev 18.80 mean 22.466 | SSIM mean 0.6934 *best* | train 25s val 4s | ETA 2.0 min
+[Tfull] EPOCH 5/8 loss 0.3170 | VAL PSNR mild 25.54 med 23.07 sev 18.77 mean 22.458 | SSIM mean 0.6934 | train 25s val 4s | ETA 1.5 min
+[Tfull] EPOCH 6/8 loss 0.3224 | VAL PSNR mild 25.79 med 23.23 sev 18.91 mean 22.642 | SSIM mean 0.6939 *best* | train 25s val 4s | ETA 1.0 min
+[Tfull] EPOCH 7/8 loss 0.3135 | VAL PSNR mild 25.81 med 23.20 sev 18.85 mean 22.623 | SSIM mean 0.6934 | train 25s val 4s | ETA 0.5 min
+[Tfull] EPOCH 8/8 loss 0.2975 | VAL PSNR mild 25.77 med 23.12 sev 18.89 mean 22.592 | SSIM mean 0.6933 | train 25s val 4s | ETA 0.0 min
+[Tfull] done: best val PSNR(mean of 3 severities) 22.642 | 4.0 min -> results/v8_translator_training/seed42/Tfull_best.pth
+=== seed 42 cfg Te2 22:39:23
+[Te2] EPOCH 1/8 loss 0.4029 | VAL PSNR mild 23.81 med 22.42 sev 18.60 mean 21.613 | SSIM mean 0.6894 *best* | train 20s val 3s | ETA 2.8 min
+[Te2] EPOCH 2/8 loss 0.3660 | VAL PSNR mild 24.86 med 22.53 sev 18.66 mean 22.019 | SSIM mean 0.6908 *best* | train 20s val 3s | ETA 2.4 min
+[Te2] EPOCH 3/8 loss 0.3336 | VAL PSNR mild 25.15 med 22.80 sev 18.85 mean 22.266 | SSIM mean 0.6930 *best* | train 20s val 3s | ETA 2.0 min
+[Te2] EPOCH 4/8 loss 0.3104 | VAL PSNR mild 25.44 med 22.84 sev 18.77 mean 22.349 | SSIM mean 0.6924 *best* | train 20s val 3s | ETA 1.6 min
+[Te2] EPOCH 5/8 loss 0.3176 | VAL PSNR mild 25.39 med 22.95 sev 18.78 mean 22.375 | SSIM mean 0.6906 *best* | train 20s val 3s | ETA 1.2 min
+[Te2] EPOCH 6/8 loss 0.3194 | VAL PSNR mild 25.56 med 23.30 sev 18.94 mean 22.600 | SSIM mean 0.6911 *best* | train 26s val 586s | ETA 4.1 min
+[Te2] EPOCH 7/8 loss 0.3075 | VAL PSNR mild 25.54 med 23.29 sev 18.97 mean 22.603 | SSIM mean 0.6927 *best* | train 683s val 3s | ETA 3.4 min
+[Te2] EPOCH 8/8 loss 0.2931 | VAL PSNR mild 25.48 med 23.26 sev 18.96 mean 22.568 | SSIM mean 0.6927 | train 21s val 3s | ETA 0.0 min
+[Te2] done: best val PSNR(mean of 3 severities) 22.603 | 24.1 min -> results/v8_translator_training/seed42/Te2_best.pth
+=== seed 42 cfg Tnone 23:03:30
+[Tnone] EPOCH 1/8 loss 0.4018 | VAL PSNR mild 23.48 med 22.20 sev 18.42 mean 21.365 | SSIM mean 0.6853 *best* | train 19s val 3s | ETA 2.6 min
+[Tnone] EPOCH 2/8 loss 0.3680 | VAL PSNR mild 24.38 med 22.41 sev 18.56 mean 21.784 | SSIM mean 0.6886 *best* | train 18s val 3s | ETA 2.2 min
+[Tnone] EPOCH 3/8 loss 0.3379 | VAL PSNR mild 24.89 med 22.74 sev 18.70 mean 22.112 | SSIM mean 0.6905 *best* | train 18s val 3s | ETA 1.8 min
+[Tnone] EPOCH 4/8 loss 0.3122 | VAL PSNR mild 25.10 med 22.92 sev 18.75 mean 22.259 | SSIM mean 0.6914 *best* | train 18s val 3s | ETA 1.5 min
+[Tnone] EPOCH 5/8 loss 0.3214 | VAL PSNR mild 25.22 med 23.17 sev 18.73 mean 22.377 | SSIM mean 0.6913 *best* | train 18s val 3s | ETA 1.1 min
+[Tnone] EPOCH 6/8 loss 0.3272 | VAL PSNR mild 25.60 med 23.45 sev 18.83 mean 22.627 | SSIM mean 0.6925 *best* | train 18s val 3s | ETA 0.7 min
+[Tnone] EPOCH 7/8 loss 0.3219 | VAL PSNR mild 25.73 med 23.47 sev 18.80 mean 22.666 | SSIM mean 0.6926 *best* | train 357s val 3s | ETA 1.2 min
+[Tnone] EPOCH 8/8 loss 0.3084 | VAL PSNR mild 25.78 med 23.49 sev 18.81 mean 22.694 | SSIM mean 0.6920 *best* | train 19s val 3s | ETA 0.0 min
+[Tnone] done: best val PSNR(mean of 3 severities) 22.694 | 8.6 min -> results/v8_translator_training/seed42/Tnone_best.pth
+=== seed 123 cfg Tfull 23:12:06
+[Tfull] EPOCH 1/8 loss 0.3877 | VAL PSNR mild 23.32 med 22.20 sev 18.39 mean 21.302 | SSIM mean 0.6846 *best* | train 25s val 4s | ETA 3.5 min
+[Tfull] EPOCH 2/8 loss 0.3485 | VAL PSNR mild 25.25 med 23.15 sev 18.50 mean 22.302 | SSIM mean 0.6918 *best* | train 25s val 4s | ETA 3.0 min
+[Tfull] EPOCH 3/8 loss 0.3427 | VAL PSNR mild 25.56 med 23.19 sev 18.42 mean 22.390 | SSIM mean 0.6936 *best* | train 25s val 4s | ETA 2.5 min
+[Tfull] EPOCH 4/8 loss 0.3218 | VAL PSNR mild 25.66 med 23.44 sev 18.64 mean 22.581 | SSIM mean 0.6954 *best* | train 25s val 4s | ETA 2.0 min
+[Tfull] EPOCH 5/8 loss 0.3358 | VAL PSNR mild 25.74 med 23.43 sev 18.73 mean 22.634 | SSIM mean 0.6960 *best* | train 1346s val 4s | ETA 14.7 min
+[Tfull] EPOCH 6/8 loss 0.3205 | VAL PSNR mild 25.89 med 23.62 sev 18.79 mean 22.770 | SSIM mean 0.6971 *best* | train 25s val 4s | ETA 8.3 min
+[Tfull] EPOCH 7/8 loss 0.3128 | VAL PSNR mild 26.04 med 23.88 sev 18.90 mean 22.939 | SSIM mean 0.6977 *best* | train 25s val 4s | ETA 3.6 min
+[Tfull] EPOCH 8/8 loss 0.3003 | VAL PSNR mild 26.11 med 24.05 sev 18.98 mean 23.045 | SSIM mean 0.6992 *best* | train 25s val 4s | ETA 0.0 min
+[Tfull] done: best val PSNR(mean of 3 severities) 23.045 | 26.0 min -> results/v8_translator_training/seed123/Tfull_best.pth
+=== seed 123 cfg Te2 23:38:09
+[Te2] EPOCH 1/8 loss 0.3894 | VAL PSNR mild 23.33 med 22.22 sev 18.47 mean 21.341 | SSIM mean 0.6863 *best* | train 20s val 3s | ETA 2.8 min
+[Te2] EPOCH 2/8 loss 0.3516 | VAL PSNR mild 24.58 med 22.87 sev 18.66 mean 22.037 | SSIM mean 0.6924 *best* | train 20s val 3s | ETA 2.4 min
+[Te2] EPOCH 3/8 loss 0.3465 | VAL PSNR mild 25.27 med 22.92 sev 18.48 mean 22.225 | SSIM mean 0.6939 *best* | train 1519s val 4s | ETA 43.7 min
+[Te2] EPOCH 4/8 loss 0.3261 | VAL PSNR mild 25.38 med 23.29 sev 18.55 mean 22.409 | SSIM mean 0.6941 *best* | train 927s val 4s | ETA 41.7 min
+[Te2] EPOCH 5/8 loss 0.3425 | VAL PSNR mild 25.45 med 23.16 sev 18.63 mean 22.414 | SSIM mean 0.6943 *best* | train 2369s val 3s | ETA 48.8 min
+[Te2] EPOCH 6/8 loss 0.3289 | VAL PSNR mild 25.64 med 23.38 sev 18.59 mean 22.538 | SSIM mean 0.6939 *best* | train 20s val 3s | ETA 27.2 min
+[Te2] EPOCH 7/8 loss 0.3296 | VAL PSNR mild 25.76 med 23.54 sev 18.60 mean 22.634 | SSIM mean 0.6935 *best* | train 20s val 3s | ETA 11.7 min
+[Te2] EPOCH 8/8 loss 0.3216 | VAL PSNR mild 25.81 med 23.63 sev 18.66 mean 22.697 | SSIM mean 0.6934 *best* | train 20s val 3s | ETA 0.0 min
+[Te2] done: best val PSNR(mean of 3 severities) 22.697 | 82.5 min -> results/v8_translator_training/seed123/Te2_best.pth
+=== seed 123 cfg Tnone 01:00:41
+[Tnone] EPOCH 1/8 loss 0.3879 | VAL PSNR mild 23.32 med 22.15 sev 18.32 mean 21.262 | SSIM mean 0.6853 *best* | train 18s val 3s | ETA 2.5 min
+[Tnone] EPOCH 2/8 loss 0.3500 | VAL PSNR mild 24.45 med 22.81 sev 18.78 mean 22.013 | SSIM mean 0.6920 *best* | train 18s val 3s | ETA 2.2 min
+[Tnone] EPOCH 3/8 loss 0.3441 | VAL PSNR mild 24.96 med 22.94 sev 18.80 mean 22.233 | SSIM mean 0.6950 *best* | train 18s val 3s | ETA 1.8 min
+[Tnone] EPOCH 4/8 loss 0.3212 | VAL PSNR mild 25.38 med 23.23 sev 18.94 mean 22.514 | SSIM mean 0.6954 *best* | train 614s val 904s | ETA 26.4 min
+[Tnone] EPOCH 5/8 loss 0.3343 | VAL PSNR mild 25.55 med 23.30 sev 19.00 mean 22.617 | SSIM mean 0.6956 *best* | train 23s val 4s | ETA 16.1 min
+[Tnone] EPOCH 6/8 loss 0.3162 | VAL PSNR mild 25.96 med 23.57 sev 19.08 mean 22.872 | SSIM mean 0.6969 *best* | train 925s val 271s | ETA 15.6 min
+[Tnone] EPOCH 7/8 loss 0.3069 | VAL PSNR mild 26.05 med 23.77 sev 19.15 mean 22.989 | SSIM mean 0.6972 *best* | train 258s val 3s | ETA 7.3 min
+[Tnone] EPOCH 8/8 loss 0.2981 | VAL PSNR mild 26.04 med 23.90 sev 19.18 mean 23.038 | SSIM mean 0.6968 *best* | train 19s val 3s | ETA 0.0 min
+[Tnone] done: best val PSNR(mean of 3 severities) 23.038 | 51.5 min -> results/v8_translator_training/seed123/Tnone_best.pth
+=== seed 2026 cfg Tfull 01:52:15
+=== RESUMED after session interruption 2026-11-24 12:13:28 (seed 2026 Tfull restarted from scratch; no partial checkpoint existed)
+=== seed 2026 cfg Tfull 12:13:28
+[Tfull] EPOCH 1/8 loss 0.3884 | VAL PSNR mild 23.01 med 21.96 sev 18.30 mean 21.087 | SSIM mean 0.6852 *best* | train 26s val 4s | ETA 3.6 min
+[Tfull] EPOCH 2/8 loss 0.3609 | VAL PSNR mild 24.71 med 22.72 sev 18.81 mean 22.079 | SSIM mean 0.6941 *best* | train 25s val 4s | ETA 3.0 min
+[Tfull] EPOCH 3/8 loss 0.3366 | VAL PSNR mild 24.97 med 22.86 sev 18.72 mean 22.183 | SSIM mean 0.6930 *best* | train 25s val 4s | ETA 2.5 min
+[Tfull] EPOCH 4/8 loss 0.3341 | VAL PSNR mild 25.34 med 23.17 sev 18.89 mean 22.465 | SSIM mean 0.6935 *best* | train 25s val 4s | ETA 2.0 min
+[Tfull] EPOCH 5/8 loss 0.3311 | VAL PSNR mild 25.40 med 23.13 sev 18.95 mean 22.493 | SSIM mean 0.6932 *best* | train 25s val 4s | ETA 1.5 min
+[Tfull] EPOCH 6/8 loss 0.3147 | VAL PSNR mild 25.56 med 23.18 sev 19.01 mean 22.584 | SSIM mean 0.6941 *best* | train 25s val 4s | ETA 1.0 min
+[Tfull] EPOCH 7/8 loss 0.2907 | VAL PSNR mild 25.83 med 23.44 sev 19.15 mean 22.807 | SSIM mean 0.6968 *best* | train 25s val 4s | ETA 0.5 min
+[Tfull] EPOCH 8/8 loss 0.2980 | VAL PSNR mild 25.93 med 23.50 sev 19.15 mean 22.861 | SSIM mean 0.6973 *best* | train 25s val 4s | ETA 0.0 min
+[Tfull] done: best val PSNR(mean of 3 severities) 22.861 | 4.0 min -> results/v8_translator_training/seed2026/Tfull_best.pth
+=== seed 2026 cfg Te2 12:17:32
+[Te2] EPOCH 1/8 loss 0.3875 | VAL PSNR mild 23.15 med 21.90 sev 18.24 mean 21.099 | SSIM mean 0.6859 *best* | train 21s val 3s | ETA 2.9 min
+[Te2] EPOCH 2/8 loss 0.3578 | VAL PSNR mild 24.84 med 22.37 sev 18.30 mean 21.836 | SSIM mean 0.6875 *best* | train 21s val 3s | ETA 2.5 min
+[Te2] EPOCH 3/8 loss 0.3370 | VAL PSNR mild 24.95 med 22.61 sev 18.41 mean 21.990 | SSIM mean 0.6895 *best* | train 21s val 3s | ETA 2.0 min
+[Te2] EPOCH 4/8 loss 0.3359 | VAL PSNR mild 25.51 med 23.10 sev 18.65 mean 22.419 | SSIM mean 0.6940 *best* | train 21s val 3s | ETA 1.6 min
+[Te2] EPOCH 5/8 loss 0.3347 | VAL PSNR mild 25.62 med 23.33 sev 18.83 mean 22.595 | SSIM mean 0.6955 *best* | train 21s val 3s | ETA 1.2 min
+[Te2] EPOCH 6/8 loss 0.3223 | VAL PSNR mild 25.78 med 23.39 sev 18.84 mean 22.670 | SSIM mean 0.6975 *best* | train 21s val 3s | ETA 0.8 min
+[Te2] EPOCH 7/8 loss 0.2960 | VAL PSNR mild 25.99 med 23.76 sev 19.06 mean 22.938 | SSIM mean 0.6994 *best* | train 21s val 3s | ETA 0.4 min
+[Te2] EPOCH 8/8 loss 0.2972 | VAL PSNR mild 26.10 med 23.94 sev 19.15 mean 23.065 | SSIM mean 0.7005 *best* | train 21s val 3s | ETA 0.0 min
+[Te2] done: best val PSNR(mean of 3 severities) 23.065 | 3.3 min -> results/v8_translator_training/seed2026/Te2_best.pth
+=== seed 2026 cfg Tnone 12:20:52
+[Tnone] EPOCH 1/8 loss 0.3903 | VAL PSNR mild 23.21 med 22.05 sev 18.28 mean 21.178 | SSIM mean 0.6836 *best* | train 19s val 3s | ETA 2.6 min
+[Tnone] EPOCH 2/8 loss 0.3635 | VAL PSNR mild 24.02 med 22.51 sev 18.77 mean 21.766 | SSIM mean 0.6928 *best* | train 19s val 3s | ETA 2.2 min
+[Tnone] EPOCH 3/8 loss 0.3385 | VAL PSNR mild 24.79 med 22.90 sev 18.88 mean 22.187 | SSIM mean 0.6952 *best* | train 19s val 3s | ETA 1.8 min
+[Tnone] EPOCH 4/8 loss 0.3351 | VAL PSNR mild 25.48 med 23.29 sev 19.07 mean 22.612 | SSIM mean 0.6971 *best* | train 19s val 3s | ETA 1.5 min
+[Tnone] EPOCH 5/8 loss 0.3298 | VAL PSNR mild 25.76 med 23.37 sev 19.21 mean 22.780 | SSIM mean 0.6972 *best* | train 19s val 3s | ETA 1.1 min
+[Tnone] EPOCH 6/8 loss 0.3125 | VAL PSNR mild 25.89 med 23.41 sev 19.25 mean 22.851 | SSIM mean 0.6989 *best* | train 19s val 3s | ETA 0.7 min
+[Tnone] EPOCH 7/8 loss 0.2868 | VAL PSNR mild 26.07 med 23.74 sev 19.44 mean 23.084 | SSIM mean 0.6985 *best* | train 19s val 3s | ETA 0.4 min
+[Tnone] EPOCH 8/8 loss 0.2930 | VAL PSNR mild 26.08 med 23.75 sev 19.45 mean 23.096 | SSIM mean 0.6981 *best* | train 19s val 3s | ETA 0.0 min
+[Tnone] done: best val PSNR(mean of 3 severities) 23.096 | 3.0 min -> results/v8_translator_training/seed2026/Tnone_best.pth
+=== ALL DONE 12:23:52

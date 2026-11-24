@@ -63,3 +63,6 @@ results/v7_corrected/predictions/
 
 # Raw Stage-0 test predictions (regenerable via experiments/stage0.py eval)
 results/v7_stage0/predictions/
+
+# Raw Stage-2 predictions (regenerable)
+results/v8_translator_training/predictions/

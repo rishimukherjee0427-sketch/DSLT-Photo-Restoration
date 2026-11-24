@@ -1,0 +1,79 @@
+{
+ "kind": "eval",
+ "created": "2026-11-24T12:26:51",
+ "git": {
+  "commit": "e235240581506078cc217d1aa2e86930d94486a6",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   "?? experiments/stage2.py",
+   "?? results/v8_translator_training/checkpoint_integrity.json",
+   "?? results/v8_translator_training/per_image/",
+   "?? results/v8_translator_training/seed123/",
+   "?? results/v8_translator_training/seed2026/",
+   "?? results/v8_translator_training/seed42/",
+   "?? results/v8_translator_training/stage2.log",
+   "?? results/v8_translator_training/train.log"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "info": {
+   "cfg": "Te2",
+   "seed": 42,
+   "params": 23019437,
+   "translators": [
+    "e2"
+   ],
+   "alignment_checked_inputs": 750
+  },
+  "split": "test",
+  "psnr_cap_db": 50,
+  "lpips": "alex"
+ },
+ "metrics": {
+  "mild": {
+   "psnr": 26.77637971300565,
+   "ssim": 0.8025853139162064,
+   "lpips": 0.22081448797462508
+  },
+  "medium": {
+   "psnr": 24.124204237129497,
+   "ssim": 0.7456402060985565,
+   "lpips": 0.3338527927789837
+  },
+  "severe": {
+   "psnr": 18.615501509617104,
+   "ssim": 0.5916840541958809,
+   "lpips": 0.5835117658376694
+  }
+ },
+ "checkpoint": {
+  "path": "results/v8_translator_training/seed42/Te2_best.pth",
+  "sha256": "d5188b9e94293bd3db27fb2097d5c25ba7381a710e4097fe85700853cc1c688c"
+ },
+ "extra": {
+  "eval_s": 36.91324424743652,
+  "alignment_checked_inputs": 750
+ }
+}

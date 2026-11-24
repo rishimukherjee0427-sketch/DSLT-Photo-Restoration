@@ -1,0 +1,82 @@
+{
+ "kind": "eval",
+ "created": "2026-11-24T12:24:45",
+ "git": {
+  "commit": "e235240581506078cc217d1aa2e86930d94486a6",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   "?? experiments/stage2.py",
+   "?? results/v8_translator_training/checkpoint_integrity.json",
+   "?? results/v8_translator_training/per_image/",
+   "?? results/v8_translator_training/seed123/",
+   "?? results/v8_translator_training/seed2026/",
+   "?? results/v8_translator_training/seed42/",
+   "?? results/v8_translator_training/stage2.log",
+   "?? results/v8_translator_training/train.log"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "info": {
+   "cfg": "Tfull",
+   "seed": 42,
+   "params": 44408550,
+   "translators": [
+    "e2",
+    "e3",
+    "e4",
+    "bn"
+   ],
+   "alignment_checked_inputs": 750
+  },
+  "split": "test",
+  "psnr_cap_db": 50,
+  "lpips": "alex"
+ },
+ "metrics": {
+  "mild": {
+   "psnr": 26.65297440378857,
+   "ssim": 0.8013961937427521,
+   "lpips": 0.22296426612976938
+  },
+  "medium": {
+   "psnr": 23.940555026431756,
+   "ssim": 0.743552521109581,
+   "lpips": 0.3363837612015195
+  },
+  "severe": {
+   "psnr": 18.469929129559816,
+   "ssim": 0.5895033772587777,
+   "lpips": 0.5820624465346337
+  }
+ },
+ "checkpoint": {
+  "path": "results/v8_translator_training/seed42/Tfull_best.pth",
+  "sha256": "89017cc134dae475818473361829334ae6bf03b8bbb955d7b828050bdbc7cc1a"
+ },
+ "extra": {
+  "eval_s": 44.33898591995239,
+  "alignment_checked_inputs": 750
+ }
+}

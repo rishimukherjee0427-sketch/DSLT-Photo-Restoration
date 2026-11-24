@@ -1,0 +1,128 @@
+{
+ "kind": "train",
+ "created": "2026-11-24T17:38:14",
+ "git": {
+  "commit": "8656affde5ae7c6e55c681bee114a638dcdd04c2",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   "?? experiments/stage3.py",
+   "?? results/v9_convergence_pilot/seed42/",
+   "?? results/v9_convergence_pilot/train.log"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "cfg": {
+   "name": "dslt_v8_full",
+   "use_gating": false,
+   "w_gate_sup": 0.0,
+   "w_gate_sparsity": 0.0,
+   "translators": [
+    "e2",
+    "e3",
+    "e4",
+    "bn"
+   ],
+   "gate_mode": "none",
+   "desc": "v8 full DSLT-A: all 4 translators, no gating modules"
+  },
+  "args": {
+   "config": "Tfull",
+   "epochs": 20,
+   "steps_per_epoch": 1000,
+   "crop": 256,
+   "batch_size": 4,
+   "lr": 0.0002,
+   "min_lr_ratio": 0.005,
+   "warmup": 500,
+   "weight_decay": 0.0001,
+   "grad_clip": 1.0,
+   "ema_decay": 0.999,
+   "seed": 42,
+   "val_n": 250,
+   "log_every": 200,
+   "clean_dir": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/train_clean",
+   "file_list": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/splits/train.txt",
+   "resume": true,
+   "smoke": false,
+   "stop_after_epoch": null,
+   "out_dir": "results/v9_convergence_pilot/seed42",
+   "vgg_normalize": 1
+  },
+  "meta": {
+   "config": "Tfull",
+   "name": "dslt_v8_full",
+   "use_gating": false,
+   "gate_mode": "none",
+   "gate_head": "rich",
+   "w_gate_sup": 0.0,
+   "w_gate_sparsity": 0.0,
+   "crop": 256,
+   "steps_per_epoch": 1000,
+   "epochs": 20,
+   "seed": 42,
+   "uses_ema": true,
+   "ema_decay": 0.999,
+   "vgg_normalize": true,
+   "translators": [
+    "e2",
+    "e3",
+    "e4",
+    "bn"
+   ],
+   "gate_mode_built": "none"
+  },
+  "n_params": 45973038
+ },
+ "metrics": {
+  "best_val_psnr_mean": 26.532967274229502,
+  "best_epoch": 20,
+  "best_val": {
+   "mild": {
+    "psnr": 29.712334163808155,
+    "ssim": 0.8772790503501892
+   },
+   "medium": {
+    "psnr": 27.283678972173867,
+    "ssim": 0.8232383621931076
+   },
+   "severe": {
+    "psnr": 22.602888686706482,
+    "ssim": 0.6830929499864579
+   },
+   "psnr_mean": 26.532967274229502,
+   "ssim_mean": 0.7945367875099182,
+   "sev_map_l1": 0.10118407436779567
+  }
+ },
+ "checkpoint": {
+  "path": "results/v9_convergence_pilot/seed42/Tfull_best.pth",
+  "sha256": "7decdad841d665869b8452de5a810b8af53a917407b83f71da195eb6a9be1150"
+ },
+ "extra": {
+  "train_minutes": 296.4149479667346,
+  "peak_mps_driver_bytes": 7193509888,
+  "last_checkpoint": "results/v9_convergence_pilot/seed42/Tfull_last.pth"
+ }
+}

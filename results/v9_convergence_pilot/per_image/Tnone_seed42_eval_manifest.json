@@ -1,0 +1,75 @@
+{
+ "kind": "eval",
+ "created": "2026-11-24T21:23:39",
+ "git": {
+  "commit": "8656affde5ae7c6e55c681bee114a638dcdd04c2",
+  "dirty": true,
+  "dirty_files": [
+   "M .gitignore",
+   "?? experiments/stage3.py",
+   "?? results/v9_convergence_pilot/checkpoint_integrity.json",
+   "?? results/v9_convergence_pilot/per_image/",
+   "?? results/v9_convergence_pilot/seed42/",
+   "?? results/v9_convergence_pilot/stage3.log",
+   "?? results/v9_convergence_pilot/train.log"
+  ]
+ },
+ "splits_sha256": {
+  "train": "053e03da3114190202aab536344e51f6a8bb101283770fda8ae68e0edd8ba98f",
+  "val": "16e4725edd54d16da462333842bbd95bc555b0336f28f0e4912ffc5634acc894",
+  "test": "d263f0df733a2ec21e977fdcb96e879ec634dbd62c39c68340c12a519f435523"
+ },
+ "environment": {
+  "python": "3.12.10",
+  "torch": "2.15.0",
+  "torchvision": "0.29.2",
+  "lpips": "0.1.4",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "macos": "27.0",
+  "mps_available": true,
+  "chip": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "env": {
+   "PYTORCH_ENABLE_MPS_FALLBACK": "1",
+   "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.5",
+   "PYTORCH_MPS_LOW_WATERMARK_RATIO": "0.4"
+  }
+ },
+ "config": {
+  "info": {
+   "cfg": "Tnone",
+   "seed": 42,
+   "params": 22516294,
+   "translators": [],
+   "alignment_checked_inputs": 750
+  },
+  "split": "test",
+  "psnr_cap_db": 50,
+  "lpips": "alex"
+ },
+ "metrics": {
+  "mild": {
+   "psnr": 29.78728151852363,
+   "ssim": 0.8789140720367432,
+   "lpips": 0.1374459753371775
+  },
+  "medium": {
+   "psnr": 27.426976020508306,
+   "ssim": 0.8254929859638214,
+   "lpips": 0.22647393899038434
+  },
+  "severe": {
+   "psnr": 22.779516527533886,
+   "ssim": 0.6861478818655014,
+   "lpips": 0.43515546202659605
+  }
+ },
+ "checkpoint": {
+  "path": "results/v9_convergence_pilot/seed42/Tnone_best.pth",
+  "sha256": "d7c9dd8740111365627f3cbb27889dd82d51bbde13a1d7a23edcd0da4fc0d289"
+ },
+ "extra": {
+  "eval_s": 31.675601959228516,
+  "alignment_checked_inputs": 750
+ }
+}

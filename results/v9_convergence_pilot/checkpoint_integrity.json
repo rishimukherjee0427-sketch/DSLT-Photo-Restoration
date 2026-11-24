@@ -1,0 +1,28 @@
+[
+ {
+  "cfg": "Tfull",
+  "sha256": "7decdad841d665869b8452de5a810b8af53a917407b83f71da195eb6a9be1150",
+  "sha_matches_manifest": true,
+  "nonfinite": 0,
+  "metadata_ok": true,
+  "completed_steps": 20000,
+  "best_epoch": 20,
+  "best_val_psnr_mean": 26.532967274229502,
+  "train_minutes_wallclock": 296.4149479667346,
+  "peak_train_mps_driver_GB": 7.193509888,
+  "ok": true
+ },
+ {
+  "cfg": "Tnone",
+  "sha256": "d7c9dd8740111365627f3cbb27889dd82d51bbde13a1d7a23edcd0da4fc0d289",
+  "sha_matches_manifest": true,
+  "nonfinite": 0,
+  "metadata_ok": true,
+  "completed_steps": 20000,
+  "best_epoch": 20,
+  "best_val_psnr_mean": 26.572460444918974,
+  "train_minutes_wallclock": 215.4860578139623,
+  "peak_train_mps_driver_GB": 5.767036928,
+  "ok": true
+ }
+]

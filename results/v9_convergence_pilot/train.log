@@ -1,0 +1,47 @@
+=== cfg Tfull start/resume 2026-11-24 12:41:44
+[Tfull] EPOCH 1/20 loss 0.3258 | VAL PSNR mild 27.23 med 24.61 sev 19.16 mean 23.669 | SSIM mean 0.7188 *best* | train 836s val 42s | ETA 278.4 min
+[Tfull] EPOCH 2/20 loss 0.2721 | VAL PSNR mild 27.82 med 25.25 sev 19.96 mean 24.344 | SSIM mean 0.7278 *best* | train 837s val 42s | ETA 263.8 min
+[Tfull] EPOCH 3/20 loss 0.2592 | VAL PSNR mild 28.09 med 25.53 sev 20.38 mean 24.666 | SSIM mean 0.7350 *best* | train 839s val 42s | ETA 249.4 min
+[Tfull] EPOCH 4/20 loss 0.2511 | VAL PSNR mild 28.32 med 25.82 sev 20.78 mean 24.977 | SSIM mean 0.7419 *best* | train 837s val 42s | ETA 234.7 min
+[Tfull] EPOCH 5/20 loss 0.2426 | VAL PSNR mild 28.54 med 26.05 sev 21.03 mean 25.205 | SSIM mean 0.7481 *best* | train 863s val 42s | ETA 221.3 min
+[Tfull] EPOCH 6/20 loss 0.2341 | VAL PSNR mild 28.72 med 26.22 sev 21.26 mean 25.400 | SSIM mean 0.7557 *best* | train 868s val 42s | ETA 207.5 min
+[Tfull] EPOCH 7/20 loss 0.2278 | VAL PSNR mild 28.85 med 26.36 sev 21.48 mean 25.563 | SSIM mean 0.7624 *best* | train 852s val 42s | ETA 192.8 min
+[Tfull] EPOCH 8/20 loss 0.2221 | VAL PSNR mild 29.00 med 26.52 sev 21.65 mean 25.725 | SSIM mean 0.7696 *best* | train 847s val 42s | ETA 178.0 min
+[Tfull] EPOCH 9/20 loss 0.2176 | VAL PSNR mild 29.16 med 26.70 sev 21.80 mean 25.888 | SSIM mean 0.7753 *best* | train 845s val 42s | ETA 163.1 min
+[Tfull] EPOCH 10/20 loss 0.2130 | VAL PSNR mild 29.32 med 26.82 sev 21.93 mean 26.025 | SSIM mean 0.7802 *best* | train 842s val 41s | ETA 148.2 min
+[Tfull] EPOCH 11/20 loss 0.2075 | VAL PSNR mild 29.42 med 26.91 sev 22.03 mean 26.121 | SSIM mean 0.7838 *best* | train 836s val 42s | ETA 133.2 min
+[Tfull] EPOCH 12/20 loss 0.2076 | VAL PSNR mild 29.47 med 26.98 sev 22.18 mean 26.211 | SSIM mean 0.7863 *best* | train 840s val 42s | ETA 118.4 min
+[Tfull] EPOCH 13/20 loss 0.2027 | VAL PSNR mild 29.53 med 27.03 sev 22.28 mean 26.279 | SSIM mean 0.7887 *best* | train 836s val 41s | ETA 103.5 min
+[Tfull] EPOCH 14/20 loss 0.1988 | VAL PSNR mild 29.58 med 27.09 sev 22.36 mean 26.343 | SSIM mean 0.7903 *best* | train 849s val 42s | ETA 88.7 min
+[Tfull] EPOCH 15/20 loss 0.1983 | VAL PSNR mild 29.62 med 27.14 sev 22.43 mean 26.397 | SSIM mean 0.7919 *best* | train 863s val 45s | ETA 74.1 min
+[Tfull] EPOCH 16/20 loss 0.1948 | VAL PSNR mild 29.66 med 27.21 sev 22.49 mean 26.454 | SSIM mean 0.7928 *best* | train 892s val 42s | ETA 59.4 min
+[Tfull] EPOCH 17/20 loss 0.1929 | VAL PSNR mild 29.69 med 27.23 sev 22.53 mean 26.483 | SSIM mean 0.7936 *best* | train 842s val 42s | ETA 44.6 min
+[Tfull] EPOCH 18/20 loss 0.1909 | VAL PSNR mild 29.69 med 27.25 sev 22.56 mean 26.503 | SSIM mean 0.7940 *best* | train 839s val 42s | ETA 29.7 min
+[Tfull] EPOCH 19/20 loss 0.1889 | VAL PSNR mild 29.70 med 27.27 sev 22.59 mean 26.520 | SSIM mean 0.7944 *best* | train 835s val 41s | ETA 14.8 min
+[Tfull] EPOCH 20/20 loss 0.1906 | VAL PSNR mild 29.71 med 27.28 sev 22.60 mean 26.533 | SSIM mean 0.7945 *best* | train 832s val 42s | ETA 0.0 min
+[Tfull] done: best val PSNR(mean of 3 severities) 26.533 | 296.4 min -> results/v9_convergence_pilot/seed42/Tfull_best.pth
+=== cfg Tfull exit 0 2026-11-24 17:38:15
+=== cfg Tnone start/resume 2026-11-24 17:38:15
+[Tnone] EPOCH 1/20 loss 0.3324 | VAL PSNR mild 27.06 med 24.34 sev 19.00 mean 23.465 | SSIM mean 0.7162 *best* | train 617s val 30s | ETA 205.1 min
+[Tnone] EPOCH 2/20 loss 0.2751 | VAL PSNR mild 27.79 med 25.10 sev 19.85 mean 24.248 | SSIM mean 0.7281 *best* | train 612s val 30s | ETA 193.5 min
+[Tnone] EPOCH 3/20 loss 0.2580 | VAL PSNR mild 28.11 med 25.46 sev 20.37 mean 24.646 | SSIM mean 0.7385 *best* | train 613s val 30s | ETA 182.6 min
+[Tnone] EPOCH 4/20 loss 0.2486 | VAL PSNR mild 28.34 med 25.77 sev 20.78 mean 24.962 | SSIM mean 0.7477 *best* | train 616s val 30s | ETA 172.0 min
+[Tnone] EPOCH 5/20 loss 0.2379 | VAL PSNR mild 28.59 med 26.04 sev 21.11 mean 25.247 | SSIM mean 0.7566 *best* | train 613s val 30s | ETA 161.2 min
+[Tnone] EPOCH 6/20 loss 0.2303 | VAL PSNR mild 28.84 med 26.27 sev 21.37 mean 25.494 | SSIM mean 0.7648 *best* | train 614s val 30s | ETA 150.5 min
+[Tnone] EPOCH 7/20 loss 0.2238 | VAL PSNR mild 29.03 med 26.42 sev 21.54 mean 25.662 | SSIM mean 0.7710 *best* | train 615s val 30s | ETA 139.7 min
+[Tnone] EPOCH 8/20 loss 0.2192 | VAL PSNR mild 29.21 med 26.56 sev 21.70 mean 25.824 | SSIM mean 0.7765 *best* | train 617s val 30s | ETA 129.1 min
+[Tnone] EPOCH 9/20 loss 0.2156 | VAL PSNR mild 29.37 med 26.72 sev 21.80 mean 25.960 | SSIM mean 0.7798 *best* | train 613s val 30s | ETA 118.3 min
+[Tnone] EPOCH 10/20 loss 0.2111 | VAL PSNR mild 29.50 med 26.86 sev 21.91 mean 26.092 | SSIM mean 0.7825 *best* | train 616s val 30s | ETA 107.5 min
+[Tnone] EPOCH 11/20 loss 0.2068 | VAL PSNR mild 29.63 med 26.95 sev 22.02 mean 26.202 | SSIM mean 0.7853 *best* | train 618s val 31s | ETA 96.8 min
+[Tnone] EPOCH 12/20 loss 0.2076 | VAL PSNR mild 29.67 med 27.03 sev 22.18 mean 26.294 | SSIM mean 0.7870 *best* | train 618s val 30s | ETA 86.1 min
+[Tnone] EPOCH 13/20 loss 0.2024 | VAL PSNR mild 29.73 med 27.09 sev 22.27 mean 26.364 | SSIM mean 0.7887 *best* | train 615s val 30s | ETA 75.4 min
+[Tnone] EPOCH 14/20 loss 0.1990 | VAL PSNR mild 29.77 med 27.13 sev 22.34 mean 26.413 | SSIM mean 0.7901 *best* | train 620s val 32s | ETA 64.6 min
+[Tnone] EPOCH 15/20 loss 0.1984 | VAL PSNR mild 29.82 med 27.16 sev 22.40 mean 26.459 | SSIM mean 0.7916 *best* | train 620s val 31s | ETA 53.9 min
+[Tnone] EPOCH 16/20 loss 0.1953 | VAL PSNR mild 29.84 med 27.21 sev 22.44 mean 26.498 | SSIM mean 0.7924 *best* | train 618s val 30s | ETA 43.1 min
+[Tnone] EPOCH 17/20 loss 0.1937 | VAL PSNR mild 29.86 med 27.24 sev 22.47 mean 26.522 | SSIM mean 0.7929 *best* | train 614s val 30s | ETA 32.3 min
+[Tnone] EPOCH 18/20 loss 0.1916 | VAL PSNR mild 29.85 med 27.27 sev 22.50 mean 26.539 | SSIM mean 0.7933 *best* | train 613s val 30s | ETA 21.6 min
+[Tnone] EPOCH 19/20 loss 0.1898 | VAL PSNR mild 29.87 med 27.28 sev 22.52 mean 26.557 | SSIM mean 0.7938 *best* | train 613s val 30s | ETA 10.8 min
+[Tnone] EPOCH 20/20 loss 0.1912 | VAL PSNR mild 29.89 med 27.30 sev 22.53 mean 26.572 | SSIM mean 0.7939 *best* | train 614s val 30s | ETA 0.0 min
+[Tnone] done: best val PSNR(mean of 3 severities) 26.572 | 215.5 min -> results/v9_convergence_pilot/seed42/Tnone_best.pth
+=== cfg Tnone exit 0 2026-11-24 21:13:51
+=== PILOT FINISHED 2026-11-24 21:13:51

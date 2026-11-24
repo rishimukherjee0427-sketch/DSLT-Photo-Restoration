@@ -1,0 +1,35 @@
+{
+ "args": {
+  "steps": 50,
+  "warmup_steps": 10,
+  "val_n": 250,
+  "one": null
+ },
+ "rows": [
+  {
+   "cfg": "Tfull",
+   "train_s_per_step": 0.8155075669288635,
+   "train_it_per_s": 1.226230191543066,
+   "warmup_s": 8.726108074188232,
+   "nonfinite_losses": 0,
+   "peak_mps_driver_GB": 7.193526272,
+   "val_n_per_severity": 250,
+   "valset_build_s": 3.9177279472351074,
+   "validation_pass_s": 41.035887002944946,
+   "est_hours_20k_steps_20_vals": 4.759663001828724
+  },
+  {
+   "cfg": "Tnone",
+   "train_s_per_step": 0.5960547268390656,
+   "train_it_per_s": 1.6776982967706577,
+   "warmup_s": 6.112862825393677,
+   "nonfinite_losses": 0,
+   "peak_mps_driver_GB": 5.767036928,
+   "val_n_per_severity": 250,
+   "valset_build_s": 3.8942677974700928,
+   "validation_pass_s": 30.190672159194946,
+   "est_hours_20k_steps_20_vals": 3.4802228466007445
+  }
+ ],
+ "total_est_hours": 8.239885848429468
+}

@@ -59,7 +59,7 @@ Evidence is in `results/gate_diagnosis/` (300 iters, 96-image probe):
 
 ## 4. Limitations to disclose in the paper
 
-1. **Short training budget:** 800 optimizer steps per model, batch 4, 128 px crops, about 4–8 min each on an M4 GPU. Rankings are indicative, and absolute numbers are far below converged values.
+1. **Short training budget:** 800 optimizer steps per model, batch 4, 128 px crops, about 4–8 min each on an Apple M4 Pro GPU. Rankings are indicative, and absolute numbers are far below converged values.
 2. **Baselines are reduced-size re-implementations:** Restormer-tiny (3.75 M) and PromptIR-tiny (7.22 M) were written from scratch and are not the official checkpoints or configurations. DSLT is 44–46 M, so the comparison is not parameter-matched.
 3. **Single seed:** there are no error bars. Gating differences of 0.01–0.07 dB are within plausible run-to-run noise. Make no claim that gating improves PSNR.
 4. **Mixed metric picture:** DSLT leads on PSNR (+0.4–0.6 dB vs. baselines) but trails on LPIPS (0.225 vs. 0.221 mild; 0.587 vs. 0.575 severe). SSIM is roughly tied.

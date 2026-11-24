@@ -16,7 +16,7 @@
 
 ## 1. Computational profile
 
-Apple M4 via MPS, FP32 inference. Latency is the median of 30 runs after 10 warm-up runs.
+Apple M4 Pro via MPS, FP32 inference. Latency is the median of 30 runs after 10 warm-up runs.
 
 | Model | Params (M) | GMACs @128² | GMACs @256² | Latency @128² (ms) | Latency @256² (ms) | Throughput @256², batch 4 (img/s) |
 |---|---:|---:|---:|---:|---:|---:|

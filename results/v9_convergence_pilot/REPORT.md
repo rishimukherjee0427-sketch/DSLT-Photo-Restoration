@@ -75,7 +75,7 @@ Final-epoch validation PSNR, mild / medium / severe:
 - **Training loss** curves almost overlap the whole way.
 - **Mild:** `Tnone` pulls ahead from about step 5k and finishes about 0.18 dB higher on val.
 - **Medium:** the two curves are indistinguishable.
-- **Severe:** `Tnone` leads slightly up to about step 9k. The curves **cross at about step 12k**, after which `Tfull` stays ahead and the gap widens slowly to 0.07 dB at step 20k. Val severe SSIM shows the same pattern (0.6831 vs 0.6801). The validation curves therefore agree with the test result on severe images, so the severe result is not a test-set artefact.
+- **Severe:** `Tnone` leads between steps 5k and 8k, by up to 0.10 dB. From step 9k, `Tfull` is nominally ahead at every validation point, but only by +0.005 to +0.011 dB until step 13k, so the curves are effectively tied there. The lead grows from +0.020 dB at step 14k to +0.075 dB at step 20k, still below the 0.10 dB margin. No precise crossover point is identified. *(Corrected 24 Nov 2026: an earlier version said "cross at about step 12k".)*. Val severe SSIM shows the same pattern (0.6831 vs 0.6801). The validation curves therefore agree with the test result on severe images, so the severe result is not a test-set artefact.
 
 **Under- or overfitting**
 - **No overfitting.** Val PSNR rises monotonically for both models, the best epoch is the last one, and train and val improve together.
@@ -109,7 +109,7 @@ The training timings are valid here because the Mac stayed awake under `caffeina
 3. **On severe damage, the translators now help, mainly in perceptual quality.**
    - Severe LPIPS is 0.0088 better for `Tfull`. That is beyond the 0.005 margin, with d_z = 0.52 and 69% of images favouring `Tfull`.
    - Severe SSIM is 0.0036 better for `Tfull`, just beyond its margin.
-   - This is the **first result in Stages 0–3 favouring the translators**. It appears only late in training (curves cross at about step 12k) and only on severe damage.
+   - This is the **first result in Stages 0–3 favouring the translators**. It appears only late in training: the validation lead is negligible (≤ 0.011 dB) until step 13k and grows over the final ~6k steps. It appears only on severe damage.
    - It is also the opposite of the Stage 2 severe result, so the claim "latent translators are redundant" (Stage 2 §5–6) **does not survive a longer budget without qualification**.
 4. **The compute advantage of `Tnone` is large and confirmed:** half the parameters, 39% fewer MACs, 34% lower latency, 57% higher throughput, and 27% faster training. The real trade-off is equal or slightly better mild and medium quality, against a small but significant perceptual loss on severe damage.
 5. **The one-seed caveat decides how much weight this carries.**

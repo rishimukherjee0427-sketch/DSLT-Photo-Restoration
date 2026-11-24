@@ -66,3 +66,6 @@ results/v7_stage0/predictions/
 
 # Raw Stage-2 predictions (regenerable)
 results/v8_translator_training/predictions/
+
+# Raw Stage-3 predictions (regenerable)
+results/v9_convergence_pilot/predictions/

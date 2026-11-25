@@ -39,13 +39,15 @@ translators at three skip scales and the bottleneck and an optional FiLM-style g
 estimator, and test whether these modules earn their cost when restoring \emph{synthetically degraded}
 photographs. All variants share one leakage-free protocol: a near-duplicate-aware split
 (\nTrain{}/\nVal{}/\nTest{} images), synthetic degradations at three severities with cached test inputs, validation-only model selection, paired per-image tests with Holm correction, and pre-registered
-equivalence margins. Damage-conditioned gating gives no benefit: even ground-truth severity conditioning improves
-PSNR by at most \nOASevPSNR{}~dB, and every gated variant has worse LPIPS than the ungated model. Translators
+equivalence margins. Damage-conditioned gating gives no practically meaningful benefit: even ground-truth severity
+conditioning improves PSNR by at most \nOASevPSNR{}~dB on average, below a 0.10\,dB threshold, and every gated
+variant has slightly worse mean LPIPS than the ungated model. Translators
 give no benefit at a short training budget. After 25$\times$ longer training, in the \nConvSeeds{} seeds in which
-both models trained normally, translators give a small but consistent severe-damage gain in SSIM
+both models trained normally, translators give a small severe-damage gain, beyond pre-registered margins in
+both seeds, in SSIM
 (\nSevSSIMgain{}) and LPIPS (\nSevLPIPSgain{}) and no PSNR gain ($|\Delta|\le\nMaxAbsPSNR$~dB), at
-\nParamRatio$\times$ the parameters and \nMACsRatio$\times$ the compute. The translator model also trained less
-reliably: it diverged in \nDivFull{} of \nSeedsAll{} seeds, while the plain encoder--decoder converged in all.
+\nParamRatio$\times$ the parameters and \nMACsRatio$\times$ the compute. The translator model also diverged in \nDivFull{} of \nSeedsAll{} seeds, while the plain encoder--decoder
+converged in all; three seeds are too few for a statistical statement about stability.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -114,12 +116,12 @@ $G=\sigma(\mathrm{logit}(g)+\Delta_c+\Delta_s)$, where $g$ is a per-scale gate p
 the severity map, and $\Delta_c$, $\Delta_s$ are zero-initialised channel and spatial offsets.
 \textbf{Variants.} A: ungated; B: learned gate; C: learned gate with severity supervision and sparsity; O: C with
 ground-truth instead of predicted severity maps (oracle, diagnostic only); Full: all translators, no gate modules
-(\nParamsFull{}M); Encoder--decoder: no translators (\nParamsEncdec{}M).
+(\nParamsFull{}M, excluding the training-only damage estimator); Encoder--decoder: no translators (\nParamsEncdec{}M).
 \textbf{Baselines.} A plain U-Net~\cite{ronneberger2015unet} (13.4M) and NAFNet-width32~\cite{chen2022nafnet}
 (17.1M), re-implemented and trained from scratch under exactly the same protocol (Section~\ref{sec:setup}); they have no damage estimator, so the damage-map loss term is absent.
 
 \section{Experimental Setup}\label{sec:setup}
-\textbf{Data.} 5{,}000 clean colour images resized to $256^2$ (predominantly portraits)
+\textbf{Data.} 5{,}000 clean colour images resized to $256^2$ (mostly portraits, by visual inspection)
 \pending{dataset source and licence}. The set contained exact and near-duplicates (resized and flipped copies);
 flip-aware perceptual-hash clustering assigns each cluster to one split, and \nExcluded{} cluster members are
 excluded, leaving \nTrain{} training, \nVal{} validation and \nTest{} test images.
@@ -134,7 +136,8 @@ severity. Long budget (Stage 3 and baselines): 20{,}000 steps, $256^2$ crops, EM
 \nVal{} validation images per severity every 1{,}000 steps. The loss is Charbonnier~\cite{charbonnier1994}
 $+\,0.01$ VGG perceptual~\cite{johnson2016perceptual} $+\,0.25(1-\mathrm{SSIM})$ plus small LAB, FFT and edge
 terms, and $0.15\times$ the damage-map L1. Within a stage, configurations share code, data order, degradation
-sampling and schedule; only the module under study differs. Checkpoints are selected on mean validation PSNR only
+sampling and schedule; only the module under study differs (the decoder's random initialisation also differs,
+because building the extra modules consumes random numbers first). Checkpoints are selected on mean validation PSNR only
 and evaluated once on the test set. FP32 on an Apple M4 Pro GPU (MPS, 24\,GB), PyTorch 2.15.
 \textbf{Metrics.} PSNR (RGB in $[0,1]$, capped at 50\,dB), SSIM~\cite{wang2004ssim} and LPIPS
 (AlexNet)~\cite{zhang2018lpips}, from one shared implementation; every prediction is checked against its expected
@@ -142,8 +145,9 @@ cached input.
 \textbf{Statistics.} All comparisons are paired over the same test images. We report Wilcoxon tests with Holm
 correction within each family, bootstrap CIs (seed$\times$image for multi-seed short-budget stages; image-level
 within each training run for the long budget), and Cohen's $d_z$. Equivalence margins, committed before the
-translator experiments, are 0.10\,dB PSNR, 0.0020 SSIM and 0.0050 LPIPS, judged on the 90\% CI.
-Image-level significance shows that two \emph{trained models} differ consistently across images; it does not show
+short-budget translator experiments (Stage~2), are 0.10\,dB PSNR, 0.0020 SSIM and 0.0050 LPIPS, judged on the 90\% CI.
+The long-budget sensitivity analysis on converged runs and the divergence criterion were defined after the
+runs and are post hoc. Image-level significance shows that two \emph{trained models} differ consistently across images; it does not show
 that the difference would reappear with new training seeds.
 
 \section{Results}
@@ -151,12 +155,13 @@ that the difference would reappear with new training seeds.
 \input{\T{tab_gating.tex}}
 Table~\ref{tab:gating} shows the gated variants. Ground-truth severity conditioning (O) improves PSNR over the
 ungated model by \nOAMildPSNR{}, \nOAMedPSNR{} and \nOASevPSNR{}~dB (mild, medium, severe; severe 95\% CI
-\nOASevCI{}), below the 0.10\,dB practical threshold even in the best case. Learned conditioning (C) is
-statistically indistinguishable from the oracle (O$-$C at most \nOCSevPSNR{}~dB on severe), so the damage
-estimator is not the bottleneck. Every gated variant, including the oracle, has worse LPIPS than the ungated
-model in all \nGatedLPIPScount{} comparisons (\nGateLPIPSmin{} to \nGateLPIPSmax{}). Unsupervised gates collapse
+\nOASevCI{}), below the 0.10\,dB practical threshold even in the best case. Learned conditioning with severity supervision (C) improves severe PSNR by \nCASevPSNR{}~dB, which is
+statistically significant but also below the threshold, and no O$-$C difference is significant (severe
+\nOCSevPSNR{}~dB). Every gated variant, including the oracle, has worse mean LPIPS than the ungated model in all
+\nGatedLPIPScount{} comparisons, though each difference (\nGateLPIPSmin{} to \nGateLPIPSmax{}) is below the 0.005
+LPIPS margin. Unsupervised gates collapse
 towards zero at e3 and e4, and forcing the gates to 1 in trained B and C changes PSNR by at most \nGOneMax{}~dB.
-\textbf{Gating gives no benefit} and was not carried forward.
+\textbf{Gating gives no practically meaningful benefit} and was not carried forward.
 
 \subsection{Translators at a short budget (3 seeds, 800 steps)}
 \input{\T{tab_translators.tex}}
@@ -169,9 +174,8 @@ non-inferior to the full model on every severity and metric and better on severe
 \input{\T{tab_stability.tex}}
 \textbf{Stability.} The full model diverged in seed \nDivSeed{} (Table~\ref{tab:stability}): its validation PSNR
 peaked at epoch \nDivBestEpoch{} and later fell by up to \nDivDrawdown{}~dB, so its validation-selected checkpoint
-is almost untrained (severe test PSNR \nDivSevPSNRbest{}~dB; final-epoch weights \nDivSevPSNRlast{}~dB, against
-\nConvSevPSNRfull{}~dB for the converged full models). No step produced non-finite values and gradient clipping
-was active throughout. \pending{cause of divergence from the per-step diagnostic}. The encoder--decoder converged
+is the epoch-1 (1{,}000-step) one (severe test PSNR \nDivSevPSNRbest{}~dB; final-epoch weights \nDivSevPSNRlast{}~dB, against
+\nConvSevPSNRfull{}~dB for the converged full models). The training loss stayed finite at every step. \pending{cause of divergence from the per-step diagnostic}. The encoder--decoder converged
 in all \nSeedsAll{} seeds (severe PSNR \nEncdecSevPSNR{}~dB). Because one diverged run dominates any average over
 seeds, we report every run separately (Table~\ref{tab:convergence}) and do not pool seeds into a single test.
 
@@ -180,16 +184,16 @@ seeds, we report every run separately (Table~\ref{tab:convergence}) and do not p
 normally (Table~\ref{tab:converged}): on severe damage the full model is better in SSIM by \nSevSSIMgain{} and in
 LPIPS by \nSevLPIPSgain{} ($d_z$ \nSevLPIPSdz{}), better on \nSevSSIMbetter\% and \nSevLPIPSbetter\% of test
 images, beyond the pre-registered margins in both seeds. PSNR differs by at most \nMaxAbsPSNR{}~dB at any
-severity. On mild and medium damage the two models are equivalent, within margin, or inconclusive, with no
-consistent direction across the two seeds. In validation curves (Fig.~\ref{fig:curves}), the full model is
+severity. On mild and medium damage the results are mixed: some within-seed differences are significant, but
+they point in different directions in the two seeds (Table~\ref{tab:converged}). In validation curves (Fig.~\ref{fig:curves}), the full model is
 ahead on severe PSNR at every point from step \nLeadStep{} in both converged seeds, by \nFinalSevGap{}~dB at the
-end, and the gap was still widening when training stopped.
+end; both models were still improving when training stopped (best validation at the final epoch).
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_severe_gap.pdf}
 \caption{Validation severe-damage PSNR difference, full model minus encoder--decoder, for the converged seeds
-(250 validation images, every 1{,}000 steps). Grey band: $\pm$0.10\,dB equivalence margin.}
+(seed \nDivSeed{} excluded because the full model diverged; 250 validation images, every 1{,}000 steps). Grey band: $\pm$0.10\,dB equivalence margin.}
 \label{fig:curves}
 \end{figure}
 
@@ -209,22 +213,23 @@ Removing the translators halves the parameters (\nParamsFull{}M to \nParamsEncde
 training time per step falls by \nStepCut\% and peak training memory by \nMemCut\% (Table~\ref{tab:efficiency}).
 
 \section{Discussion}
-\textbf{Budget changes the answer.} At 800 steps the smaller encoder--decoder learns faster and comes out ahead;
-with 25$\times$ more training the full model catches up and, in the runs that converged, gains a small
-severe-damage advantage in SSIM and LPIPS but not PSNR. Short-budget ablations can confuse faster optimisation with
-better final capability.
+\textbf{The protocol changes the answer.} At 800 steps the encoder--decoder came out ahead; under the longer
+protocol the full model caught up and, in the runs that converged, gained a small severe-damage advantage in SSIM
+and LPIPS but not PSNR. The two protocols differ in more than length (crop size, warm-up, EMA decay and validation
+size also changed), so the change cannot be attributed to training length alone, but a short-budget ablation
+alone would have reached a different conclusion.
 \textbf{Is the gain worth it?} The converged severe-damage gain is small (LPIPS \nSevLPIPSgain{}) against
 \nParamRatio$\times$ the parameters, \nMACsRatio$\times$ the MACs, higher latency, longer training, and a failed
 run in one of three seeds. For mild and medium damage, or when training reliability and cost matter, the
 encoder--decoder is the better choice on current evidence; translators are a compute-for-quality trade-off only on
 heavily damaged inputs.
-\textbf{Conditioning.} An oracle that knows the true damage adds less than 0.1\,dB through the gate pathway,
-suggesting that this backbone infers the degradation implicitly; conditioning inside the translator blocks was not
-tested.
+\textbf{Conditioning.} Even an oracle that knows the true damage adds less than 0.1\,dB on average through the
+gate pathway, so this pathway does not exploit severity information even when it is perfect; conditioning inside
+the translator blocks was not tested.
 
 \section{Limitations}
-(1)~\textbf{Training budget.} 20k steps is short: both models were still improving, and the full model's
-severe-damage lead was still widening at the end, so the size of the converged gap is not known.
+(1)~\textbf{Training budget.} 20k steps is short: both models were still improving at the end, so the size of
+the gap at convergence is not known. The short and long protocols differ in several settings besides length.
 (2)~\textbf{Two clean seeds for the full model.} The converged-run analysis rests on seeds \nConvSeeds{}; the
 divergence criterion (validation drawdown above \nDivThreshold{}~dB) was fixed after observing the runs.
 (3)~\textbf{Unknown cause of divergence.} \pending{update from diagnostic}. Whether a stabiliser (e.g.\ a lower
@@ -245,12 +250,13 @@ Quantitative results (Tables~\ref{tab:gating}--\ref{tab:converged}) are on synth
 (5)~\textbf{Dataset provenance.} \pending{licence and source of the training images}.
 (6)~\textbf{Baselines.} Only convolutional baselines (U-Net, NAFNet) were trained; larger transformer baselines
 such as Restormer~\cite{zamir2022restormer} were not trained under the 20k-step protocol for compute reasons.
-(7)~\textbf{Scope.} Gating was tested only at the short budget; margins were chosen by the authors; timing comes
+(7)~\textbf{Scope.} Gating was tested only at the short budget; margins were chosen by the authors (SSIM and
+LPIPS margins calibrated on short-budget seed variability); duplicate control uses perceptual hashing only; timing comes
 from one Apple GPU in FP32.
 
 \section{Conclusion}
-Under one controlled protocol, damage-conditioned gating gives no benefit to this old-photo restoration backbone,
-even with oracle damage information. Latent translators give no benefit at a short budget and, at a longer budget
+Under one controlled protocol, damage-conditioned gating gives no practically meaningful benefit to
+this restoration backbone on synthetically degraded photographs, even with oracle damage information. Latent translators give no benefit at a short budget and, at a longer budget
 and only in runs that converged, a small severe-damage SSIM/LPIPS gain without a PSNR gain, at about twice the
 parameters and with less stable training. Claims about restoration modules should be checked at more than one
 budget, per training run, and against their cost.

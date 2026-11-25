@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\centering
+\caption{Stage~3: convergence, test set, 20k steps at $256^2$ (3 seeds; PSNR mean$\pm$SD over seeds)}
+\label{tab:convergence}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccccccc}
+\toprule
+ & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+Model & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ \\
+\midrule
+Full (all translators) & 28.87$\pm$1.47 & 0.8537 & 0.1670 & 26.53$\pm$1.61 & 0.8003 & 0.2620 & 21.54$\pm$2.15 & 0.6593 & 0.4767 \\
+Encoder--decoder (no translators) & 29.65$\pm$0.14 & 0.8775 & 0.1446 & 27.38$\pm$0.11 & 0.8238 & 0.2342 & 22.71$\pm$0.10 & 0.6843 & 0.4425 \\
+\bottomrule
+\end{tabular}
+\end{table*}

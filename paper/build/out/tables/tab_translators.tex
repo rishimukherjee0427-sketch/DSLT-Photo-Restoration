@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering
+\caption{Stage~2: independently trained translator ablation, test set, 800 steps (3 seeds; PSNR mean$\pm$SD over seeds)}
+\label{tab:translators}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccccccc}
+\toprule
+ & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+Model & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ \\
+\midrule
+Full (all translators) & 26.75$\pm$0.20 & 0.8023 & 0.2207 & 24.17$\pm$0.23 & 0.7461 & 0.3317 & 18.81$\pm$0.30 & 0.5966 & 0.5755 \\
+e2 translator only & 26.74$\pm$0.12 & 0.8023 & 0.2216 & 24.08$\pm$0.13 & 0.7446 & 0.3352 & 18.74$\pm$0.12 & 0.5954 & 0.5798 \\
+Encoder--decoder (no translators) & 26.81$\pm$0.17 & 0.8030 & 0.2189 & 24.25$\pm$0.22 & 0.7466 & 0.3293 & 18.94$\pm$0.36 & 0.5974 & 0.5747 \\
+\bottomrule
+\end{tabular}
+\end{table*}

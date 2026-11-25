@@ -69,3 +69,6 @@ results/v8_translator_training/predictions/
 
 # Raw Stage-3 predictions (regenerable)
 results/v9_convergence_pilot/predictions/
+
+# Paper build scripts and generated outputs are tracked
+!paper/build/

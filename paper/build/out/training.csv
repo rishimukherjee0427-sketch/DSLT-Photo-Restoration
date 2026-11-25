@@ -1,0 +1,7 @@
+stage,model,seed,steps,best_epoch,best_val_psnr_mean,train_s_per_step_median,train_minutes,peak_train_GB,chip,git,source
+S3,Tfull,123,20000,20,26.49965637896807,0.8264772529602051,290.1489251017571,7.19560704,Apple M4 Pro,cc863cc,results/v9_convergence_pilot/seed123/Tfull_manifest.json
+S3,Tnone,123,20000,20,26.4499026863592,0.6122211054563522,214.29063411553702,5.760745472,Apple M4 Pro,cc863cc,results/v9_convergence_pilot/seed123/Tnone_manifest.json
+S3,Tfull,2026,20000,1,23.607926233135156,0.8277795839309692,291.20281723340355,7.19560704,Apple M4 Pro,cc863cc,results/v9_convergence_pilot/seed2026/Tfull_manifest.json
+S3,Tnone,2026,20000,20,26.275298295096206,0.6219009486436844,219.21359465122222,5.767036928,Apple M4 Pro,cc863cc,results/v9_convergence_pilot/seed2026/Tnone_manifest.json
+S3,Tfull,42,20000,20,26.532967274229502,0.8408465501070023,296.4149479667346,7.193509888,Apple M4 Pro,8656aff,results/v9_convergence_pilot/seed42/Tfull_manifest.json
+S3,Tnone,42,20000,20,26.572460444918974,0.6150150849819183,215.4860578139623,5.767036928,Apple M4 Pro,8656aff,results/v9_convergence_pilot/seed42/Tnone_manifest.json

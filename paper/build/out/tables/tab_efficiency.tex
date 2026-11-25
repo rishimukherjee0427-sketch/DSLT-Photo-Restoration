@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Cost at $256^2$ (Stage~3 profiling, Apple M4 Pro, MPS, FP32; training figures are means over completed Stage~3 runs).}
+\label{tab:efficiency}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Model & Params (M) & GMACs & Lat. (ms) & Thr. (img/s) & s/step & Train (min) & Peak (GB) \\
+\midrule
+Full (all translators) & 44.41 & 76.3 & 57.2 & 24.8 & 0.832 & 293 & 7.19 \\
+Encoder--decoder (no translators) & 22.52 & 46.4 & 37.7 & 38.9 & 0.616 & 216 & 5.76 \\
+\bottomrule
+\end{tabular}
+\end{table}

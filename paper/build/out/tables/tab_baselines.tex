@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Protocol-matched comparison, seed 42 (20k steps at $256^2$, identical data order, schedule, validation and selection; test set, 250 images per severity). Baselines were re-implemented and trained from scratch; one training run per model. Cost: Apple M4 Pro, MPS, FP32, $256^2$.}
+\label{tab:baselines}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lrrrrccccccccc}
+\toprule
+ & & & & & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\
+\cmidrule(lr){6-8}\cmidrule(lr){9-11}\cmidrule(lr){12-14}
+Model & Params (M) & GMACs & Lat. (ms) & s/step & PSNR & SSIM & LPIPS & PSNR & SSIM & LPIPS & PSNR & SSIM & LPIPS \\
+\midrule
+Full (all translators) & 44.4 & 76.3 & 57.2 & 0.84 & 29.74 & 0.8771 & 0.1407 & 27.51 & 0.8254 & 0.2271 & 22.82 & 0.6897 & 0.4264 \\
+Encoder--decoder (no translators) & 22.5 & 46.4 & 37.7 & 0.62 & 29.79 & 0.8789 & 0.1374 & 27.43 & 0.8255 & 0.2265 & 22.78 & 0.6861 & 0.4352 \\
+U-Net (baseline) & 13.4 & 30.9 & 12.9 & 0.30 & 28.45 & 0.8673 & 0.1688 & 25.97 & 0.8070 & 0.2698 & 20.87 & 0.6583 & 0.4927 \\
+NAFNet-w32 (baseline) & 17.1 & 16.0 & 42.7 & 0.71 & 29.35 & 0.8723 & 0.1621 & 27.28 & 0.8217 & 0.2486 & 22.79 & 0.6874 & 0.4389 \\
+\bottomrule
+\end{tabular}
+\end{table*}

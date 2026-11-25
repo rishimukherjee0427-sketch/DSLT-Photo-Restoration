@@ -117,8 +117,8 @@ the severity map, and $\Delta_c$, $\Delta_s$ are zero-initialised channel and sp
 \textbf{Variants.} A: ungated; B: learned gate; C: learned gate with severity supervision and sparsity; O: C with
 ground-truth instead of predicted severity maps (oracle, diagnostic only); Full: all translators, no gate modules
 (\nParamsFull{}M, excluding the training-only damage estimator); Encoder--decoder: no translators (\nParamsEncdec{}M).
-\textbf{Baselines.} A plain U-Net~\cite{ronneberger2015unet} (13.4M) and NAFNet-width32~\cite{chen2022nafnet}
-(17.1M), re-implemented and trained from scratch under exactly the same protocol (Section~\ref{sec:setup}); they have no damage estimator, so the damage-map loss term is absent.
+\textbf{Baselines.} A plain U-Net~\cite{ronneberger2015unet} (\nParamsUnet{}M) and NAFNet-width32~\cite{chen2022nafnet}
+(\nParamsNaf{}M), re-implemented and trained from scratch under exactly the same protocol (Section~\ref{sec:setup}); they have no damage estimator, so the damage-map loss term is absent.
 
 \section{Experimental Setup}\label{sec:setup}
 \textbf{Data.} 5{,}000 clean colour images resized to $256^2$ (mostly portraits, by visual inspection)
@@ -202,9 +202,15 @@ end; both models were still improving when training stopped (best validation at 
 \end{figure}
 
 \subsection{Baselines (same protocol)}
-\IfFileExists{\T{tab_baselines.tex}}{\input{\T{tab_baselines.tex}}}{\pending{baseline table: U-Net and NAFNet under the
-Stage-3 protocol}}
-\pending{baseline results text}.
+\input{\T{tab_baselines.tex}}
+Under the same long-budget protocol (Table~\ref{tab:baselines}; seed 42, one training run per model, image-level
+paired tests with Holm correction), the plain U-Net is clearly weaker, with \nUnetPSNRdef{}~dB lower PSNR than the
+encoder--decoder across severities. NAFNet-w32 (\nParamsNaf{}M parameters, \nMACsNaf{} GMACs) matches the
+encoder--decoder on severe PSNR (\nNafEncSevPSNR{}~dB, $p_\mathrm{Holm}=\nNafEncSevPSNRp$) but is lower on mild
+PSNR (\nNafEncMildPSNR{}~dB, $p_\mathrm{Holm}=\nNafEncMildPSNRp$), and its severe-damage LPIPS is worse than the
+full model's by \nNafFullSevLPIPS{}. NAFNet needs the fewest MACs but is slower than the encoder--decoder on this
+hardware (\nLatNaf{} vs.\ \nLatEncdec{}~ms). The studied backbone is therefore competitive with a strong efficient
+baseline at this budget, with or without translators; these are single-seed comparisons.
 We do not compare against the released model of Wan et al.~\cite{wan2020bringing}: it was trained on different
 data and degradations, so a comparison on our synthetic test set would measure the training data rather than the
 architecture, and retraining its multi-stage pipeline under our protocol is beyond this study.
@@ -255,7 +261,7 @@ Quantitative results (Tables~\ref{tab:gating}--\ref{tab:converged}) are on synth
 \label{fig:real}
 \end{figure}
 (5)~\textbf{Dataset provenance.} \pending{licence and source of the training images}.
-(6)~\textbf{Baselines.} Only convolutional baselines (U-Net, NAFNet) were trained; larger transformer baselines
+(6)~\textbf{Baselines.} Each baseline was trained with one seed only; only convolutional baselines (U-Net, NAFNet) were trained; larger transformer baselines
 such as Restormer~\cite{zamir2022restormer} were not trained under the 20k-step protocol for compute reasons.
 (7)~\textbf{Scope.} Gating was tested only at the short budget; margins were chosen by the authors (SSIM and
 LPIPS margins calibrated on short-budget seed variability); duplicate control uses perceptual hashing only; timing comes

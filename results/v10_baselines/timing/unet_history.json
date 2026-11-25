@@ -1,0 +1,76 @@
+{
+ "config": "unet",
+ "name": "baseline_unet",
+ "cfg": {
+  "name": "baseline_unet",
+  "use_gating": false,
+  "w_gate_sup": 0.0,
+  "w_gate_sparsity": 0.0,
+  "translators": [],
+  "gate_mode": "none",
+  "desc": "plain U-Net (base 64, bilinear up, no norm)"
+ },
+ "args": {
+  "config": "unet",
+  "epochs": 1,
+  "steps_per_epoch": 50,
+  "crop": 256,
+  "batch_size": 4,
+  "lr": 0.0002,
+  "min_lr_ratio": 0.005,
+  "warmup": 500,
+  "weight_decay": 0.0001,
+  "grad_clip": 1.0,
+  "ema_decay": 0.999,
+  "seed": 42,
+  "val_n": 8,
+  "log_every": 25,
+  "clean_dir": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/train_clean",
+  "file_list": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/splits/train.txt",
+  "resume": false,
+  "smoke": false,
+  "stop_after_epoch": null,
+  "out_dir": "results/v10_baselines/timing",
+  "vgg_normalize": 1
+ },
+ "n_params": 13387523,
+ "history": [
+  {
+   "epoch": 1,
+   "step": 50,
+   "lr": 2.04e-05,
+   "train": {
+    "loss": 0.6723054194450379,
+    "charb": 0.12019258096814156,
+    "ssim_loss": 0.37037912726402283,
+    "damage": 0.0,
+    "gate_sup": 0.0,
+    "gate_sparsity": 0.0,
+    "gate_loss": 0.0
+   },
+   "train_s_per_step": 0.31746310234069824,
+   "skipped": 0,
+   "val": {
+    "mild": {
+     "psnr": 21.481536637167487,
+     "ssim": 0.663371168076992
+    },
+    "medium": {
+     "psnr": 19.562374444922703,
+     "ssim": 0.5554698072373867
+    },
+    "severe": {
+     "psnr": 17.394309603006903,
+     "ssim": 0.5514397844672203
+    },
+    "psnr_mean": 19.479406895032366,
+    "ssim_mean": 0.5900935865938663,
+    "sev_map_l1": 0.2757004102071126
+   },
+   "gates": "n/a",
+   "best": true,
+   "time_train_s": 15.873155117034912,
+   "time_val_s": 0.5976309776306152
+  }
+ ]
+}

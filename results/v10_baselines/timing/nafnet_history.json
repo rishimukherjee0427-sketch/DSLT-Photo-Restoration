@@ -1,0 +1,76 @@
+{
+ "config": "nafnet",
+ "name": "baseline_nafnet",
+ "cfg": {
+  "name": "baseline_nafnet",
+  "use_gating": false,
+  "w_gate_sup": 0.0,
+  "w_gate_sparsity": 0.0,
+  "translators": [],
+  "gate_mode": "none",
+  "desc": "NAFNet-width32 (ECCV 2022 config), re-implemented"
+ },
+ "args": {
+  "config": "nafnet",
+  "epochs": 1,
+  "steps_per_epoch": 50,
+  "crop": 256,
+  "batch_size": 4,
+  "lr": 0.0002,
+  "min_lr_ratio": 0.005,
+  "warmup": 500,
+  "weight_decay": 0.0001,
+  "grad_clip": 1.0,
+  "ema_decay": 0.999,
+  "seed": 42,
+  "val_n": 8,
+  "log_every": 25,
+  "clean_dir": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/train_clean",
+  "file_list": "/Users/debangshumukherjee/iCloud Drive (Archive)/Documents/Minor Project /data/splits/train.txt",
+  "resume": false,
+  "smoke": false,
+  "stop_after_epoch": null,
+  "out_dir": "results/v10_baselines/timing",
+  "vgg_normalize": 1
+ },
+ "n_params": 17111907,
+ "history": [
+  {
+   "epoch": 1,
+   "step": 50,
+   "lr": 2.04e-05,
+   "train": {
+    "loss": 0.7486193478107452,
+    "charb": 0.21058814018964767,
+    "ssim_loss": 0.6661316013336182,
+    "damage": 0.0,
+    "gate_sup": 0.0,
+    "gate_sparsity": 0.0,
+    "gate_loss": 0.0
+   },
+   "train_s_per_step": 0.7655494832992553,
+   "skipped": 0,
+   "val": {
+    "mild": {
+     "psnr": 15.15083413232083,
+     "ssim": 0.43382493779063225
+    },
+    "medium": {
+     "psnr": 14.945480992834213,
+     "ssim": 0.37088390812277794
+    },
+    "severe": {
+     "psnr": 14.11809924653339,
+     "ssim": 0.36364212073385715
+    },
+    "psnr_mean": 14.738138123896144,
+    "ssim_mean": 0.38945032221575576,
+    "sev_map_l1": 0.2757004102071126
+   },
+   "gates": "n/a",
+   "best": true,
+   "time_train_s": 38.27747416496277,
+   "time_val_s": 1.4019131660461426
+  }
+ ]
+}

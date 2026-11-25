@@ -1,0 +1,58 @@
+=== launch 2026-11-25 18:17:02 git 4f641a1 dirty=2
+=== timing unet 2026-11-25 18:17:02
+[unet] plain U-Net (base 64, bilinear up, no norm) | 13.39M params (incl. damage estimator + unused gate modulators) | device=mps | 1 epochs x 50 steps = 50 steps | bs=4 crop=256 | val 8 imgs x 3 sev
+[unet] ep 1 step 50/50 loss 0.6430 (charb 0.1188 1-ssim 0.365 dmg 0.0000 gsup 0.000) lr 2.04e-05 | 0.30 s/step
+[unet] EPOCH 1/1 loss 0.6723 | VAL PSNR mild 21.48 med 19.56 sev 17.39 mean 19.479 | SSIM mean 0.5901 *best* | train 16s val 1s | ETA 0.0 min
+=== timing nafnet 2026-11-25 18:17:21
+[nafnet] NAFNet-width32 (ECCV 2022 config), re-implemented | 17.11M params (incl. damage estimator + unused gate modulators) | device=mps | 1 epochs x 50 steps = 50 steps | bs=4 crop=256 | val 8 imgs x 3 sev
+[nafnet] ep 1 step 50/50 loss 0.7210 (charb 0.2120 1-ssim 0.644 dmg 0.0000 gsup 0.000) lr 2.04e-05 | 0.72 s/step
+[nafnet] EPOCH 1/1 loss 0.7486 | VAL PSNR mild 15.15 med 14.95 sev 14.12 mean 14.738 | SSIM mean 0.3895 *best* | train 38s val 1s | ETA 0.0 min
+=== train unet seed 42 start/resume 2026-11-25 18:28:43
+[unet] plain U-Net (base 64, bilinear up, no norm) | 13.39M params (incl. damage estimator + unused gate modulators) | device=mps | 20 epochs x 1000 steps = 20000 steps | bs=4 crop=256 | val 250 imgs x 3 sev
+[unet] EPOCH 1/20 loss 0.3309 | VAL PSNR mild 24.79 med 22.81 sev 16.76 mean 21.455 | SSIM mean 0.6910 *best* | train 306s val 17s | ETA 102.4 min
+[unet] EPOCH 2/20 loss 0.2831 | VAL PSNR mild 25.55 med 23.26 sev 17.13 mean 21.978 | SSIM mean 0.6988 *best* | train 304s val 17s | ETA 96.6 min
+[unet] EPOCH 3/20 loss 0.2698 | VAL PSNR mild 26.68 med 23.89 sev 17.45 mean 22.672 | SSIM mean 0.7064 *best* | train 304s val 17s | ETA 91.2 min
+[unet] EPOCH 4/20 loss 0.2630 | VAL PSNR mild 27.15 med 24.37 sev 17.91 mean 23.140 | SSIM mean 0.7199 *best* | train 303s val 17s | ETA 85.7 min
+[unet] EPOCH 5/20 loss 0.2507 | VAL PSNR mild 27.41 med 24.70 sev 18.29 mean 23.466 | SSIM mean 0.7310 *best* | train 305s val 17s | ETA 80.4 min
+[unet] EPOCH 6/20 loss 0.2436 | VAL PSNR mild 27.59 med 24.88 sev 18.48 mean 23.651 | SSIM mean 0.7378 *best* | train 305s val 17s | ETA 75.0 min
+[unet] EPOCH 7/20 loss 0.2367 | VAL PSNR mild 27.76 med 25.03 sev 18.68 mean 23.822 | SSIM mean 0.7436 *best* | train 303s val 17s | ETA 69.6 min
+[unet] EPOCH 8/20 loss 0.2295 | VAL PSNR mild 27.89 med 25.16 sev 18.97 mean 24.007 | SSIM mean 0.7500 *best* | train 305s val 17s | ETA 64.3 min
+[unet] EPOCH 9/20 loss 0.2256 | VAL PSNR mild 28.02 med 25.30 sev 19.31 mean 24.210 | SSIM mean 0.7555 *best* | train 304s val 17s | ETA 58.9 min
+[unet] EPOCH 10/20 loss 0.2198 | VAL PSNR mild 28.14 med 25.43 sev 19.64 mean 24.404 | SSIM mean 0.7606 *best* | train 303s val 17s | ETA 53.5 min
+[unet] EPOCH 11/20 loss 0.2147 | VAL PSNR mild 28.20 med 25.57 sev 19.92 mean 24.563 | SSIM mean 0.7642 *best* | train 303s val 17s | ETA 48.2 min
+[unet] EPOCH 12/20 loss 0.2150 | VAL PSNR mild 28.28 med 25.69 sev 20.15 mean 24.704 | SSIM mean 0.7670 *best* | train 303s val 17s | ETA 42.8 min
+[unet] EPOCH 13/20 loss 0.2104 | VAL PSNR mild 28.36 med 25.78 sev 20.30 mean 24.813 | SSIM mean 0.7690 *best* | train 303s val 16s | ETA 37.4 min
+[unet] EPOCH 14/20 loss 0.2063 | VAL PSNR mild 28.43 med 25.84 sev 20.42 mean 24.899 | SSIM mean 0.7704 *best* | train 302s val 17s | ETA 32.1 min
+[unet] EPOCH 15/20 loss 0.2054 | VAL PSNR mild 28.48 med 25.91 sev 20.53 mean 24.974 | SSIM mean 0.7715 *best* | train 303s val 17s | ETA 26.7 min
+[unet] EPOCH 16/20 loss 0.2028 | VAL PSNR mild 28.52 med 25.96 sev 20.63 mean 25.038 | SSIM mean 0.7728 *best* | train 305s val 17s | ETA 21.4 min
+[unet] EPOCH 17/20 loss 0.2005 | VAL PSNR mild 28.55 med 25.99 sev 20.71 mean 25.082 | SSIM mean 0.7734 *best* | train 308s val 17s | ETA 16.1 min
+[unet] EPOCH 18/20 loss 0.1992 | VAL PSNR mild 28.54 med 26.00 sev 20.75 mean 25.098 | SSIM mean 0.7736 *best* | train 306s val 17s | ETA 10.7 min
+[unet] EPOCH 19/20 loss 0.1969 | VAL PSNR mild 28.56 med 26.01 sev 20.77 mean 25.115 | SSIM mean 0.7737 *best* | train 302s val 17s | ETA 5.4 min
+[unet] EPOCH 20/20 loss 0.1981 | VAL PSNR mild 28.55 med 26.02 sev 20.79 mean 25.122 | SSIM mean 0.7739 *best* | train 303s val 17s | ETA 0.0 min
+[unet] done: best val PSNR(mean of 3 severities) 25.122 | 107.0 min -> results/v10_baselines/seed42/unet_best.pth
+=== train unet exit 0 2026-11-25 20:15:49
+=== train nafnet seed 42 start/resume 2026-11-25 20:15:49
+[nafnet] NAFNet-width32 (ECCV 2022 config), re-implemented | 17.11M params (incl. damage estimator + unused gate modulators) | device=mps | 20 epochs x 1000 steps = 20000 steps | bs=4 crop=256 | val 250 imgs x 3 sev
+[nafnet] EPOCH 1/20 loss 0.3511 | VAL PSNR mild 25.49 med 23.27 sev 17.28 mean 22.014 | SSIM mean 0.6895 *best* | train 706s val 28s | ETA 232.7 min
+[nafnet] EPOCH 2/20 loss 0.2653 | VAL PSNR mild 27.01 med 24.67 sev 18.92 mean 23.533 | SSIM mean 0.7207 *best* | train 707s val 28s | ETA 220.4 min
+[nafnet] EPOCH 3/20 loss 0.2407 | VAL PSNR mild 27.65 med 25.20 sev 19.68 mean 24.176 | SSIM mean 0.7368 *best* | train 706s val 27s | ETA 208.2 min
+[nafnet] EPOCH 4/20 loss 0.2313 | VAL PSNR mild 27.94 med 25.53 sev 20.15 mean 24.539 | SSIM mean 0.7464 *best* | train 707s val 28s | ETA 196.0 min
+[nafnet] EPOCH 5/20 loss 0.2212 | VAL PSNR mild 28.18 med 25.83 sev 20.55 mean 24.851 | SSIM mean 0.7520 *best* | train 713s val 27s | ETA 184.1 min
+[nafnet] EPOCH 6/20 loss 0.2148 | VAL PSNR mild 28.31 med 26.04 sev 20.89 mean 25.078 | SSIM mean 0.7564 *best* | train 707s val 27s | ETA 171.8 min
+[nafnet] EPOCH 7/20 loss 0.2085 | VAL PSNR mild 28.43 med 26.18 sev 21.11 mean 25.240 | SSIM mean 0.7597 *best* | train 708s val 27s | ETA 159.5 min
+[nafnet] EPOCH 8/20 loss 0.2039 | VAL PSNR mild 28.49 med 26.30 sev 21.36 mean 25.383 | SSIM mean 0.7634 *best* | train 707s val 27s | ETA 147.2 min
+[nafnet] EPOCH 9/20 loss 0.2012 | VAL PSNR mild 28.57 med 26.44 sev 21.55 mean 25.519 | SSIM mean 0.7662 *best* | train 709s val 27s | ETA 135.0 min
+[nafnet] EPOCH 10/20 loss 0.1961 | VAL PSNR mild 28.61 med 26.51 sev 21.74 mean 25.622 | SSIM mean 0.7691 *best* | train 709s val 27s | ETA 122.7 min
+[nafnet] EPOCH 11/20 loss 0.1913 | VAL PSNR mild 28.70 med 26.62 sev 21.93 mean 25.747 | SSIM mean 0.7725 *best* | train 707s val 27s | ETA 110.4 min
+[nafnet] EPOCH 12/20 loss 0.1907 | VAL PSNR mild 28.79 med 26.71 sev 22.12 mean 25.874 | SSIM mean 0.7764 *best* | train 708s val 27s | ETA 98.2 min
+[nafnet] EPOCH 13/20 loss 0.1854 | VAL PSNR mild 28.90 med 26.83 sev 22.25 mean 25.991 | SSIM mean 0.7799 *best* | train 711s val 28s | ETA 85.9 min
+[nafnet] EPOCH 14/20 loss 0.1810 | VAL PSNR mild 29.01 med 26.93 sev 22.38 mean 26.106 | SSIM mean 0.7829 *best* | train 714s val 28s | ETA 73.7 min
+[nafnet] EPOCH 15/20 loss 0.1801 | VAL PSNR mild 29.13 med 27.00 sev 22.47 mean 26.198 | SSIM mean 0.7854 *best* | train 710s val 28s | ETA 61.4 min
+[nafnet] EPOCH 16/20 loss 0.1763 | VAL PSNR mild 29.22 med 27.05 sev 22.53 mean 26.268 | SSIM mean 0.7872 *best* | train 710s val 28s | ETA 49.1 min
+[nafnet] EPOCH 17/20 loss 0.1740 | VAL PSNR mild 29.28 med 27.09 sev 22.57 mean 26.314 | SSIM mean 0.7883 *best* | train 710s val 28s | ETA 36.9 min
+[nafnet] EPOCH 18/20 loss 0.1724 | VAL PSNR mild 29.31 med 27.14 sev 22.62 mean 26.359 | SSIM mean 0.7890 *best* | train 710s val 28s | ETA 24.6 min
+[nafnet] EPOCH 19/20 loss 0.1705 | VAL PSNR mild 29.33 med 27.17 sev 22.67 mean 26.392 | SSIM mean 0.7900 *best* | train 710s val 27s | ETA 12.3 min
+[nafnet] EPOCH 20/20 loss 0.1712 | VAL PSNR mild 29.36 med 27.20 sev 22.69 mean 26.418 | SSIM mean 0.7905 *best* | train 725s val 28s | ETA 0.0 min
+[nafnet] done: best val PSNR(mean of 3 severities) 26.418 | 246.1 min -> results/v10_baselines/seed42/nafnet_best.pth
+=== train nafnet exit 0 2026-11-26 00:22:01
+=== BASELINES FINISHED 2026-11-26 00:22:01

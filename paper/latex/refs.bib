@@ -1,22 +1,21 @@
-% Bibliography for main.tex. Entries were checked on 24 Nov 2026 (paper/MANUSCRIPT_REVIEW.md, section 5).
-% A DOI is given ONLY where a primary source showed it. Lines marked VERIFY must be confirmed on IEEE Xplore /
-% Crossref before submission. Never add a DOI that has not been checked.
+% Bibliography for main.tex. All entries were verified on 2026-11-25 against primary sources (publisher pages,
+% CVF open access, NeurIPS/ICLR proceedings, Crossref, arXiv, PubMed/IEEE metadata).
+% A DOI is given ONLY where a primary source or Crossref resolved it to the same title. See paper/CITATION_CHECK.md.
 
 @inproceedings{wan2020bringing,
   author    = {Ziyu Wan and Bo Zhang and Dongdong Chen and Pan Zhang and Dong Chen and Jing Liao and Fang Wen},
   title     = {Bringing Old Photos Back to Life},
   booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)},
-  pages     = {2747--2757},
+  pages     = {2744--2754},
   year      = {2020},
-  verify = {VERIFY: IEEE DOI not confirmed}
+  doi       = {10.1109/CVPR42600.2020.00282}
 }
 @article{wan2023tpami,
-  author  = {Ziyu Wan and Bo Zhang and Dongdong Chen and Pan Zhang and Fang Wen and Jing Liao},
+  author  = {Ziyu Wan and Bo Zhang and Dongdong Chen and Pan Zhang and Dong Chen and Fang Wen and Jing Liao},
   title   = {Old Photo Restoration via Deep Latent Space Translation},
   journal = {IEEE Trans. Pattern Analysis and Machine Intelligence},
   volume  = {45}, number = {2}, pages = {2071--2087}, year = {2023},
-  doi     = {10.1109/TPAMI.2022.3163183},
-  verify = {VERIFY: author list and order}
+  doi     = {10.1109/TPAMI.2022.3163183}
 }
 @inproceedings{ronneberger2015unet,
   author = {Olaf Ronneberger and Philipp Fischer and Thomas Brox},
@@ -47,36 +46,38 @@
 @inproceedings{wang2018sft,
   author = {Xintao Wang and Ke Yu and Chao Dong and Chen Change Loy},
   title = {Recovering Realistic Texture in Image Super-Resolution by Deep Spatial Feature Transform},
-  booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {606--615}, year = {2018}
+  booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {606--615}, year = {2018},
+  doi = {10.1109/CVPR.2018.00070}
 }
 @inproceedings{zamir2022restormer,
   author = {Syed Waqas Zamir and Aditya Arora and Salman Khan and Munawar Hayat and Fahad Shahbaz Khan and Ming-Hsuan Yang},
   title = {Restormer: Efficient Transformer for High-Resolution Image Restoration},
-  booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {5728--5739}, year = {2022}
+  booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {5718--5729}, year = {2022},
+  doi = {10.1109/CVPR52688.2022.00564}
 }
 @inproceedings{potlapalli2023promptir,
   author = {Vaishnav Potlapalli and Syed Waqas Zamir and Salman Khan and Fahad Shahbaz Khan},
   title = {{PromptIR}: Prompting for All-in-One Image Restoration},
-  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)}, volume = {36}, year = {2023}
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)}, volume = {36}, pages = {71275--71293}, year = {2023},
+  doi = {10.52202/075280-3121}
 }
 @inproceedings{chen2022nafnet,
   author = {Liangyu Chen and Xiaojie Chu and Xiangyu Zhang and Jian Sun},
   title = {Simple Baselines for Image Restoration},
-  booktitle = {European Conf. Computer Vision (ECCV)}, series = {LNCS}, volume = {13667}, year = {2022},
-  doi = {10.1007/978-3-031-20071-7_2},
-  verify = {VERIFY: pages}
+  booktitle = {European Conf. Computer Vision (ECCV)}, series = {LNCS}, volume = {13667}, pages = {17--33}, year = {2022},
+  doi = {10.1007/978-3-031-20071-7_2}
 }
 @inproceedings{li2022airnet,
   author = {Boyun Li and Xiao Liu and Peng Hu and Zhongqin Wu and Jiancheng Lv and Xi Peng},
   title = {All-in-One Image Restoration for Unknown Corruption},
-  booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {17452--17462}, year = {2022},
-  verify = {VERIFY: pages (CVF vs DBLP differ) and DOI}
+  booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {17431--17441}, year = {2022},
+  doi = {10.1109/CVPR52688.2022.01693}
 }
 @inproceedings{zhang2018lpips,
   author = {Richard Zhang and Phillip Isola and Alexei A. Efros and Eli Shechtman and Oliver Wang},
   title = {The Unreasonable Effectiveness of Deep Features as a Perceptual Metric},
   booktitle = {Proc. IEEE/CVF Conf. Computer Vision and Pattern Recognition (CVPR)}, pages = {586--595}, year = {2018},
-  verify = {VERIFY: DOI 10.1109/CVPR.2018.00068 (not yet confirmed on IEEE Xplore)}
+  doi = {10.1109/CVPR.2018.00068}
 }
 @article{wang2004ssim,
   author = {Zhou Wang and Alan C. Bovik and Hamid R. Sheikh and Eero P. Simoncelli},
@@ -87,14 +88,14 @@
 @inproceedings{johnson2016perceptual,
   author = {Justin Johnson and Alexandre Alahi and Li Fei-Fei},
   title = {Perceptual Losses for Real-Time Style Transfer and Super-Resolution},
-  booktitle = {European Conf. Computer Vision (ECCV)}, year = {2016},
-  doi = {10.1007/978-3-319-46475-6_43},
-  verify = {VERIFY: LNCS volume and pages}
+  booktitle = {European Conf. Computer Vision (ECCV)}, series = {LNCS}, volume = {9906}, pages = {694--711}, year = {2016},
+  doi = {10.1007/978-3-319-46475-6_43}
 }
 @inproceedings{charbonnier1994,
   author = {Pierre Charbonnier and Laure Blanc-F{\'e}raud and Gilles Aubert and Michel Barlaud},
   title = {Two Deterministic Half-Quadratic Regularization Algorithms for Computed Imaging},
-  booktitle = {Proc. IEEE Int. Conf. Image Processing (ICIP)}, volume = {2}, pages = {168--172}, year = {1994}
+  booktitle = {Proc. 1st Int. Conf. Image Processing (ICIP)}, volume = {2}, pages = {168--172}, year = {1994},
+  doi = {10.1109/ICIP.1994.413553}
 }
 @inproceedings{loshchilov2019adamw,
   author = {Ilya Loshchilov and Frank Hutter}, title = {Decoupled Weight Decay Regularization},
@@ -103,7 +104,7 @@
 @article{schuirmann1987tost,
   author = {Donald J. Schuirmann},
   title = {A Comparison of the Two One-Sided Tests Procedure and the Power Approach for Assessing the Equivalence of Average Bioavailability},
-  journal = {J. Pharmacokinetics and Biopharmaceutics}, volume = {15}, pages = {657--680}, year = {1987},
+  journal = {J. Pharmacokinetics and Biopharmaceutics}, volume = {15}, number = {6}, pages = {657--680}, year = {1987},
   doi = {10.1007/BF01068419}
 }
 @article{lakens2017equivalence,
@@ -114,12 +115,12 @@
 }
 @article{holm1979,
   author = {Sture Holm}, title = {A Simple Sequentially Rejective Multiple Test Procedure},
-  journal = {Scandinavian J. Statistics}, volume = {6}, number = {2}, pages = {65--70}, year = {1979},
-  verify = {JSTOR 4615733; VERIFY DOI}
+  journal = {Scandinavian J. Statistics}, volume = {6}, number = {2}, pages = {65--70}, year = {1979}
 }
 @article{wilcoxon1945,
   author = {Frank Wilcoxon}, title = {Individual Comparisons by Ranking Methods},
-  journal = {Biometrics Bulletin}, volume = {1}, number = {6}, pages = {80--83}, year = {1945}
+  journal = {Biometrics Bulletin}, volume = {1}, number = {6}, pages = {80--83}, year = {1945},
+  doi = {10.2307/3001968}
 }
 @article{efron1979bootstrap,
   author = {Bradley Efron}, title = {Bootstrap Methods: Another Look at the Jackknife},

@@ -23,21 +23,22 @@
 
 \begin{document}
 
-\title{Do Latent Translators and Damage-Conditioned Gating Pay Off in Old-Photo Restoration?\\
-A Controlled Multi-Seed Study}
+\title{Do Latent Translators and Damage-Conditioned Gating Pay Off?\\
+A Controlled Multi-Seed Study on Synthetically Degraded Photographs}
 
 \author{\IEEEauthorblockN{\pending{authors and affiliations; omit if review is double-blind}}}
 
 \maketitle
 
 \begin{abstract}
-Old-photo restoration networks often add specialised modules to a convolutional encoder--decoder, such as
-latent feature translators and damage-conditioned gates, but these additions are rarely tested under controlled,
-multi-seed conditions with their cost reported alongside. We study a \nParamsFull{}M-parameter multi-scale
-restoration U-Net (\method{}) with residual latent translators at three skip scales and the bottleneck and an
-optional FiLM-style gate driven by a learned damage estimator. All variants share one leakage-free protocol:
-a near-duplicate-aware split (\nTrain{}/\nVal{}/\nTest{} images), cached synthetic test degradations at three
-severities, validation-only model selection, paired per-image tests with Holm correction, and pre-registered
+Networks for restoring old photographs often add specialised modules to a convolutional encoder--decoder,
+such as latent feature translators and damage-conditioned gates, but these additions are rarely tested under
+controlled, multi-seed conditions with their cost reported alongside. We do not propose a new method. We take a
+reference architecture, \method{}, a \nParamsFull{}M-parameter multi-scale restoration U-Net with residual latent
+translators at three skip scales and the bottleneck and an optional FiLM-style gate driven by a learned damage
+estimator, and test whether these modules earn their cost when restoring \emph{synthetically degraded}
+photographs. All variants share one leakage-free protocol: a near-duplicate-aware split
+(\nTrain{}/\nVal{}/\nTest{} images), synthetic degradations at three severities with cached test inputs, validation-only model selection, paired per-image tests with Holm correction, and pre-registered
 equivalence margins. Damage-conditioned gating gives no benefit: even ground-truth severity conditioning improves
 PSNR by at most \nOASevPSNR{}~dB, and every gated variant has worse LPIPS than the ungated model. Translators
 give no benefit at a short training budget. After 25$\times$ longer training, in the \nConvSeeds{} seeds in which
@@ -61,10 +62,13 @@ which modulates features with an estimate of the degradation~\cite{perez2018film
 usually justified by gains over a baseline that may be small, come from a single training run, be measured at a
 single training budget, and be reported without their computational cost.
 
-This paper began as the development of such a model. During development we found that our early evaluation was
-invalid: metrics had been computed on training images, and near-duplicate images would have leaked across a
-naive split. We rebuilt the protocol and asked a narrower question: \emph{does either module give a measurable
-restoration benefit, and is the benefit worth its cost?}
+This paper does not introduce a new method. We use \method{}, a multi-scale restoration U-Net that combines both
+modules, as a \emph{reference architecture} in which each module can be removed independently, and we study it on
+photographs with synthetic, multi-severity degradation where ground truth is available. The study began as the
+development of this model; during development we found that our early evaluation was invalid (metrics had been
+computed on training images, and near-duplicate images would have leaked across a naive split). We rebuilt the
+protocol and asked a narrower question: \emph{does either module give a measurable restoration benefit, and is the
+benefit worth its cost?}
 
 \textbf{Contributions.}
 (i)~A leakage-free, multi-severity evaluation protocol with validation-only selection, paired statistics and
@@ -111,9 +115,8 @@ the severity map, and $\Delta_c$, $\Delta_s$ are zero-initialised channel and sp
 \textbf{Variants.} A: ungated; B: learned gate; C: learned gate with severity supervision and sparsity; O: C with
 ground-truth instead of predicted severity maps (oracle, diagnostic only); Full: all translators, no gate modules
 (\nParamsFull{}M); Encoder--decoder: no translators (\nParamsEncdec{}M).
-\textbf{Baselines.} A plain U-Net~\cite{ronneberger2015unet} (13.4M), NAFNet-width32~\cite{chen2022nafnet}
-(17.1M) and Restormer~\cite{zamir2022restormer} (26.1M), re-implemented and trained from scratch under exactly the
-same protocol (Section~\ref{sec:setup}); they have no damage estimator, so the damage-map loss term is absent.
+\textbf{Baselines.} A plain U-Net~\cite{ronneberger2015unet} (13.4M) and NAFNet-width32~\cite{chen2022nafnet}
+(17.1M), re-implemented and trained from scratch under exactly the same protocol (Section~\ref{sec:setup}); they have no damage estimator, so the damage-map loss term is absent.
 
 \section{Experimental Setup}\label{sec:setup}
 \textbf{Data.} 5{,}000 clean colour images resized to $256^2$ (predominantly portraits)
@@ -191,8 +194,8 @@ end, and the gap was still widening when training stopped.
 \end{figure}
 
 \subsection{Baselines (same protocol)}
-\IfFileExists{\T{tab_baselines.tex}}{\input{\T{tab_baselines.tex}}}{\pending{baseline table: U-Net, NAFNet,
-Restormer under the Stage-3 protocol}}
+\IfFileExists{\T{tab_baselines.tex}}{\input{\T{tab_baselines.tex}}}{\pending{baseline table: U-Net and NAFNet under the
+Stage-3 protocol}}
 \pending{baseline results text}.
 We do not compare against the released model of Wan et al.~\cite{wan2020bringing}: it was trained on different
 data and degradations, so a comparison on our synthetic test set would measure the training data rather than the
@@ -204,19 +207,6 @@ architecture, and retraining its multi-stage pipeline under our protocol is beyo
 Removing the translators halves the parameters (\nParamsFull{}M to \nParamsEncdec{}M) and cuts MACs from
 \nMACsFull{} to \nMACsEncdec{} GMACs at $256^2$; latency falls by \nLatCut\%, throughput rises by \nThrGain\%,
 training time per step falls by \nStepCut\% and peak training memory by \nMemCut\% (Table~\ref{tab:efficiency}).
-
-\subsection{Real photographs (qualitative)}
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig_real_panel.pdf}
-\caption{Real scanned photographs (no ground truth; models trained only on synthetic degradation; seed 42, 20k
-steps). The ten photos and their damage categories were fixed from the inputs before any model was run.
-Quantitative results (Tables~\ref{tab:gating}--\ref{tab:converged}) are on synthetic degradation only.}
-\label{fig:real}
-\end{figure}
-On real scans (Fig.~\ref{fig:real}) neither model visibly removes scratches, tears or spots; both mainly raise
-contrast and saturation and add a warm cast, and the two models' outputs are nearly indistinguishable. The
-synthetic training degradation does not transfer to these photographs.
 
 \section{Discussion}
 \textbf{Budget changes the answer.} At 800 steps the smaller encoder--decoder learns faster and comes out ahead;
@@ -239,11 +229,23 @@ severe-damage lead was still widening at the end, so the size of the converged g
 divergence criterion (validation drawdown above \nDivThreshold{}~dB) was fixed after observing the runs.
 (3)~\textbf{Unknown cause of divergence.} \pending{update from diagnostic}. Whether a stabiliser (e.g.\ a lower
 learning rate or longer warm-up) would remove the instability without changing the comparison is untested.
-(4)~\textbf{Synthetic degradation.} Training and test use the same synthetic pipeline on one dataset of mostly
-portraits; on real photographs neither model visibly repairs damage, and no real test set with ground truth was
-used.
+(4)~\textbf{Synthetic degradation only.} All quantitative results use the same synthetic pipeline for training and
+test, on one dataset of mostly portraits. On ten real scanned photographs (Fig.~\ref{fig:real}; selection fixed from
+the inputs before any model was run) neither model visibly removes scratches, tears or spots; both mainly raise
+contrast and saturation and add a warm cast, and their outputs are nearly indistinguishable. The synthetic
+training degradation does not transfer to these photographs, and no real test set with ground truth was used.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig_real_panel.pdf}
+\caption{Real scanned photographs (no ground truth; models trained only on synthetic degradation; seed 42, 20k
+steps). The ten photos and their damage categories were fixed from the inputs before any model was run.
+Quantitative results (Tables~\ref{tab:gating}--\ref{tab:converged}) are on synthetic degradation only.}
+\label{fig:real}
+\end{figure}
 (5)~\textbf{Dataset provenance.} \pending{licence and source of the training images}.
-(6)~\textbf{Scope.} Gating was tested only at the short budget; margins were chosen by the authors; timing comes
+(6)~\textbf{Baselines.} Only convolutional baselines (U-Net, NAFNet) were trained; larger transformer baselines
+such as Restormer~\cite{zamir2022restormer} were not trained under the 20k-step protocol for compute reasons.
+(7)~\textbf{Scope.} Gating was tested only at the short budget; margins were chosen by the authors; timing comes
 from one Apple GPU in FP32.
 
 \section{Conclusion}

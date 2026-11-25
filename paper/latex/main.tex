@@ -175,7 +175,11 @@ non-inferior to the full model on every severity and metric and better on severe
 \textbf{Stability.} The full model diverged in seed \nDivSeed{} (Table~\ref{tab:stability}): its validation PSNR
 peaked at epoch \nDivBestEpoch{} and later fell by up to \nDivDrawdown{}~dB, so its validation-selected checkpoint
 is the epoch-1 (1{,}000-step) one (severe test PSNR \nDivSevPSNRbest{}~dB; final-epoch weights \nDivSevPSNRlast{}~dB, against
-\nConvSevPSNRfull{}~dB for the converged full models). The training loss stayed finite at every step. \pending{cause of divergence from the per-step diagnostic}. The encoder--decoder converged
+\nConvSevPSNRfull{}~dB for the converged full models). The training loss stayed finite at every step. A per-step replay, which reproduces the original run exactly,
+shows the cause: from about step 1{,}100 the input to the bottleneck translator collapses relative to its output,
+and from step 1{,}486 that translator's gradient norm reaches $10^{6}$--$10^{8}$ on almost every step, against a
+maximum of 6.7 in a healthy seed. Because gradients are clipped by their global norm, every other module's update
+is then scaled down by about $10^{7}$, so the rest of the network effectively stops learning. The encoder--decoder converged
 in all \nSeedsAll{} seeds (severe PSNR \nEncdecSevPSNR{}~dB). Because one diverged run dominates any average over
 seeds, we report every run separately (Table~\ref{tab:convergence}) and do not pool seeds into a single test.
 
@@ -232,8 +236,11 @@ the translator blocks was not tested.
 the gap at convergence is not known. The short and long protocols differ in several settings besides length.
 (2)~\textbf{Two clean seeds for the full model.} The converged-run analysis rests on seeds \nConvSeeds{}; the
 divergence criterion (validation drawdown above \nDivThreshold{}~dB) was fixed after observing the runs.
-(3)~\textbf{Unknown cause of divergence.} \pending{update from diagnostic}. Whether a stabiliser (e.g.\ a lower
-learning rate or longer warm-up) would remove the instability without changing the comparison is untested.
+(3)~\textbf{Divergence mechanism only partly explained.} We located where and how the failed run broke (an
+exploding bottleneck-translator gradient that global clipping turns into a network-wide stall), but why the
+bottleneck input collapses in this seed is a hypothesis (InstanceNorm over near-constant $16\times16$ maps).
+Whether a stabiliser such as per-module clipping would remove the failure without changing the comparison is
+untested.
 (4)~\textbf{Synthetic degradation only.} All quantitative results use the same synthetic pipeline for training and
 test, on one dataset of mostly portraits. On ten real scanned photographs (Fig.~\ref{fig:real}; selection fixed from
 the inputs before any model was run) neither model visibly removes scratches, tears or spots; both mainly raise

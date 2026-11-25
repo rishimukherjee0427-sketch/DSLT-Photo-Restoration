@@ -1,0 +1,61 @@
+{
+ "created": "2026-11-25T15:51:39",
+ "note": "Chosen from INPUTS only, before any model was run on these photos (rule: paper/REAL_PHOTO_PANEL_PLAN.md). Each photo assigned to one category by its dominant visible damage; when a category had more candidates than slots, the first in filename order were taken.",
+ "excluded": {
+  "old_photo_18.jpg": "appears to be a modern photograph with a digital vintage effect, not a genuine old print"
+ },
+ "candidates": {
+  "scratches_tears_spots": [
+   "old_photo_02.jpg",
+   "old_photo_05.jpg",
+   "old_photo_06.jpg",
+   "old_photo_16.jpg",
+   "old_photo_24.jpg",
+   "old_photo_29.jpg"
+  ],
+  "fading_colour_cast": [
+   "old_photo_07.jpg",
+   "old_photo_10.jpg",
+   "old_photo_22.jpg",
+   "old_photo_23.jpg"
+  ],
+  "blur_noise_grain": [
+   "old_photo_08.jpeg",
+   "old_photo_09.jpeg",
+   "old_photo_14.jpg",
+   "old_photo_21.jpg",
+   "old_photo_25.jpg"
+  ]
+ },
+ "selected": {
+  "scratches_tears_spots": [
+   "old_photo_02.jpg",
+   "old_photo_05.jpg",
+   "old_photo_06.jpg",
+   "old_photo_16.jpg"
+  ],
+  "fading_colour_cast": [
+   "old_photo_07.jpg",
+   "old_photo_10.jpg",
+   "old_photo_22.jpg"
+  ],
+  "blur_noise_grain": [
+   "old_photo_08.jpeg",
+   "old_photo_09.jpeg",
+   "old_photo_14.jpg"
+  ]
+ },
+ "md5": {
+  "old_photo_02.jpg": "75304bba6d0ae9b226277346dec5696e",
+  "old_photo_05.jpg": "69323b5dbc518337de1bef7836a735c6",
+  "old_photo_06.jpg": "723897f56f1660623525dd281c40fd9a",
+  "old_photo_16.jpg": "ac441f8321e13dcf4e1da085ec7d052d",
+  "old_photo_07.jpg": "99eafdb6a7c68b30b3bc25cf21e34253",
+  "old_photo_10.jpg": "b27ba430fddc8d275878e3471a85c1a6",
+  "old_photo_22.jpg": "34e7d5ab8f5fb6f9de3514235934b5f2",
+  "old_photo_08.jpeg": "d196cbe5b40b5fc3b65323c3ec47a482",
+  "old_photo_09.jpeg": "c3b60bb53a9f7beb9af8b01666af6398",
+  "old_photo_14.jpg": "f82d26705756e2f604bbe518b31c9bb0"
+ },
+ "source": "data/raw/archive (2)/ (Kaggle bundle 4045250; licence unconfirmed)"
+}

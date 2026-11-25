@@ -1,0 +1,38 @@
+[
+ {
+  "cfg": "Tfull",
+  "seed": 42,
+  "alignment_checked_inputs": 750,
+  "ok": true
+ },
+ {
+  "cfg": "Tfull",
+  "seed": 123,
+  "alignment_checked_inputs": 750,
+  "ok": true
+ },
+ {
+  "cfg": "Tfull",
+  "seed": 2026,
+  "alignment_checked_inputs": 750,
+  "ok": true
+ },
+ {
+  "cfg": "Tnone",
+  "seed": 42,
+  "alignment_checked_inputs": 750,
+  "ok": true
+ },
+ {
+  "cfg": "Tnone",
+  "seed": 123,
+  "alignment_checked_inputs": 750,
+  "ok": true
+ },
+ {
+  "cfg": "Tnone",
+  "seed": 2026,
+  "alignment_checked_inputs": 750,
+  "ok": true
+ }
+]

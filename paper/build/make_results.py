@@ -47,11 +47,12 @@ STAGE_INFO = {  # descriptive metadata, mirrored from the run configs (verified 
     "S2": dict(name="translator ablation (trained)", steps=800, crop=128, val_images=24),
     "S3": dict(name="convergence", steps=20000, crop=256, val_images=250),
 }
+BASELINES = ("unet", "nafnet")
 DIVERGE_DB = 0.5   # post hoc: a run "diverged" if val PSNR (mean of 3 sev.) ever fell > 0.5 dB below its running max
 LABEL = {"A": "DSLT-A (ungated)", "B": "DSLT-B (gated)", "C": "DSLT-C (gated + sev. sup.)",
          "O": "DSLT-O (oracle, diagnostic)", "B_g1": "DSLT-B, gates forced to 1", "C_g1": "DSLT-C, gates forced to 1",
          "Tfull": "Full (all translators)", "Te2": "e2 translator only", "Tnone": "Encoder--decoder (no translators)",
-         "Tfull_last": "Full, final-epoch weights"}
+         "Tfull_last": "Full, final-epoch weights", "unet": "U-Net (baseline)", "nafnet": "NAFNet-w32 (baseline)"}
 
 
 # ------------------------------------------------------------------ collection
@@ -86,6 +87,11 @@ def per_image_sources():
             p = R("v9_convergence_pilot", "per_image", f"{m}_seed{s}_last.json")
             if os.path.exists(p):
                 yield "S3", f"{m}_last", s, p, lambda d: d["results"]
+    for m in BASELINES:            # Task 3: Stage-3-protocol baselines
+        for s in SEEDS3:
+            p = R("v10_baselines", "per_image", f"{m}_seed{s}.json")
+            if os.path.exists(p):
+                yield "S3", m, s, p, lambda d: d["results"]
 
 
 def collect():
@@ -154,13 +160,43 @@ def collect_stats():
                         ci90_lo=t["ci90"][0], ci90_hi=t["ci90"][1], cohens_dz=t["cohens_dz"], per_seed=f"{t['mean_diff']:.6g}",
                         p_wilcoxon=t["p_wilcoxon"], p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=1, pct_full_better="",
                         source="results/v9_convergence_pilot/stats.json"))
+    pb = R("v10_baselines", "stats.json")
+    if os.path.exists(pb):
+        for t in _load(pb)["tests"]:
+            out.append(dict(stage="S3", family="baselines_seed42", comparison=t["comparison"], severity=t["severity"],
+                            metric=t["metric"], mean_diff=t["mean_diff"], ci95_lo=t["ci95"][0], ci95_hi=t["ci95"][1],
+                            ci90_lo=t["ci90"][0], ci90_hi=t["ci90"][1], cohens_dz=t["cohens_dz"],
+                            per_seed=f"{t['mean_diff']:.6g}", p_wilcoxon=t["p_wilcoxon"], p_holm=t["p_holm"], verdict="",
+                            n_seeds=1, pct_full_better=t["pct_images_baseline_better"],
+                            source="results/v10_baselines/stats.json"))
     return out
+
+
+def collect_baseline_training():
+    tr = []
+    for m in BASELINES:
+        d = R("v10_baselines", "seed42")
+        hp, mp = os.path.join(d, f"{m}_history.json"), os.path.join(d, f"{m}_manifest.json")
+        if not (os.path.exists(hp) and os.path.exists(mp)):
+            continue
+        h, man = _load(hp)["history"], _load(mp)
+        if h[-1]["step"] != 20000:
+            continue
+        best = max(h, key=lambda x: x["val"]["psnr_mean"])
+        tr.append(dict(stage="S3", model=m, seed=42, steps=20000, best_epoch=best["epoch"],
+                       train_s_per_step_median=float(np.median([x["train_s_per_step"] for x in h])),
+                       train_minutes=man["extra"]["train_minutes"], peak_train_GB=man["extra"]["peak_mps_driver_bytes"] / 1e9,
+                       source=os.path.relpath(mp, ROOT)))
+    return tr
 
 
 def collect_profiling():
     out = []
     for stage, p, key in (("S0", R("v7_stage0", "profiling.json"), "model"), ("S2", R("v8_translator_training", "profiling.json"), "cfg"),
-                          ("S3", R("v9_convergence_pilot", "profiling.json"), "cfg")):
+                          ("S3", R("v9_convergence_pilot", "profiling.json"), "cfg"),
+                          ("S3", R("v10_baselines", "profiling.json"), "cfg")):
+        if not os.path.exists(p):
+            continue
         for r in _load(p):
             out.append(dict(stage=stage, model=r[key], params_M=r["params_M"], GMACs_128=r["GMACs_128"], GMACs_256=r["GMACs_256"],
                             latency_ms_256_b1=r["latency_ms_256_b1"], throughput_img_s_256_b4=r["throughput_img_s_256_b4"],
@@ -328,6 +364,32 @@ def converged_table(stats, training, path):
     open(path, "w").write("\n".join(L) + "\n")
 
 
+def baselines_table(rows, prof, btrain, training, path):
+    """Seed-42 test results and cost for the two DSLT variants and the protocol-matched baselines."""
+    have = [m for m in BASELINES if any(r["stage"] == "S3" and r["model"] == m for r in rows)]
+    if not have:
+        return False
+    p = {x["model"]: x for x in prof if x["stage"] == "S3"}
+    tr = {x["model"]: x for x in btrain + [t for t in training if t["seed"] == 42]}
+    g = lambda mo, sv, m: [r["mean"] for r in rows if r["stage"] == "S3" and r["model"] == mo and r["seed"] == 42
+                           and r["severity"] == sv and r["metric"] == m][0]
+    L = [r"\begin{table*}[t]", r"\centering",
+         r"\caption{Protocol-matched comparison, seed 42 (20k steps at $256^2$, identical data order, schedule, validation and "
+         r"selection; test set, 250 images per severity). Baselines were re-implemented and trained from scratch; one training "
+         r"run per model. Cost: Apple M4 Pro, MPS, FP32, $256^2$.}",
+         r"\label{tab:baselines}", r"\scriptsize", r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lrrrr" + "ccc" * 3 + "}", r"\toprule",
+         r" & & & & & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\",
+         r"\cmidrule(lr){6-8}\cmidrule(lr){9-11}\cmidrule(lr){12-14}",
+         r"Model & Params (M) & GMACs & Lat. (ms) & s/step & " + " & ".join([r"PSNR", r"SSIM", r"LPIPS"] * 3) + r" \\", r"\midrule"]
+    for mo in ["Tfull", "Tnone"] + have:
+        L.append(f"{LABEL[mo]} & {p[mo]['params_M']:.1f} & {p[mo]['GMACs_256']:.1f} & {p[mo]['latency_ms_256_b1']:.1f} & "
+                 f"{tr[mo]['train_s_per_step_median']:.2f} & "
+                 + " & ".join(FMT[m].format(g(mo, sv, m)) for sv in SEVS for m in METRICS) + r" \\")
+    L += [r"\bottomrule", r"\end{tabular}", r"\end{table*}"]
+    open(path, "w").write("\n".join(L) + "\n")
+    return True
+
+
 def efficiency_table(prof, training, path):
     p = {r["model"]: r for r in prof if r["stage"] == "S3"}
     L = [r"\begin{table*}[t]", r"\centering",
@@ -476,6 +538,7 @@ def main():
     os.makedirs(os.path.join(OUT, "tables"), exist_ok=True); os.makedirs(os.path.join(OUT, "figures"), exist_ok=True)
     rows, pis = collect()
     stats = collect_stats(); prof = collect_profiling(); training, curves = collect_training()
+    btrain = collect_baseline_training()
     write_csv(os.path.join(OUT, "results.csv"), rows); write_csv(os.path.join(OUT, "stats.csv"), stats)
     write_csv(os.path.join(OUT, "profiling.csv"), prof); write_csv(os.path.join(OUT, "training.csv"), training)
     write_csv(os.path.join(OUT, "curves.csv"), curves)
@@ -500,6 +563,7 @@ def main():
     if os.path.exists(stale):
         os.remove(stale)
     efficiency_table(prof, training, T("tab_efficiency.tex"))
+    baselines_table(rows, prof, btrain, training, T("tab_baselines.tex"))
     numbers(rows, stats, prof, training, os.path.join(OUT, "numbers.tex"))
     if curves:
         dv = {(t["model"], t["seed"]) for t in training if t["diverged"]}

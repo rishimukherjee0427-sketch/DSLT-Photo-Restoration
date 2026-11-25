@@ -284,13 +284,13 @@ def stability_table(training, path):
          r"\caption{Stage~3 training stability. A run is counted as diverged if its validation PSNR (mean of the three "
          r"severities, 250 images) ever fell more than " + f"{DIVERGE_DB:.1f}" + r"~dB below its running maximum (criterion "
          r"fixed after observing the runs). Drawdown and best epoch per seed (42/123/2026).}",
-         r"\label{tab:stability}", r"\scriptsize", r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lcll}", r"\toprule",
+         r"\label{tab:stability}", r"\scriptsize", r"\setlength{\tabcolsep}{3pt}", r"\resizebox{\linewidth}{!}{%", r"\begin{tabular}{lcll}", r"\toprule",
          r"Model & Diverged & Best epoch (of 20) & Max.\ drawdown (dB) \\", r"\midrule"]
     for m in ("Tfull", "Tnone"):
         t = sorted([x for x in training if x["model"] == m], key=lambda x: x["seed"])
         L.append(f"{LABEL[m]} & {sum(x['diverged'] for x in t)}/{len(t)} & "
                  + "/".join(str(x["best_epoch"]) for x in t) + " & " + "/".join(f"{x['max_val_drawdown_db']:.2f}" for x in t) + r" \\")
-    L += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+    L += [r"\bottomrule", r"\end{tabular}}", r"\end{table}"]
     open(path, "w").write("\n".join(L) + "\n")
 
 
@@ -303,7 +303,7 @@ def converged_table(stats, training, path):
     (no cross-seed p-values). Shown as Full - Enc-dec (positive PSNR/SSIM, negative LPIPS = translators help)."""
     bad = {x["seed"] for x in training if x["diverged"]}
     seeds = sorted({x["seed"] for x in training} - bad)
-    L = [r"\begin{table}[t]", r"\centering",
+    L = [r"\begin{table*}[t]", r"\centering",
          r"\caption{Sensitivity analysis on converged runs only (seeds " + ", ".join(map(str, seeds)) + r"; seed"
          + ("s " if len(bad) > 1 else " ") + ", ".join(map(str, sorted(bad))) + r" excluded because the full model diverged). "
          r"$\Delta$ = full $-$ encoder--decoder on the 250 test images; paired per-image tests within each training run "
@@ -311,6 +311,7 @@ def converged_table(stats, training, path):
          r"images on which the full model is better. Verdicts use the pre-registered margins (0.10~dB, 0.0020, 0.0050) on the 90\% CI.}",
          r"\label{tab:converged}", r"\scriptsize", r"\setlength{\tabcolsep}{2.5pt}", r"\begin{tabular}{llrcrrrl}", r"\toprule",
          r"Sev. & Metric & Seed & $\Delta$ [95\% CI] & $d_z$ & Better & $p_\mathrm{Holm}$ & Verdict \\", r"\midrule"]
+    END = [r"\bottomrule", r"\end{tabular}", r"\end{table*}"]
     for sv in SEVS:
         for m in METRICS:
             for se in seeds:
@@ -323,13 +324,13 @@ def converged_table(stats, training, path):
                          f" & {-t['cohens_dz']:+.2f} & {t['pct_full_better']:.0f}\\% & {t['p_holm']:.2g} & {VERDICT_FULL[t['verdict']]}" + r" \\")
         if sv != SEVS[-1]:
             L.append(r"\midrule")
-    L += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+    L += END
     open(path, "w").write("\n".join(L) + "\n")
 
 
 def efficiency_table(prof, training, path):
     p = {r["model"]: r for r in prof if r["stage"] == "S3"}
-    L = [r"\begin{table}[t]", r"\centering",
+    L = [r"\begin{table*}[t]", r"\centering",
          r"\caption{Cost at $256^2$ (Stage~3 profiling, Apple M4 Pro, MPS, FP32; training figures are means over completed Stage~3 runs).}",
          r"\label{tab:efficiency}", r"\scriptsize", r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lrrrrrrr}", r"\toprule",
          r"Model & Params (M) & GMACs & Lat. (ms) & Thr. (img/s) & s/step & Train (min) & Peak (GB) \\", r"\midrule"]
@@ -338,7 +339,7 @@ def efficiency_table(prof, training, path):
         L.append(f"{LABEL[m]} & {p[m]['params_M']:.2f} & {p[m]['GMACs_256']:.1f} & {p[m]['latency_ms_256_b1']:.1f} & "
                  f"{p[m]['throughput_img_s_256_b4']:.1f} & {np.mean([x['train_s_per_step_median'] for x in t]):.3f} & "
                  f"{np.mean([x['train_minutes'] for x in t]):.0f} & {np.mean([x['peak_train_GB'] for x in t]):.2f}" + r" \\")
-    L += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+    L += [r"\bottomrule", r"\end{tabular}", r"\end{table*}"]
     open(path, "w").write("\n".join(L) + "\n")
 
 
@@ -384,6 +385,92 @@ def fig_severe_gap(curves, path_noext, exclude_seeds=()):
         fig.savefig(f"{path_noext}.{ext}", dpi=300)
 
 
+# ------------------------------------------------------------------ numbers quoted in the text
+def numbers(rows, stats, prof, training, path):
+    """Every number the LaTeX text quotes, as \newcommand macros (paper/build/out/numbers.tex)."""
+    M = {}
+    nlines = lambda n: sum(1 for l in open(os.path.join(ROOT, "data", "splits", n)) if l.strip())
+    M.update(nTrain=f"{nlines('train.txt'):,}", nVal=nlines("val.txt"), nTest=nlines("test.txt"), nExcluded=nlines("excluded.txt"))
+
+    def st(stage, fam, comp, sv, m):
+        t = [x for x in stats if x["stage"] == stage and x["family"] == fam and x["comparison"] == comp
+             and x["severity"] == sv and x["metric"] == m]
+        assert len(t) == 1, (stage, fam, comp, sv, m)
+        return t[0]
+    # Stage 0 (gating)
+    for comp, key in (("O-A", "OA"), ("C-A", "CA"), ("O-C", "OC")):
+        for sv, k in (("mild", "Mild"), ("medium", "Med"), ("severe", "Sev")):
+            t = st("S0", "oracle_family", comp, sv, "psnr")
+            M[f"n{key}{k}PSNR"] = f"{t['mean_diff']:+.3f}"
+    t = st("S0", "oracle_family", "O-A", "severe", "psnr")
+    M["nOASevCI"] = f"[{t['ci95_lo']:+.3f}, {t['ci95_hi']:+.3f}]"
+    gl = [st("S0", f, c, sv, "lpips")["mean_diff"] for f, c in (("abc_3seed_family", "B-A"), ("abc_3seed_family", "C-A"),
+                                                               ("oracle_family", "O-A")) for sv in SEVS]
+    M["nGateLPIPSmin"], M["nGateLPIPSmax"] = f"{min(gl):+.4f}", f"{max(gl):+.4f}"
+    M["nGatedWorseLPIPScount"] = sum(x > 0 for x in gl); M["nGatedLPIPScount"] = len(gl)
+    M["nGOneMax"] = f"{max(abs(x['mean_diff']) for x in stats if x['stage'] == 'S0' and x['family'] == 'counterfactual_family' and x['metric'] == 'psnr'):.2f}"
+    # Stage 2 (short budget)
+    t = st("S2", "preregistered_equivalence", "Tnone-Tfull", "severe", "psnr")
+    M["nTwoSevPSNR"] = f"{t['mean_diff']:+.3f}"; M["nTwoSevPSNRCI"] = f"[{t['ci95_lo']:+.3f}, {t['ci95_hi']:+.3f}]"
+    # Stage 3 (per seed; converged seeds only for the effect statements)
+    div = [t for t in training if t["diverged"]]
+    bad = {t["seed"] for t in div}
+    conv = sorted({t["seed"] for t in training} - bad)
+    M["nSeedsAll"] = len({t["seed"] for t in training})
+    M["nDivFull"] = sum(t["diverged"] for t in training if t["model"] == "Tfull")
+    M["nDivEncdec"] = sum(t["diverged"] for t in training if t["model"] == "Tnone")
+    M["nDivSeed"] = ", ".join(str(s) for s in sorted(bad)) or "none"
+    M["nConvSeeds"] = " and ".join(map(str, conv))
+    if div:
+        d = div[0]
+        M["nDivDrawdown"] = f"{d['max_val_drawdown_db']:.2f}"; M["nDivBestEpoch"] = d["best_epoch"]
+    M["nDivThreshold"] = f"{DIVERGE_DB:.1f}"
+
+    def rng(vals, f):
+        lo, hi = min(vals), max(vals)
+        return f.format(lo) if f.format(lo) == f.format(hi) else f.format(lo) + "--" + f.format(hi)
+    pick = lambda sv, m: [x for x in stats if x["stage"] == "S3" and x["family"] in {f"per_seed_{s}" for s in conv}
+                          and x["severity"] == sv and x["metric"] == m]
+    M["nSevSSIMgain"] = rng([-x["mean_diff"] for x in pick("severe", "ssim")], "{:.4f}")
+    M["nSevLPIPSgain"] = rng([x["mean_diff"] for x in pick("severe", "lpips")], "{:.4f}")
+    M["nSevSSIMbetter"] = rng([x["pct_full_better"] for x in pick("severe", "ssim")], "{:.0f}")
+    M["nSevLPIPSbetter"] = rng([x["pct_full_better"] for x in pick("severe", "lpips")], "{:.0f}")
+    M["nSevLPIPSdz"] = rng([abs(x["cohens_dz"]) for x in pick("severe", "lpips")], "{:.2f}")
+    M["nMaxAbsPSNR"] = f"{max(abs(x['mean_diff']) for sv in SEVS for x in pick(sv, 'psnr')):.2f}"
+    tr = _load(R("v9_convergence_pilot", "three_seed", "stats.json"))["crossover"]
+    leads = [tr[str(s)]["severe_psnr"]["sustained_tfull_lead_from_step"] for s in conv]
+    M["nLeadStep"] = rng([x / 1000 for x in leads], "{:.0f}") + "k"
+    M["nFinalSevGap"] = rng([tr[str(s)]["severe_psnr"]["final_diff"] for s in conv], "{:+.3f}")
+    g = lambda mo, se, sv, m: [x["mean"] for x in rows if x["stage"] == "S3" and x["model"] == mo and x["seed"] == se
+                               and x["severity"] == sv and x["metric"] == m][0]
+    if div:
+        s0 = div[0]["seed"]
+        M["nDivSevPSNRbest"] = f"{g('Tfull', s0, 'severe', 'psnr'):.2f}"
+        if any(x["model"] == "Tfull_last" for x in rows):
+            M["nDivSevPSNRlast"] = f"{g('Tfull_last', s0, 'severe', 'psnr'):.2f}"
+    M["nConvSevPSNRfull"] = rng([g("Tfull", s, "severe", "psnr") for s in conv], "{:.2f}")
+    M["nEncdecSevPSNR"] = rng([g("Tnone", s, "severe", "psnr") for s in sorted({t['seed'] for t in training})], "{:.2f}")
+    # efficiency (Stage 3 profiling + training manifests)
+    p = {x["model"]: x for x in prof if x["stage"] == "S3"}
+    F_, N_ = p["Tfull"], p["Tnone"]
+    tm = lambda m, k: float(np.mean([x[k] for x in training if x["model"] == m]))
+    M.update(nParamsFull=f"{F_['params_M']:.1f}", nParamsEncdec=f"{N_['params_M']:.1f}",
+             nParamRatio=f"{F_['params_M'] / N_['params_M']:.1f}",
+             nMACsFull=f"{F_['GMACs_256']:.1f}", nMACsEncdec=f"{N_['GMACs_256']:.1f}",
+             nMACsRatio=f"{F_['GMACs_256'] / N_['GMACs_256']:.1f}",
+             nLatFull=f"{F_['latency_ms_256_b1']:.1f}", nLatEncdec=f"{N_['latency_ms_256_b1']:.1f}",
+             nLatCut=f"{100 * (1 - N_['latency_ms_256_b1'] / F_['latency_ms_256_b1']):.0f}",
+             nThrGain=f"{100 * (N_['throughput_img_s_256_b4'] / F_['throughput_img_s_256_b4'] - 1):.0f}",
+             nStepCut=f"{100 * (1 - tm('Tnone', 'train_s_per_step_median') / tm('Tfull', 'train_s_per_step_median')):.0f}",
+             nMemCut=f"{100 * (1 - tm('Tnone', 'peak_train_GB') / tm('Tfull', 'peak_train_GB')):.0f}")
+    with open(path, "w") as f:
+        f.write("% generated by paper/build/make_results.py -- do not edit\n")
+        for k, v in M.items():
+            assert k.isalpha(), k
+            f.write(f"\\newcommand{{\\{k}}}{{{v}}}\n")
+    return M
+
+
 # ------------------------------------------------------------------ main
 def main():
     os.makedirs(os.path.join(OUT, "tables"), exist_ok=True); os.makedirs(os.path.join(OUT, "figures"), exist_ok=True)
@@ -413,6 +500,7 @@ def main():
     if os.path.exists(stale):
         os.remove(stale)
     efficiency_table(prof, training, T("tab_efficiency.tex"))
+    numbers(rows, stats, prof, training, os.path.join(OUT, "numbers.tex"))
     if curves:
         dv = {(t["model"], t["seed"]) for t in training if t["diverged"]}
         fig_curves(curves, os.path.join(OUT, "figures", "fig_convergence_curves"), dv)

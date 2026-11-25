@@ -72,3 +72,8 @@ results/v9_convergence_pilot/predictions/
 
 # Paper build scripts and generated outputs are tracked
 !paper/build/
+paper/latex/*.pdf
+paper/latex/*.log
+paper/latex/*.blg
+paper/latex/*.bbl
+paper/latex/*.aux

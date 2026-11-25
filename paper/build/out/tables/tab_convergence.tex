@@ -1,16 +1,22 @@
 \begin{table*}[t]
 \centering
-\caption{Stage~3: convergence, test set, 20k steps at $256^2$ (3 seeds; PSNR mean$\pm$SD over seeds)}
+\caption{Stage~3 test results per training run (250 images per severity; 20k steps at $256^2$; validation-best checkpoint unless stated). $^\dagger$Diverged run (Table~\ref{tab:stability}); its final-epoch (20k-step) weights are listed for completeness and were not used for selection.}
 \label{tab:convergence}
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccccccccc}
+\begin{tabular}{lrccccccccc}
 \toprule
- & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
-Model & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ \\
+ & & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+Model & Seed & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ & PSNR$\uparrow$ & SSIM$\uparrow$ & LPIPS$\downarrow$ \\
 \midrule
-Full (all translators) & 28.87$\pm$1.47 & 0.8537 & 0.1670 & 26.53$\pm$1.61 & 0.8003 & 0.2620 & 21.54$\pm$2.15 & 0.6593 & 0.4767 \\
-Encoder--decoder (no translators) & 29.65$\pm$0.14 & 0.8775 & 0.1446 & 27.38$\pm$0.11 & 0.8238 & 0.2342 & 22.71$\pm$0.10 & 0.6843 & 0.4425 \\
+Full (all translators) & 42 & 29.74 & 0.8771 & 0.1407 & 27.51 & 0.8254 & 0.2271 & 22.82 & 0.6897 & 0.4264 \\
+Full (all translators) & 123 & 29.71 & 0.8779 & 0.1443 & 27.41 & 0.8247 & 0.2331 & 22.74 & 0.6852 & 0.4397 \\
+Full (all translators) & 2026$^\dagger$ & 27.17 & 0.8061 & 0.2159 & 24.67 & 0.7509 & 0.3258 & 19.06 & 0.6030 & 0.5640 \\
+\quad final-epoch weights & 2026$^\dagger$ & 26.26 & 0.8005 & 0.2176 & 23.93 & 0.7454 & 0.3267 & 18.44 & 0.5850 & 0.5790 \\
+\midrule
+Encoder--decoder (no translators) & 42 & 29.79 & 0.8789 & 0.1374 & 27.43 & 0.8255 & 0.2265 & 22.78 & 0.6861 & 0.4352 \\
+Encoder--decoder (no translators) & 123 & 29.64 & 0.8771 & 0.1464 & 27.46 & 0.8223 & 0.2375 & 22.76 & 0.6814 & 0.4477 \\
+Encoder--decoder (no translators) & 2026 & 29.52 & 0.8764 & 0.1499 & 27.26 & 0.8237 & 0.2387 & 22.60 & 0.6854 & 0.4448 \\
 \bottomrule
 \end{tabular}
 \end{table*}

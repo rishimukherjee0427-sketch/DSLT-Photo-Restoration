@@ -9,7 +9,11 @@ Inputs (read-only; produced by the experiment scripts, never edited by hand):
   Stage 1  inference   results/v7_translator_ablation/per_image_seed*.json, stats.json
   Stage 2  translators results/v8_translator_training/per_image/*.json, stats.json, profiling.json
   Stage 3  convergence results/v9_convergence_pilot/per_image/*.json, stats.json (seed 42) or
-                       three_seed/stats.json (when seeds 123/2026 exist), profiling.json, seed*/ histories+manifests
+                       three_seed/stats.json (per-seed image-level tests only), profiling.json, seed*/ histories+manifests,
+                       per_image/Tfull_seed2026_last.json (final-epoch weights of the diverged run; reporting only)
+  Stage 3 reporting rule (decided after the seed-2026 divergence): no pooled cross-seed tests or verdicts. The paper
+  gets (a) a per-seed table, (b) a stability table (diverged runs per model), (c) a converged-runs-only sensitivity
+  analysis with per-image paired tests inside each seed (Holm over the 9 tests of that seed).
 Outputs (paper/build/out/):
   results.csv          one row per (stage, model, seed, severity, metric): mean over the 250 test images
   per_image.csv.gz     every per-image value (stage, model, seed, severity, image, psnr, ssim, lpips)
@@ -43,9 +47,11 @@ STAGE_INFO = {  # descriptive metadata, mirrored from the run configs (verified 
     "S2": dict(name="translator ablation (trained)", steps=800, crop=128, val_images=24),
     "S3": dict(name="convergence", steps=20000, crop=256, val_images=250),
 }
+DIVERGE_DB = 0.5   # post hoc: a run "diverged" if val PSNR (mean of 3 sev.) ever fell > 0.5 dB below its running max
 LABEL = {"A": "DSLT-A (ungated)", "B": "DSLT-B (gated)", "C": "DSLT-C (gated + sev. sup.)",
          "O": "DSLT-O (oracle, diagnostic)", "B_g1": "DSLT-B, gates forced to 1", "C_g1": "DSLT-C, gates forced to 1",
-         "Tfull": "Full (all translators)", "Te2": "e2 translator only", "Tnone": "Encoder--decoder (no translators)"}
+         "Tfull": "Full (all translators)", "Te2": "e2 translator only", "Tnone": "Encoder--decoder (no translators)",
+         "Tfull_last": "Full, final-epoch weights"}
 
 
 # ------------------------------------------------------------------ collection
@@ -77,6 +83,9 @@ def per_image_sources():
             p = R("v9_convergence_pilot", "per_image", f"{m}_seed{s}.json")
             if os.path.exists(p):
                 yield "S3", m, s, p, lambda d: d["results"]
+            p = R("v9_convergence_pilot", "per_image", f"{m}_seed{s}_last.json")
+            if os.path.exists(p):
+                yield "S3", f"{m}_last", s, p, lambda d: d["results"]
 
 
 def collect():
@@ -107,35 +116,43 @@ def collect_stats():
                             mean_diff=t["mean_diff"], ci95_lo=t["ci95"][0], ci95_hi=t["ci95"][1], ci90_lo="", ci90_hi="",
                             cohens_dz=t["cohens_dz"], per_seed=";".join(f"{x:.6g}" for x in t["per_seed_mean_diff"]),
                             p_wilcoxon=t["p_wilcoxon"], p_holm=t["p_holm"], verdict="", n_seeds=3,
-                            source="results/v7_stage0/stats.json"))
+                            pct_full_better="", source="results/v7_stage0/stats.json"))
     s1 = _load(R("v7_translator_ablation", "stats.json"))
     for t in s1["tests"]:
         out.append(dict(stage="S1", family="translator_intervention", comparison=t.get("comparison", t.get("variant", "")),
                         severity=t["severity"], metric=t["metric"], mean_diff=t["mean_diff"],
                         ci95_lo=t["ci95"][0], ci95_hi=t["ci95"][1], ci90_lo="", ci90_hi="", cohens_dz=t.get("cohens_dz", ""),
                         per_seed=";".join(f"{x:.6g}" for x in t.get("per_seed_mean_diff", [])), p_wilcoxon=t["p_wilcoxon"],
-                        p_holm=t["p_holm"], verdict="", n_seeds=3, source="results/v7_translator_ablation/stats.json"))
+                        p_holm=t["p_holm"], verdict="", n_seeds=3, pct_full_better="", source="results/v7_translator_ablation/stats.json"))
     s2 = _load(R("v8_translator_training", "stats.json"))
     for t in s2["tests"]:
         out.append(dict(stage="S2", family="preregistered_equivalence", comparison=t["comparison"], severity=t["severity"],
                         metric=t["metric"], mean_diff=t["mean_diff"], ci95_lo=t["ci95"][0], ci95_hi=t["ci95"][1],
                         ci90_lo=t["ci90"][0], ci90_hi=t["ci90"][1], cohens_dz=t["cohens_dz"],
                         per_seed=";".join(f"{x:.6g}" for x in t["per_seed_mean_diff"]), p_wilcoxon=t["p_wilcoxon"],
-                        p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=3, source="results/v8_translator_training/stats.json"))
+                        p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=3, pct_full_better="", source="results/v8_translator_training/stats.json"))
     p3 = R("v9_convergence_pilot", "three_seed", "stats.json")
     if os.path.exists(p3):
         for t in _load(p3)["tests"]:
-            out.append(dict(stage="S3", family="three_seed", comparison="Tnone-Tfull", severity=t["severity"], metric=t["metric"],
+            for ps in t["per_seed"]:        # image-level, within one training run; Holm over the 9 tests of that seed
+                out.append(dict(stage="S3", family=f"per_seed_{ps['seed']}", comparison="Tnone-Tfull", severity=t["severity"],
+                                metric=t["metric"], mean_diff=ps["mean_diff"], ci95_lo=ps["ci95_img"][0], ci95_hi=ps["ci95_img"][1],
+                                ci90_lo=ps["ci90_img"][0], ci90_hi=ps["ci90_img"][1], cohens_dz=ps["cohens_dz"],
+                                per_seed=f"{ps['mean_diff']:.6g}", p_wilcoxon=ps["p_wilcoxon"], p_holm=ps["p_holm"],
+                                verdict=ps["verdict_img"], n_seeds=1, pct_full_better=ps["pct_images_tfull_better"],
+                                source="results/v9_convergence_pilot/three_seed/stats.json"))
+            # pooled 3-seed rows are kept as a record only; NOT used in any table (decision after seed-2026 divergence)
+            out.append(dict(stage="S3", family="three_seed_pooled_NOT_USED", comparison="Tnone-Tfull", severity=t["severity"], metric=t["metric"],
                             mean_diff=t["mean_diff"], ci95_lo=t["ci95_2level"][0], ci95_hi=t["ci95_2level"][1],
                             ci90_lo=t["ci90_2level"][0], ci90_hi=t["ci90_2level"][1], cohens_dz=t["cohens_dz"],
                             per_seed=";".join(f"{p['mean_diff']:.6g}" for p in t["per_seed"]), p_wilcoxon=t["p_wilcoxon"],
-                            p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=3,
+                            p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=3, pct_full_better="",
                             source="results/v9_convergence_pilot/three_seed/stats.json"))
     for t in _load(R("v9_convergence_pilot", "stats.json"))["tests"]:
         out.append(dict(stage="S3", family="seed42_image_level", comparison="Tnone-Tfull", severity=t["severity"],
                         metric=t["metric"], mean_diff=t["mean_diff"], ci95_lo=t["ci95"][0], ci95_hi=t["ci95"][1],
                         ci90_lo=t["ci90"][0], ci90_hi=t["ci90"][1], cohens_dz=t["cohens_dz"], per_seed=f"{t['mean_diff']:.6g}",
-                        p_wilcoxon=t["p_wilcoxon"], p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=1,
+                        p_wilcoxon=t["p_wilcoxon"], p_holm=t["p_holm"], verdict=t["verdict"], n_seeds=1, pct_full_better="",
                         source="results/v9_convergence_pilot/stats.json"))
     return out
 
@@ -163,8 +180,12 @@ def collect_training():
             if h[-1]["step"] != 20000:
                 continue
             best = max(h, key=lambda x: x["val"]["psnr_mean"])
+            run_max, drawdown = -1e9, 0.0
+            for x in h:
+                run_max = max(run_max, x["val"]["psnr_mean"]); drawdown = max(drawdown, run_max - x["val"]["psnr_mean"])
             tr.append(dict(stage="S3", model=m, seed=seed, steps=h[-1]["step"], best_epoch=best["epoch"],
-                           best_val_psnr_mean=best["val"]["psnr_mean"],
+                           best_val_psnr_mean=best["val"]["psnr_mean"], final_val_psnr_mean=h[-1]["val"]["psnr_mean"],
+                           max_val_drawdown_db=drawdown, diverged=bool(drawdown > DIVERGE_DB),
                            train_s_per_step_median=float(np.median([x["train_s_per_step"] for x in h])),
                            train_minutes=man["extra"]["train_minutes"], peak_train_GB=man["extra"]["peak_mps_driver_bytes"] / 1e9,
                            chip=man["environment"].get("chip"), git=man["git"]["commit"][:7], source=os.path.relpath(mp, ROOT)))
@@ -228,6 +249,84 @@ def stats_table(stats, stage, family, comparisons, caption, label, path):
     open(path, "w").write("\n".join(L) + "\n")
 
 
+def s3_per_seed_table(rows, training, path):
+    """(a) Stage 3, one row per training run (no averaging over seeds). Diverged runs are flagged; the diverged run's
+    final-epoch weights are shown next to its validation-best checkpoint."""
+    div = {(t["model"], t["seed"]): t for t in training}
+    g = lambda mo, se, sv, m: [r["mean"] for r in rows if r["stage"] == "S3" and r["model"] == mo and r["seed"] == se
+                               and r["severity"] == sv and r["metric"] == m]
+    L = [r"\begin{table*}[t]", r"\centering",
+         r"\caption{Stage~3 test results per training run (250 images per severity; 20k steps at $256^2$; validation-best "
+         r"checkpoint unless stated). $^\dagger$Diverged run (Table~\ref{tab:stability}); its final-epoch (20k-step) weights are "
+         r"listed for completeness and were not used for selection.}",
+         r"\label{tab:convergence}", r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{lr" + "ccc" * 3 + "}", r"\toprule",
+         r" & & \multicolumn{3}{c}{Mild} & \multicolumn{3}{c}{Medium} & \multicolumn{3}{c}{Severe} \\",
+         r"\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}",
+         "Model & Seed & " + " & ".join([r"PSNR$\uparrow$", r"SSIM$\uparrow$", r"LPIPS$\downarrow$"] * 3) + r" \\", r"\midrule"]
+    for mo in ("Tfull", "Tnone"):
+        for se in sorted({r["seed"] for r in rows if r["stage"] == "S3" and r["model"] == mo}):
+            d = div.get((mo, se), {}).get("diverged")
+            be = div.get((mo, se), {}).get("best_epoch")
+            L.append(LABEL[mo] + " & " + f"{se}" + (r"$^\dagger$" if d else "") + " & "
+                     + " & ".join(FMT[m].format(g(mo, se, sv, m)[0]) for sv in SEVS for m in METRICS) + r" \\")
+            if d and g(mo + "_last", se, "mild", "psnr"):
+                L.append(r"\quad final-epoch weights & " + f"{se}" + r"$^\dagger$ & "
+                         + " & ".join(FMT[m].format(g(mo + "_last", se, sv, m)[0]) for sv in SEVS for m in METRICS) + r" \\")
+        if mo == "Tfull":
+            L.append(r"\midrule")
+    L += [r"\bottomrule", r"\end{tabular}", r"\end{table*}"]
+    open(path, "w").write("\n".join(L) + "\n")
+
+
+def stability_table(training, path):
+    """(b) Training stability per model: diverged runs, best epoch and largest validation drawdown per seed."""
+    L = [r"\begin{table}[t]", r"\centering",
+         r"\caption{Stage~3 training stability. A run is counted as diverged if its validation PSNR (mean of the three "
+         r"severities, 250 images) ever fell more than " + f"{DIVERGE_DB:.1f}" + r"~dB below its running maximum (criterion "
+         r"fixed after observing the runs). Drawdown and best epoch per seed (42/123/2026).}",
+         r"\label{tab:stability}", r"\scriptsize", r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lcll}", r"\toprule",
+         r"Model & Diverged & Best epoch (of 20) & Max.\ drawdown (dB) \\", r"\midrule"]
+    for m in ("Tfull", "Tnone"):
+        t = sorted([x for x in training if x["model"] == m], key=lambda x: x["seed"])
+        L.append(f"{LABEL[m]} & {sum(x['diverged'] for x in t)}/{len(t)} & "
+                 + "/".join(str(x["best_epoch"]) for x in t) + " & " + "/".join(f"{x['max_val_drawdown_db']:.2f}" for x in t) + r" \\")
+    L += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+    open(path, "w").write("\n".join(L) + "\n")
+
+
+VERDICT_FULL = {"equivalent": "equivalent", "worse beyond margin": "full better beyond margin",
+                "non-inferior (not equivalent)": "enc--dec non-inferior", "inconclusive": "inconclusive"}
+
+
+def converged_table(stats, training, path):
+    """(c) Sensitivity analysis: seeds in which NEITHER model diverged. Per-image paired tests inside each seed only
+    (no cross-seed p-values). Shown as Full - Enc-dec (positive PSNR/SSIM, negative LPIPS = translators help)."""
+    bad = {x["seed"] for x in training if x["diverged"]}
+    seeds = sorted({x["seed"] for x in training} - bad)
+    L = [r"\begin{table}[t]", r"\centering",
+         r"\caption{Sensitivity analysis on converged runs only (seeds " + ", ".join(map(str, seeds)) + r"; seed"
+         + ("s " if len(bad) > 1 else " ") + ", ".join(map(str, sorted(bad))) + r" excluded because the full model diverged). "
+         r"$\Delta$ = full $-$ encoder--decoder on the 250 test images; paired per-image tests within each training run "
+         r"(bootstrap 95\% CI, Wilcoxon, Holm over the 9 tests of that seed); no test across seeds. ``Better'' = share of "
+         r"images on which the full model is better. Verdicts use the pre-registered margins (0.10~dB, 0.0020, 0.0050) on the 90\% CI.}",
+         r"\label{tab:converged}", r"\scriptsize", r"\setlength{\tabcolsep}{2.5pt}", r"\begin{tabular}{llrcrrrl}", r"\toprule",
+         r"Sev. & Metric & Seed & $\Delta$ [95\% CI] & $d_z$ & Better & $p_\mathrm{Holm}$ & Verdict \\", r"\midrule"]
+    for sv in SEVS:
+        for m in METRICS:
+            for se in seeds:
+                t = [x for x in stats if x["stage"] == "S3" and x["family"] == f"per_seed_{se}" and x["severity"] == sv
+                     and x["metric"] == m]
+                if not t:
+                    continue
+                t = t[0]; f = DFMT[m]
+                L.append(f"{sv} & {m.upper()} & {se} & {f.format(-t['mean_diff'])} [{f.format(-t['ci95_hi'])}, {f.format(-t['ci95_lo'])}]"
+                         f" & {-t['cohens_dz']:+.2f} & {t['pct_full_better']:.0f}\\% & {t['p_holm']:.2g} & {VERDICT_FULL[t['verdict']]}" + r" \\")
+        if sv != SEVS[-1]:
+            L.append(r"\midrule")
+    L += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+    open(path, "w").write("\n".join(L) + "\n")
+
+
 def efficiency_table(prof, training, path):
     p = {r["model"]: r for r in prof if r["stage"] == "S3"}
     L = [r"\begin{table}[t]", r"\centering",
@@ -244,7 +343,7 @@ def efficiency_table(prof, training, path):
 
 
 # ------------------------------------------------------------------ figures
-def fig_curves(curves, path_noext):
+def fig_curves(curves, path_noext, diverged=()):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -254,8 +353,10 @@ def fig_curves(curves, path_noext):
         for m, col in (("Tfull", "#1f77b4"), ("Tnone", "#d62728")):
             for s in seeds:
                 c = [x for x in curves if x["model"] == m and x["seed"] == s]
+                dv = (m, s) in diverged
                 ax[k].plot([x["step"] / 1000 for x in c], [x[f"val_{sv}_psnr"] for x in c], color=col, lw=1,
-                           alpha=1 if len(seeds) == 1 else 0.6, label=LABEL[m] if s == seeds[0] else None)
+                           ls=":" if dv else "-", alpha=1 if len(seeds) == 1 else 0.7,
+                           label=(LABEL[m] if s == seeds[0] else None) if not dv else f"{LABEL[m]}, seed {s} (diverged)")
         ax[k].set_title(f"{sv.capitalize()} (val, 250 img)", fontsize=8); ax[k].set_xlabel("step (k)", fontsize=7)
         ax[k].tick_params(labelsize=6)
     ax[0].set_ylabel("PSNR (dB)", fontsize=7); ax[0].legend(fontsize=6, frameon=False)
@@ -264,12 +365,12 @@ def fig_curves(curves, path_noext):
         fig.savefig(f"{path_noext}.{ext}", dpi=300)
 
 
-def fig_severe_gap(curves, path_noext):
+def fig_severe_gap(curves, path_noext, exclude_seeds=()):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots(figsize=(3.5, 2.0))
-    for s in sorted({c["seed"] for c in curves}):
+    for s in sorted({c["seed"] for c in curves} - set(exclude_seeds)):   # converged runs only
         f = [x for x in curves if x["model"] == "Tfull" and x["seed"] == s]
         n = [x for x in curves if x["model"] == "Tnone" and x["seed"] == s]
         if len(f) == len(n) == 20:
@@ -300,23 +401,25 @@ def main():
     results_table(rows, "S2", ["Tfull", "Te2", "Tnone"], "Stage~2: independently trained translator ablation, test set, 800 steps",
                   "tab:translators", SEEDS3, T("tab_translators.tex"))
     s3_seeds = sorted({r["seed"] for r in rows if r["stage"] == "S3" and r["model"] == "Tfull"})
-    results_table(rows, "S3", ["Tfull", "Tnone"], "Stage~3: convergence, test set, 20k steps at $256^2$" +
-                  ("" if len(s3_seeds) > 1 else " (exploratory)"), "tab:convergence", None, T("tab_convergence.tex"))
+    s3_per_seed_table(rows, training, T("tab_convergence.tex"))
+    stability_table(training, T("tab_stability.tex"))
+    converged_table(stats, training, T("tab_converged.tex"))
     stats_table(stats, "S0", "oracle_family", ("O-A", "C-A", "O-C"), r"Stage~0 paired differences (Holm over 27 tests; 3 seeds)",
                 "tab:gating_stats", T("tab_gating_stats.tex"))
     stats_table(stats, "S2", "preregistered_equivalence", ("Tnone-Tfull",),
                 r"Stage~2: encoder--decoder $-$ full (pre-registered margins; Holm over 18; 3 seeds)", "tab:translator_stats",
                 T("tab_translator_stats.tex"))
-    fam3 = "three_seed" if any(t["family"] == "three_seed" for t in stats) else "seed42_image_level"
-    stats_table(stats, "S3", fam3, ("Tnone-Tfull",),
-                r"Stage~3: encoder--decoder $-$ full (" + ("3 seeds" if fam3 == "three_seed" else "one seed, image-level only") + ")",
-                "tab:convergence_stats", T("tab_convergence_stats.tex"))
+    stale = T("tab_convergence_stats.tex")           # pooled 3-seed table retired; do not leave a stale copy around
+    if os.path.exists(stale):
+        os.remove(stale)
     efficiency_table(prof, training, T("tab_efficiency.tex"))
     if curves:
-        fig_curves(curves, os.path.join(OUT, "figures", "fig_convergence_curves"))
-        fig_severe_gap(curves, os.path.join(OUT, "figures", "fig_severe_gap"))
+        dv = {(t["model"], t["seed"]) for t in training if t["diverged"]}
+        fig_curves(curves, os.path.join(OUT, "figures", "fig_convergence_curves"), dv)
+        fig_severe_gap(curves, os.path.join(OUT, "figures", "fig_severe_gap"), {s for _, s in dv})
     print(f"results.csv: {len(rows)} rows | per_image: {len(pis)} | stats: {len(stats)} | profiling: {len(prof)} | "
-          f"training runs: {len(training)} | Stage-3 seeds with test results: {s3_seeds} | stats family S3: {fam3}")
+          f"training runs: {len(training)} | Stage-3 seeds with test results: {s3_seeds} | "
+          f"diverged: {[(t['model'], t['seed']) for t in training if t['diverged']]}")
 
 
 if __name__ == "__main__":

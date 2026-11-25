@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Stage~3 training stability. A run is counted as diverged if its validation PSNR (mean of the three severities, 250 images) ever fell more than 0.5~dB below its running maximum (criterion fixed after observing the runs). Drawdown and best epoch per seed (42/123/2026).}
+\label{tab:stability}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcll}
+\toprule
+Model & Diverged & Best epoch (of 20) & Max.\ drawdown (dB) \\
+\midrule
+Full (all translators) & 1/3 & 20/20/1 & 0.00/0.00/3.21 \\
+Encoder--decoder (no translators) & 0/3 & 20/20/20 & 0.00/0.00/0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}

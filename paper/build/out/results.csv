@@ -431,6 +431,15 @@ S3,Tfull,2026,medium,lpips,0.3258491140373517,250,results/v9_convergence_pilot/p
 S3,Tfull,2026,severe,psnr,19.05870999516043,250,results/v9_convergence_pilot/per_image/Tfull_seed2026.json
 S3,Tfull,2026,severe,ssim,0.6029766852259636,250,results/v9_convergence_pilot/per_image/Tfull_seed2026.json
 S3,Tfull,2026,severe,lpips,0.5639793668985367,250,results/v9_convergence_pilot/per_image/Tfull_seed2026.json
+S3,Tfull_last,2026,mild,psnr,26.25696328311835,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,mild,ssim,0.8004871504306793,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,mild,lpips,0.2176205378435552,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,medium,psnr,23.92838581391726,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,medium,ssim,0.7453662351369857,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,medium,lpips,0.32672891568019985,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,severe,psnr,18.43718478971624,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,severe,ssim,0.5849973977804184,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
+S3,Tfull_last,2026,severe,lpips,0.5790036469101906,250,results/v9_convergence_pilot/per_image/Tfull_seed2026_last.json
 S2,Te2,42,mild,psnr,26.77637971300565,250,results/v8_translator_training/per_image/Te2_seed42.json
 S2,Te2,42,mild,ssim,0.8025853139162064,250,results/v8_translator_training/per_image/Te2_seed42.json
 S2,Te2,42,mild,lpips,0.22081448797462508,250,results/v8_translator_training/per_image/Te2_seed42.json

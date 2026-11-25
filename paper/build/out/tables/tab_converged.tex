@@ -1,0 +1,33 @@
+\begin{table}[t]
+\centering
+\caption{Sensitivity analysis on converged runs only (seeds 42, 123; seed 2026 excluded because the full model diverged). $\Delta$ = full $-$ encoder--decoder on the 250 test images; paired per-image tests within each training run (bootstrap 95\% CI, Wilcoxon, Holm over the 9 tests of that seed); no test across seeds. ``Better'' = share of images on which the full model is better. Verdicts use the pre-registered margins (0.10~dB, 0.0020, 0.0050) on the 90\% CI.}
+\label{tab:converged}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{llrcrrrl}
+\toprule
+Sev. & Metric & Seed & $\Delta$ [95\% CI] & $d_z$ & Better & $p_\mathrm{Holm}$ & Verdict \\
+\midrule
+mild & PSNR & 42 & -0.050 [-0.170, +0.065] & -0.05 & 45\% & 1 & enc--dec non-inferior \\
+mild & PSNR & 123 & +0.062 [-0.038, +0.164] & +0.08 & 60\% & 0.12 & inconclusive \\
+mild & SSIM & 42 & -0.0018 [-0.0033, -0.0004] & -0.16 & 38\% & 0.0022 & enc--dec non-inferior \\
+mild & SSIM & 123 & +0.0007 [-0.0003, +0.0018] & +0.09 & 58\% & 0.11 & equivalent \\
+mild & LPIPS & 42 & +0.0033 [+0.0020, +0.0046] & +0.31 & 31\% & 1.4e-07 & equivalent \\
+mild & LPIPS & 123 & -0.0021 [-0.0033, -0.0007] & -0.20 & 59\% & 9.6e-05 & equivalent \\
+\midrule
+medium & PSNR & 42 & +0.080 [-0.034, +0.193] & +0.09 & 53\% & 0.79 & inconclusive \\
+medium & PSNR & 123 & -0.042 [-0.156, +0.064] & -0.05 & 54\% & 1 & enc--dec non-inferior \\
+medium & SSIM & 42 & -0.0001 [-0.0015, +0.0013] & -0.01 & 53\% & 1 & equivalent \\
+medium & SSIM & 123 & +0.0023 [+0.0010, +0.0039] & +0.21 & 66\% & 5.7e-05 & inconclusive \\
+medium & LPIPS & 42 & +0.0007 [-0.0008, +0.0022] & +0.05 & 45\% & 1 & equivalent \\
+medium & LPIPS & 123 & -0.0044 [-0.0058, -0.0030] & -0.39 & 68\% & 8.2e-10 & inconclusive \\
+\midrule
+severe & PSNR & 42 & +0.039 [-0.065, +0.148] & +0.05 & 53\% & 1 & inconclusive \\
+severe & PSNR & 123 & -0.016 [-0.115, +0.082] & -0.02 & 50\% & 1 & equivalent \\
+severe & SSIM & 42 & +0.0036 [+0.0019, +0.0054] & +0.25 & 65\% & 2.4e-06 & full better beyond margin \\
+severe & SSIM & 123 & +0.0038 [+0.0024, +0.0052] & +0.33 & 73\% & 5.1e-11 & full better beyond margin \\
+severe & LPIPS & 42 & -0.0088 [-0.0108, -0.0067] & -0.52 & 69\% & 3.7e-13 & full better beyond margin \\
+severe & LPIPS & 123 & -0.0080 [-0.0100, -0.0060] & -0.50 & 70\% & 8.6e-13 & full better beyond margin \\
+\bottomrule
+\end{tabular}
+\end{table}
